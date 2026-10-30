@@ -1,0 +1,14 @@
+{
+  "name": "claude-skills-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Content-only Claude Code plugin. package.json exists for the test scripts.",
+  "type": "module",
+  "scripts": {
+    "test": "node tools/fire-test.mjs && node tools/validate-skills.mjs",
+    "test:fire": "node tools/fire-test.mjs",
+    "validate": "node tools/validate-skills.mjs"
+  },
+  "license": "MIT",
+  "engines": { "node": ">=20" }
+}

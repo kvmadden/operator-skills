@@ -1,0 +1,17 @@
+{
+  "name": "operator-skills-marketplace",
+  "description": "Marketplace for the operator-skills plugin.",
+  "owner": {
+    "name": "Kevin Madden"
+  },
+  "plugins": [
+    {
+      "name": "operator-skills",
+      "source": "./",
+      "description": "Ten general-purpose Claude Code skills for agent workflows.",
+      "author": { "name": "Kevin Madden" },
+      "license": "MIT",
+      "keywords": ["claude-code", "skills", "agents", "hooks"]
+    }
+  ]
+}

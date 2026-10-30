@@ -1,0 +1,11 @@
+{
+  "name": "operator-skills",
+  "displayName": "Operator Skills",
+  "version": "1.0.0",
+  "description": "Ten general-purpose Claude Code skills for agent workflows: build discipline, decision discipline, honest output, engineering floors, and autonomous runs.",
+  "author": {
+    "name": "Kevin Madden"
+  },
+  "license": "MIT",
+  "keywords": ["claude-code", "plugin", "skills", "agents", "hooks", "engineering", "decision-making"]
+}

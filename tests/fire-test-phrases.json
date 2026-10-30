@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Synthetic fire test set. Each entry describes a trigger phrase + the umbrella/rule that SHOULD dispatch. Run via `node tools/fire-test.mjs` to catch dispatch regressions before they hit real sessions. New rules + new triggers should add to this set so the regression coverage grows with the plugin.",
+  "schema_version": "1",
+  "phrases": [
+    {
+      "id": "strategy-business-moat",
+      "phrase": "What's the moat on this product? Could competitors copy it in a weekend?",
+      "expected_umbrella": "strategy-and-business",
+      "expected_rule": "moat-thinking",
+      "notes": "Defensibility evaluation"
+    },
+    {
+      "id": "strategy-business-unit-economics",
+      "phrase": "Let's scale this up — push to more users.",
+      "expected_umbrella": "strategy-and-business",
+      "expected_rule": "unit-economics",
+      "notes": "Scaling without unit-economics check"
+    },
+    {
+      "id": "build-discipline-not-another-product",
+      "phrase": "I want to start a new app — I'll spin it up tonight.",
+      "expected_umbrella": "build-discipline",
+      "expected_rule": "not-another-product",
+      "notes": "Starting new while unshipped projects exist"
+    },
+    {
+      "id": "build-discipline-done-is-done",
+      "phrase": "Let me revisit that shipped feature — I want to redo it.",
+      "expected_umbrella": "build-discipline",
+      "expected_rule": "done-is-done",
+      "notes": "Re-opening shipped work"
+    },
+    {
+      "id": "build-discipline-scope-lock",
+      "phrase": "And while we're at it, let me also fix that other thing.",
+      "expected_umbrella": "build-discipline",
+      "expected_rule": "scope-lock",
+      "notes": "Scope bump mid-build"
+    },
+    {
+      "id": "decision-discipline-kill-criteria",
+      "phrase": "Let's start a new initiative for the platform.",
+      "expected_umbrella": "decision-discipline",
+      "expected_rule": "kill-criteria",
+      "notes": "New commitment without abandonment conditions"
+    },
+    {
+      "id": "decision-discipline-pick-one",
+      "phrase": "We could do A, B, or C. Maybe even a hybrid of all three.",
+      "expected_umbrella": "decision-discipline",
+      "expected_rule": "pick-one",
+      "notes": "Multiple options without picking"
+    },
+    {
+      "id": "claude-quality-watch-is-claude-just-agreeing",
+      "phrase": "Push back on me — what do you actually disagree with here?",
+      "expected_umbrella": "claude-quality-watch",
+      "expected_rule": "claude-disagrees",
+      "notes": "Explicit invocation for forced disagreement"
+    },
+    {
+      "id": "engineering-floor-migration-not-mutation",
+      "phrase": "Let me just run an UPDATE on those rows to clean them up.",
+      "expected_umbrella": "engineering-floor",
+      "expected_rule": "migration-not-mutation",
+      "notes": "HARD INTERRUPT — in-place mutation without migration plan"
+    },
+    {
+      "id": "engineering-floor-tokens-not-values",
+      "phrase": "Let me hardcode this color as #3A8FBC — it looks right.",
+      "expected_umbrella": "engineering-floor",
+      "expected_rule": "tokens-not-values",
+      "notes": "Inline hex literal instead of design-token reference"
+    },
+    {
+      "id": "communication-craft-acknowledgment-first",
+      "phrase": "Let me reply to her — actually, the issue is she doesn't get what I meant.",
+      "expected_umbrella": "communication-craft",
+      "expected_rule": "acknowledgment-first",
+      "notes": "Jumping to fix/disagreement without acknowledging what she said"
+    },
+    {
+      "id": "communication-craft-apologies-without-excuses",
+      "phrase": "I'm sorry for missing the deadline, but I was just buried in other work.",
+      "expected_umbrella": "communication-craft",
+      "expected_rule": "apologies-without-excuses",
+      "notes": "Apology with 'but' undoing it"
+    },
+    {
+      "id": "communication-craft-is-this-a-no",
+      "phrase": "She said 'let me think about it' about my proposal and I haven't heard back.",
+      "expected_umbrella": "communication-craft",
+      "expected_rule": "is-this-a-no",
+      "notes": "Soft no dressed up as ambiguity"
+    },
+    {
+      "id": "communication-craft-when-someone-shares-bad-news",
+      "phrase": "A friend just shared some hard news with me and I'm about to reply.",
+      "expected_umbrella": "communication-craft",
+      "expected_rule": "when-someone-shares-bad-news",
+      "notes": "Receiving hard news — hold space, don't fix"
+    },
+    {
+      "id": "communication-craft-when-someone-shares-good-news",
+      "phrase": "She just got promoted and told me — how should I respond?",
+      "expected_umbrella": "communication-craft",
+      "expected_rule": "when-someone-shares-good-news",
+      "notes": "Receiving good news — celebrate first"
+    },
+    {
+      "id": "communication-craft-difficult-conversation-prep",
+      "phrase": "Tough convo coming up — I have to talk to someone about a hard topic.",
+      "expected_umbrella": "communication-craft",
+      "expected_rule": "difficult-conversation-prep",
+      "notes": "Structure a hard conversation before having it"
+    },
+    {
+      "id": "communication-craft-thank-you-overdue",
+      "phrase": "Someone helped me a lot last week — should I thank them properly?",
+      "expected_umbrella": "communication-craft",
+      "expected_rule": "thank-you-overdue",
+      "notes": "Meaningful help unacknowledged"
+    },
+    {
+      "id": "strategy-and-business-vendor-as-resource",
+      "phrase": "I just need them to do X — send them the request.",
+      "expected_umbrella": "strategy-and-business",
+      "expected_rule": "vendor-as-resource",
+      "notes": "Vendor treated as pure transaction"
+    },
+    {
+      "id": "claude-effective-usage-dispatch-this",
+      "phrase": "Can you investigate the competitor landscape and have a full report ready by EOD?",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "dispatch-this",
+      "notes": "Async multi-step with deadline → Claude Dispatch"
+    },
+    {
+      "id": "claude-effective-usage-switch-to-chat",
+      "phrase": "Let me think out loud — brainstorm with me about positioning, no files or tools.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "switch-to-chat-instead",
+      "notes": "Open-ended exploration with no tools → Claude Chat"
+    },
+    {
+      "id": "claude-effective-usage-use-cowork",
+      "phrase": "This brief needs a persistent doc I'll keep editing across sessions.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "use-cowork-not-code",
+      "notes": "Persistent long-form document → Claude Cowork. Must NOT be hijacked by the communication-craft drafting ladder (surface choice, not message craft)."
+    },
+    {
+      "id": "claude-effective-usage-invoke-subagent",
+      "phrase": "This is a bounded task — search across the whole codebase and just give me the conclusion.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "invoke-subagent",
+      "notes": "Codebase-wide search / bounded hand-offable task → subagent"
+    },
+    {
+      "id": "claude-effective-usage-monitor-instead-of-poll",
+      "phrase": "Let me write a sleep loop to poll the deploy status until it's done.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "monitor-instead-of-poll",
+      "notes": "Sleep-loop polling → event-driven monitor"
+    },
+    {
+      "id": "claude-effective-usage-prefer-dedicated-mcp",
+      "phrase": "I'll just screenshot Slack instead of using its MCP.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "prefer-dedicated-mcp",
+      "notes": "computer-use when a dedicated app MCP exists → use the MCP"
+    },
+    {
+      "id": "claude-effective-usage-single-message-multi-tool",
+      "phrase": "Let me read this file, then that file, then the other one to compare them.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "single-message-multi-tool",
+      "notes": "Independent sequential tool calls → batch in one message"
+    },
+    {
+      "id": "claude-effective-usage-pin-this",
+      "phrase": "That's an important point — save this so I can find it again later.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "pin-this",
+      "notes": "Durable conclusion → pin. 'save this' / 'important point' is pin-this's signal."
+    },
+    {
+      "id": "claude-effective-usage-clear-context-when-stale",
+      "phrase": "You keep forgetting what we changed — you're going in circles now.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "clear-context-when-stale",
+      "notes": "Context staleness signals → /compact or /clear"
+    },
+    {
+      "id": "claude-effective-usage-summarize-and-archive",
+      "phrase": "We basically solved this. Let me start a new chat for the next thing.",
+      "expected_umbrella": "claude-effective-usage",
+      "expected_rule": "summarize-and-archive",
+      "notes": "Long resolved thread + pivot → capture conclusions then archive"
+    }
+  ],
+  "regressions": []
+}
