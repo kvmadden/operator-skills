@@ -115,6 +115,10 @@ tests/            routing test phrases
 tools/            routing test and structure validator
 ```
 
+## Development history
+
+Built May to October 2026 over 66 commits in a private repository. The full history includes personal notes and private configuration, so this repository is a cleaned public snapshot. The examples, validator and privacy pass described above were added for this release in October 2026.
+
 ## License
 
 MIT, Kevin Madden, 2026. See [LICENSE](LICENSE). All examples and test phrases are fictional or synthetic.
