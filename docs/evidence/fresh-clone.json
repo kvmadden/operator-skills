@@ -1,6 +1,6 @@
 {
   "commit": "251deb7a8f40dc6d46b5dfed4eca7d79bb247dc5",
-  "location": "fresh clone under /private/tmp outside estate",
+  "location": "fresh clone in a temporary directory outside the author's workspace",
   "environmentUnset": [
     "MFW_UMBRELLA_ROOT",
     "OPERATOR_ECOSYSTEM_ROOT"
