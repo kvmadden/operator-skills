@@ -1,0 +1,150 @@
+
+> claude-skills-plugin@1.0.0 test
+> node tools/fire-test.mjs && node tools/validate-skills.mjs && node --test tests/*.test.mjs && node benchmark/build.mjs --check && node benchmark/variant-audit.mjs --check
+
+Loaded 10 top-level skills.
+
+═══ Fire Test ═══
+
+Loaded 28 dispatch tests + 0 regression pins.
+
+✓ PASS  [strategy-business-moat]
+   "What's the moat on this product? Could competitors copy it in a weeken…"
+   → strategy-and-business / moat-thinking
+
+✓ PASS  [strategy-business-unit-economics]
+   "Let's scale this up — push to more users."
+   → strategy-and-business / unit-economics
+
+✓ PASS  [build-discipline-not-another-product]
+   "I want to start a new app — I'll spin it up tonight."
+   → build-discipline / not-another-product
+
+✓ PASS  [build-discipline-done-is-done]
+   "Let me revisit that shipped feature — I want to redo it."
+   → build-discipline / done-is-done
+
+✓ PASS  [build-discipline-scope-lock]
+   "And while we're at it, let me also fix that other thing."
+   → build-discipline / scope-lock
+
+✓ PASS  [decision-discipline-kill-criteria]
+   "Let's start a new initiative for the platform."
+   → decision-discipline / kill-criteria
+
+✓ PASS  [decision-discipline-pick-one]
+   "We could do A, B, or C. Maybe even a hybrid of all three."
+   → decision-discipline / pick-one
+
+✓ PASS  [claude-quality-watch-is-claude-just-agreeing]
+   "Push back on me — what do you actually disagree with here?"
+   → claude-quality-watch / claude-disagrees
+
+✓ PASS  [engineering-floor-migration-not-mutation]
+   "Let me just run an UPDATE on those rows to clean them up."
+   → engineering-floor / migration-not-mutation
+
+✓ PASS  [engineering-floor-tokens-not-values]
+   "Let me hardcode this color as #3A8FBC — it looks right."
+   → engineering-floor / tokens-not-values
+
+✓ PASS  [communication-craft-acknowledgment-first]
+   "Let me reply to her — actually, the issue is she doesn't get what I me…"
+   → communication-craft / acknowledgment-first
+
+✓ PASS  [communication-craft-apologies-without-excuses]
+   "I'm sorry for missing the deadline, but I was just buried in other wor…"
+   → communication-craft / apologies-without-excuses
+
+✓ PASS  [communication-craft-is-this-a-no]
+   "She said 'let me think about it' about my proposal and I haven't heard…"
+   → communication-craft / is-this-a-no
+
+✓ PASS  [communication-craft-when-someone-shares-bad-news]
+   "A friend just shared some hard news with me and I'm about to reply."
+   → communication-craft / when-someone-shares-bad-news
+
+✓ PASS  [communication-craft-when-someone-shares-good-news]
+   "She just got promoted and told me — how should I respond?"
+   → communication-craft / when-someone-shares-good-news
+
+✓ PASS  [communication-craft-difficult-conversation-prep]
+   "Tough convo coming up — I have to talk to someone about a hard topic."
+   → communication-craft / difficult-conversation-prep
+
+✓ PASS  [communication-craft-thank-you-overdue]
+   "Someone helped me a lot last week — should I thank them properly?"
+   → communication-craft / thank-you-overdue
+
+✓ PASS  [strategy-and-business-vendor-as-resource]
+   "I just need them to do X — send them the request."
+   → strategy-and-business / vendor-as-resource
+
+✓ PASS  [claude-effective-usage-dispatch-this]
+   "Can you investigate the competitor landscape and have a full report re…"
+   → claude-effective-usage / dispatch-this
+
+✓ PASS  [claude-effective-usage-switch-to-chat]
+   "Let me think out loud — brainstorm with me about positioning, no files…"
+   → claude-effective-usage / switch-to-chat-instead
+
+✓ PASS  [claude-effective-usage-use-cowork]
+   "This brief needs a persistent doc I'll keep editing across sessions."
+   → claude-effective-usage / use-cowork-not-code
+
+✓ PASS  [claude-effective-usage-invoke-subagent]
+   "This is a bounded task — search across the whole codebase and just giv…"
+   → claude-effective-usage / invoke-subagent
+
+✓ PASS  [claude-effective-usage-monitor-instead-of-poll]
+   "Let me write a sleep loop to poll the deploy status until it's done."
+   → claude-effective-usage / monitor-instead-of-poll
+
+✓ PASS  [claude-effective-usage-prefer-dedicated-mcp]
+   "I'll just screenshot Slack instead of using its MCP."
+   → claude-effective-usage / prefer-dedicated-mcp
+
+✓ PASS  [claude-effective-usage-single-message-multi-tool]
+   "Let me read this file, then that file, then the other one to compare t…"
+   → claude-effective-usage / single-message-multi-tool
+
+✓ PASS  [claude-effective-usage-pin-this]
+   "That's an important point — save this so I can find it again later."
+   → claude-effective-usage / pin-this
+
+✓ PASS  [claude-effective-usage-clear-context-when-stale]
+   "You keep forgetting what we changed — you're going in circles now."
+   → claude-effective-usage / clear-context-when-stale
+
+✓ PASS  [claude-effective-usage-summarize-and-archive]
+   "We basically solved this. Let me start a new chat for the next thing."
+   → claude-effective-usage / summarize-and-archive
+
+═══ Regression pins ═══
+
+═══ Summary ═══
+Dispatch tests:    28/28 passed
+Regression pins:   0/0 held
+
+✓ ALL TESTS PASSED — plugin dispatch logic intact.
+OK: 10 skills, 117 rules, manifests and hooks valid.
+✔ 36 tasks, 12 development and 24 final with balanced rules and labels (0.7425ms)
+✔ only task content reaches runner and metadata permutation is invariant (177.33375ms)
+✔ runtime excludes final key, fixture literals and answer imports (148.91275ms)
+✔ degenerate controls fail opposite directions and suppression completion (7.71275ms)
+✔ both rules grade actual artifacts and reject empty declarations (2.946875ms)
+✔ fixture values are explicitly nonfunctional, report is reproducible and unmeasured (0.920667ms)
+✔ viewer distinguishes three evidence levels and has no network dependency (0.400875ms)
+✔ leak and unapproved changes fail even when an intervention is declared (0.178334ms)
+✔ paired report preserves manual separation, partial denominators and family intervals (2.945083ms)
+✔ existing hooks on temporary repositories and synthetic records only (3791.720667ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4218.307334
+{"status":"unmeasured","tasks":36,"actualRuns":0,"viewer":"docs/viewer.html"}
+{"surfaceClassifier":{"numerator":15,"denominator":24},"review":"draft, pending blind edit review"}

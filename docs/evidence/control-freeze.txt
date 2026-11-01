@@ -1,0 +1,11 @@
+file:///private/tmp/operator-control-_gbo163m/benchmark/build.mjs:31
+for (const field of ['pluginHash', 'runnerHash', 'evaluatorHash', 'rubricHash', 'corpusHash']) if (frozen[field] !== freeze[field]) throw Error(`freeze mismatch: ${field}`)
+                                                                                                                                          ^
+
+Error: freeze mismatch: pluginHash
+    at file:///private/tmp/operator-control-_gbo163m/benchmark/build.mjs:31:139
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.14.1

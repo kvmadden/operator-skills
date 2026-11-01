@@ -1,0 +1,38 @@
+jq: invalid JSON text passed to --argjson
+Use jq --help for help with command-line options,
+or see the jq manpage, or online docs  at https://jqlang.github.io/jq
+✖ existing hooks on temporary repositories and synthetic records only (2903.821875ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3145.698292
+
+✖ failing tests:
+
+test at tests/hooks.test.mjs:9:1
+✖ existing hooks on temporary repositories and synthetic records only (2903.821875ms)
+  Error: Command failed: bash /Volumes/HubData/work/worktrees/operator-skills-showcase-standard/hooks/subagent-stop.sh
+  jq: invalid JSON text passed to --argjson
+  Use jq --help for help with command-line options,
+  or see the jq manpage, or online docs  at https://jqlang.github.io/jq
+
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at TestContext.<anonymous> (file:///Volumes/HubData/work/worktrees/operator-skills-showcase-standard/tests/hooks.test.mjs:30:5)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    status: 2,
+    signal: null,
+    output: [ null, <Buffer >, <Buffer 6a 71 3a 20 69 6e 76 61 6c 69 64 20 4a 53 4f 4e 20 74 65 78 74 20 70 61 73 73 65 64 20 74 6f 20 2d 2d 61 72 67 6a 73 6f 6e 0a 55 73 65 20 6a 71 20 2d ... 112 more bytes> ],
+    pid: 71578,
+    stdout: <Buffer >,
+    stderr: <Buffer 6a 71 3a 20 69 6e 76 61 6c 69 64 20 4a 53 4f 4e 20 74 65 78 74 20 70 61 73 73 65 64 20 74 6f 20 2d 2d 61 72 67 6a 73 6f 6e 0a 55 73 65 20 6a 71 20 2d ... 112 more bytes>
+  }

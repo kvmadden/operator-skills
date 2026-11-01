@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "pluginHash": "d8849049b5baef4b73ca5817aa0364a8c75349196009f689c05ac183dbc72f89",
+  "runnerHash": "6f3c686a9842360f145da895e9becb7e6aabe7a512350c4073351860a1a627e7",
+  "evaluatorHash": "8fb2d28cf53e1976ccb4350d512d10a38d18e64f90dc4d01989a36a3f8559fc7",
+  "rubricHash": "376de5dcbc6140c0bbabe05ccb4f978cf945814ffde4deb619606cc516fb94cd",
+  "corpusHash": "27789b3b7a6914f7ff12ad09913ecaf9e6f6a8e7e09adef4e9964a93bb5a6597",
+  "runnerStatus": "No authorized isolated zero-cost runner configuration established. No agent calls made.",
+  "runnerMeaning": "runnerHash freezes the input adapter only. Actual runner binary, model and settings must be separately recorded before any trial."
+}

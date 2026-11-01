@@ -5,10 +5,14 @@
   "description": "Content-only Claude Code plugin. package.json exists for the test scripts.",
   "type": "module",
   "scripts": {
-    "test": "node tools/fire-test.mjs && node tools/validate-skills.mjs",
+    "test": "node tools/fire-test.mjs && node tools/validate-skills.mjs && node --test tests/*.test.mjs && node benchmark/build.mjs --check && node benchmark/variant-audit.mjs --check",
     "test:fire": "node tools/fire-test.mjs",
-    "validate": "node tools/validate-skills.mjs"
+    "validate": "node tools/validate-skills.mjs",
+    "test:behavior": "node --test tests/behavior.test.mjs tests/hooks.test.mjs",
+    "benchmark": "node benchmark/build.mjs"
   },
   "license": "MIT",
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }
