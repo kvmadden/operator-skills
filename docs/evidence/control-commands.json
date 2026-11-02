@@ -1,0 +1,32 @@
+[
+  {
+    "label": "original-gate",
+    "command": [
+      "npm",
+      "test"
+    ],
+    "exit": 0
+  },
+  {
+    "label": "focused",
+    "command": [
+      "node",
+      "--test",
+      "tests/behavior.test.mjs",
+      "tests/hooks.test.mjs"
+    ],
+    "exit": 1
+  },
+  {
+    "label": "freeze",
+    "command": [
+      "node",
+      "benchmark/build.mjs",
+      "--check"
+    ],
+    "exit": 1
+  },
+  {
+    "trackedChanges": ""
+  }
+]

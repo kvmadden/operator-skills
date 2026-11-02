@@ -1,0 +1,17 @@
+{
+  "gifenc": {
+    "version": "1.0.3",
+    "resolved": "https://registry.npmjs.org/gifenc/-/gifenc-1.0.3.tgz",
+    "overridden": false
+  },
+  "playwright": {
+    "version": "1.64.1",
+    "resolved": "https://registry.npmjs.org/playwright/-/playwright-1.64.1.tgz",
+    "overridden": false
+  },
+  "pngjs": {
+    "version": "7.0.0",
+    "resolved": "https://registry.npmjs.org/pngjs/-/pngjs-7.0.0.tgz",
+    "overridden": false
+  }
+}

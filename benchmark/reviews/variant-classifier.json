@@ -1,0 +1,131 @@
+{
+  "status": "draft, pending blind edit review",
+  "method": "Four surface features with masked fixture values. Nearest centroid fitted only on dev families. Original trigger prompts versus paired edited suppression prompts.",
+  "limitation": "Semantic differences are intentional. This small cue check cannot establish indistinguishability or natural task validity.",
+  "accuracy": {
+    "numerator": 15,
+    "denominator": 24
+  },
+  "predictions": [
+    {
+      "id": "c07",
+      "edited": false,
+      "prediction": true
+    },
+    {
+      "id": "c08",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c09",
+      "edited": false,
+      "prediction": true
+    },
+    {
+      "id": "c10",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c11",
+      "edited": false,
+      "prediction": true
+    },
+    {
+      "id": "c12",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c13",
+      "edited": false,
+      "prediction": true
+    },
+    {
+      "id": "c14",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c15",
+      "edited": false,
+      "prediction": true
+    },
+    {
+      "id": "c16",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c17",
+      "edited": false,
+      "prediction": true
+    },
+    {
+      "id": "c18",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c25",
+      "edited": false,
+      "prediction": false
+    },
+    {
+      "id": "c26",
+      "edited": true,
+      "prediction": false
+    },
+    {
+      "id": "c27",
+      "edited": false,
+      "prediction": false
+    },
+    {
+      "id": "c28",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c29",
+      "edited": false,
+      "prediction": false
+    },
+    {
+      "id": "c30",
+      "edited": true,
+      "prediction": false
+    },
+    {
+      "id": "c31",
+      "edited": false,
+      "prediction": false
+    },
+    {
+      "id": "c32",
+      "edited": true,
+      "prediction": false
+    },
+    {
+      "id": "c33",
+      "edited": false,
+      "prediction": false
+    },
+    {
+      "id": "c34",
+      "edited": true,
+      "prediction": true
+    },
+    {
+      "id": "c35",
+      "edited": false,
+      "prediction": false
+    },
+    {
+      "id": "c36",
+      "edited": true,
+      "prediction": true
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+✔ 36 tasks, 12 development and 24 final with balanced rules and labels (0.877ms)
+✔ only task content reaches runner and metadata permutation is invariant (2.127417ms)
+✔ runtime excludes final key, fixture literals and answer imports (6.601625ms)
+✔ degenerate controls fail opposite directions and suppression completion (11.653167ms)
+✔ both rules grade actual artifacts and reject empty declarations (1.476708ms)
+✔ fixture values are explicitly nonfunctional, report is reproducible and unmeasured (1.264042ms)
+✔ viewer distinguishes three evidence levels and has no network dependency (0.374625ms)
+✔ leak and unapproved changes fail even when an intervention is declared (0.18725ms)
+✔ paired report preserves manual separation, partial denominators and family intervals (4.927792ms)
+jq: invalid JSON text passed to --argjson
+Use jq --help for help with command-line options,
+or see the jq manpage, or online docs  at https://jqlang.github.io/jq
+✖ existing hooks on temporary repositories and synthetic records only (617.51125ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 9
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 718.43825
+
+✖ failing tests:
+
+test at tests/hooks.test.mjs:9:1
+✖ existing hooks on temporary repositories and synthetic records only (617.51125ms)
+  Error: Command failed: bash /private/tmp/operator-control-_j1hm2hq/hooks/subagent-stop.sh
+  jq: invalid JSON text passed to --argjson
+  Use jq --help for help with command-line options,
+  or see the jq manpage, or online docs  at https://jqlang.github.io/jq
+
+      at genericNodeError (node:internal/errors:985:15)
+      at wrappedFn (node:internal/errors:539:14)
+      at checkExecSyncError (node:child_process:925:11)
+      at execFileSync (node:child_process:961:15)
+      at TestContext.<anonymous> (file:///private/tmp/operator-control-_j1hm2hq/tests/hooks.test.mjs:30:5)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    status: 2,
+    signal: null,
+    output: [ null, <Buffer >, <Buffer 6a 71 3a 20 69 6e 76 61 6c 69 64 20 4a 53 4f 4e 20 74 65 78 74 20 70 61 73 73 65 64 20 74 6f 20 2d 2d 61 72 67 6a 73 6f 6e 0a 55 73 65 20 6a 71 20 2d ... 112 more bytes> ],
+    pid: 83881,
+    stdout: <Buffer >,
+    stderr: <Buffer 6a 71 3a 20 69 6e 76 61 6c 69 64 20 4a 53 4f 4e 20 74 65 78 74 20 70 61 73 73 65 64 20 74 6f 20 2d 2d 61 72 67 6a 73 6f 6e 0a 55 73 65 20 6a 71 20 2d ... 112 more bytes>
+  }

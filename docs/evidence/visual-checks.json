@@ -1,0 +1,49 @@
+{
+  "checks": [
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "light",
+      "overflow": false,
+      "minimumTarget": 44
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "theme": "dark",
+      "overflow": false,
+      "minimumTarget": 44
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "theme": "light",
+      "overflow": false,
+      "minimumTarget": 44
+    },
+    {
+      "width": 430,
+      "height": 932,
+      "theme": "dark",
+      "overflow": false,
+      "minimumTarget": 44
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "light",
+      "overflow": false,
+      "minimumTarget": 44
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "theme": "dark",
+      "overflow": false,
+      "minimumTarget": 44
+    }
+  ],
+  "networkRequests": 0,
+  "consoleErrors": [],
+  "keyboard": "Theme via Enter, filter via Tab and select, case selection verified"
+}
