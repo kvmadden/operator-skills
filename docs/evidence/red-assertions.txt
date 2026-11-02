@@ -22,7 +22,7 @@ test at tests/behavior.test.mjs:9:1
 
   0 !== 36
 
-      at TestContext.<anonymous> (file:///Volumes/HubData/work/worktrees/operator-skills-showcase-standard/tests/behavior.test.mjs:10:10)
+      at TestContext.<anonymous> (file://<repo>/tests/behavior.test.mjs:10:10)
       at Test.runInAsyncScope (node:async_hooks:228:14)
       at Test.run (node:internal/test_runner/test:1118:25)
       at Test.start (node:internal/test_runner/test:1015:17)
@@ -38,7 +38,7 @@ test at tests/behavior.test.mjs:9:1
 test at tests/behavior.test.mjs:18:1
 ✖ only task content reaches runner and metadata permutation is invariant (0.490667ms)
   AssertionError [ERR_ASSERTION]: Missing expected exception.
-      at TestContext.<anonymous> (file:///Volumes/HubData/work/worktrees/operator-skills-showcase-standard/tests/behavior.test.mjs:28:10)
+      at TestContext.<anonymous> (file://<repo>/tests/behavior.test.mjs:28:10)
       at Test.runInAsyncScope (node:async_hooks:228:14)
       at Test.run (node:internal/test_runner/test:1118:25)
       at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
@@ -56,7 +56,7 @@ test at tests/behavior.test.mjs:18:1
 test at tests/behavior.test.mjs:30:1
 ✖ runtime excludes final key, fixture literals and answer imports (1.453ms)
   AssertionError [ERR_ASSERTION]: Missing expected exception.
-      at TestContext.<anonymous> (file:///Volumes/HubData/work/worktrees/operator-skills-showcase-standard/tests/behavior.test.mjs:33:10)
+      at TestContext.<anonymous> (file://<repo>/tests/behavior.test.mjs:33:10)
       at Test.runInAsyncScope (node:async_hooks:228:14)
       at Test.run (node:internal/test_runner/test:1118:25)
       at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
@@ -79,7 +79,7 @@ test at tests/behavior.test.mjs:55:1
   + undefined
   - 'unmeasured'
 
-      at TestContext.<anonymous> (file:///Volumes/HubData/work/worktrees/operator-skills-showcase-standard/tests/behavior.test.mjs:62:10)
+      at TestContext.<anonymous> (file://<repo>/tests/behavior.test.mjs:62:10)
       at Test.runInAsyncScope (node:async_hooks:228:14)
       at Test.run (node:internal/test_runner/test:1118:25)
       at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
@@ -97,7 +97,7 @@ test at tests/behavior.test.mjs:55:1
 test at tests/behavior.test.mjs:67:1
 ✖ viewer distinguishes three evidence levels and has no network dependency (0.32375ms)
   AssertionError [ERR_ASSERTION]: Static keyword routing
-      at TestContext.<anonymous> (file:///Volumes/HubData/work/worktrees/operator-skills-showcase-standard/tests/behavior.test.mjs:69:163)
+      at TestContext.<anonymous> (file://<repo>/tests/behavior.test.mjs:69:163)
       at Test.runInAsyncScope (node:async_hooks:228:14)
       at Test.run (node:internal/test_runner/test:1118:25)
       at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
