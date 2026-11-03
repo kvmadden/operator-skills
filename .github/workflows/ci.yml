@@ -34,4 +34,4 @@ jobs:
       - name: Install shellcheck if missing
         run: command -v shellcheck || { sudo apt-get update && sudo apt-get install -y shellcheck; }
       - run: shellcheck --version
-      - run: shellcheck -x hooks/*.sh evals/scaffold/*.sh
+      - run: shellcheck -x hooks/*.sh evals/cases/*/scaffold.sh

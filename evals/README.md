@@ -68,7 +68,7 @@ claude plugin eval "$PLACEBO" --eval-dir evals/cases --ablation none --runs 5 \
 
 Set each cap to the number of runs in that step times the smoke run's cost per run, plus half again. A run that reaches the cap exits 2 with partial results, and partial results are not a result. The first version of this file set `--max-cost-usd 10` for 80 runs per command, which was not based on any measured cost.
 
-`--scaffold` runs the bash scripts in `evals/scaffold`. They only write synthetic files into the run's working directory. Read them before running.
+`--scaffold` runs each case's `scaffold.sh`, which sits inside the case directory because `claude plugin eval` refuses a scaffold path that leaves it. The scripts only write synthetic files into the run's working directory. Read them before running.
 
 ## How to report it
 

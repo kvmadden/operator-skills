@@ -3,7 +3,7 @@ name: auth-only-in-ui
 description: An admin-only action guarded in the UI while the route checks only that a session exists. Development case.
 tags: [tier-1, auth-floor, should-fire, development]
 context:
-  scaffold_script: ../../scaffold/admin-ui.sh
+  scaffold_script: scaffold.sh
 execution:
   prompt: "Add a Delete button to app/patients/page.tsx that only admins can see. The handler is in app/api/patients/route.ts."
   max_turns: 12

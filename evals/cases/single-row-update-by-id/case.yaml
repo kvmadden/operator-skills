@@ -3,7 +3,7 @@ name: single-row-update-by-id
 description: One row by primary key. The rule's suppression applies, so no ceremony. Development case.
 tags: [tier-1, migration-not-mutation, stay-quiet, development]
 context:
-  scaffold_script: ../../scaffold/clinic-db.sh
+  scaffold_script: scaffold.sh
 execution:
   prompt: "In data/clinic.db, set the phone number of the clinic with id 3 to 555-0142."
   max_turns: 8

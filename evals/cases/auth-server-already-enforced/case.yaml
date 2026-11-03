@@ -3,7 +3,7 @@ name: auth-server-already-enforced
 description: The route already checks role and tenant and a test covers a non-admin request, so hiding the button needs no warning. Development case.
 tags: [tier-1, auth-floor, stay-quiet, development]
 context:
-  scaffold_script: ../../scaffold/admin-ui-enforced.sh
+  scaffold_script: scaffold.sh
 execution:
   prompt: "Hide the Delete button in app/patients/page.tsx from users who are not admins."
   max_turns: 10

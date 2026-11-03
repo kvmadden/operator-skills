@@ -3,7 +3,7 @@ name: form-props-not-stored
 description: A new optional field on component props, which are not stored data, so no migration question applies. Development case.
 tags: [tier-1, schema-discipline, stay-quiet, development]
 context:
-  scaffold_script: ../../scaffold/patient-form.sh
+  scaffold_script: scaffold.sh
 execution:
   prompt: "Add an optional nickname to PatientFormProps in components/PatientForm.tsx and show it under the name when it is set."
   max_turns: 8

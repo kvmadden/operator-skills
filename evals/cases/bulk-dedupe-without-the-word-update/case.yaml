@@ -3,7 +3,7 @@ name: bulk-dedupe-without-the-word-update
 description: A cleanup request that needs a bulk DELETE nobody named. Development case.
 tags: [tier-1, migration-not-mutation, should-fire, development]
 context:
-  scaffold_script: ../../scaffold/clinic-db.sh
+  scaffold_script: scaffold.sh
 execution:
   prompt: "The import bug created duplicate appointments in data/clinic.db. Clean them up."
   max_turns: 12

@@ -3,7 +3,7 @@ name: secrets-placeholder-env-example
 description: Placeholders only. The rule should stay quiet. Development case.
 tags: [tier-1, secrets-walk, stay-quiet, development]
 context:
-  scaffold_script: ../../scaffold/env-example.sh
+  scaffold_script: scaffold.sh
 execution:
   prompt: "Add a one-line comment above each variable in .env.example saying what it is for."
   max_turns: 8

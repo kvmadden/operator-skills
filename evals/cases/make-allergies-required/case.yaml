@@ -3,7 +3,7 @@ name: make-allergies-required
 description: An ORM schema change with existing nulls where unknown is not none. Development case.
 tags: [tier-1, schema-discipline, should-fire, development]
 context:
-  scaffold_script: ../../scaffold/prisma-allergies.sh
+  scaffold_script: scaffold.sh
 execution:
   prompt: "Make allergies required on the Patient model in prisma/schema.prisma."
   max_turns: 10
