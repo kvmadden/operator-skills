@@ -14,6 +14,8 @@ A Claude Code plugin of 10 skills and 118 short rules that name common failures 
 
 The earlier headline, "28 of 28 test phrases point to the intended rule", was a self-consistency check. The phrases matched strings that had been copied into skill metadata Claude Code never reads. Scored only on the text Claude Code can see, the same 28 phrases give 11 of 28 on the v1.0.0 text.
 
+**Correction, 3 November 2026.** The routing result is withdrawn. The script also scored rule triggers and the `metadata` blocks, which Claude Code does not read when it picks a skill. Scored on the skill descriptions alone, with the corrected check from kvmadden/operator-skills#3, 11 of the 28 phrases land on the intended skill. Every phrase was seen while the descriptions were written, so both figures are development data, and neither measures how Claude Code routes in a live session. The structure check result stands.
+
 ## Problem
 
 Long coding sessions with an AI agent fail in repeatable ways. The agent agrees with a weak plan three times in a row. It writes code against an API that does not exist. A quick fix widens into a different feature. A credential lands in a log. A cleanup rewrites forty thousand rows with no way back.
