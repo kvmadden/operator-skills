@@ -4,6 +4,13 @@
 
 Changes after a four-model review (GPT, Grok, Gemini and Claude) of v1.0.0, then a second round in which GPT and Grok reviewed this branch. Every number in the docs carries its denominator, and every routing set is labeled development data.
 
+### Live eval (3 Nov 2026)
+
+- First live run of the harness, approved by Kevin with a $5 cap. It cost $3.92 at list price. As shipped, Claude Code loaded no skill in 12 of 12 plugin runs and every case scored the same with and without the plugin. Invoked by hand, the bulk delete rule stopped the agent before deleting in 4 of 4 runs, against 0 of 6 as shipped. See docs/EVALUATION.md.
+- Harness fixes found by the smoke runs: each scaffold script now sits inside its case directory, and every `tool_used` never-check sets `min: 0`.
+- Added two invoked variants (bulk-dedupe-skill-invoked, secrets-skill-invoked), evals/results/2026-11-03-summary.json and docs/evidence/live-eval-2026-11-03.txt. Raw eval output is ignored by git because it holds the planted synthetic key.
+- Merged main, keeping PR #4's dated correction that withdraws "28 of 28".
+
 ### Second review round (3 Nov 2026)
 
 Fixed:
