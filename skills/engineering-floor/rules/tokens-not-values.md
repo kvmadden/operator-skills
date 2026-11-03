@@ -22,9 +22,9 @@ Across several apps or packages: tokens make visual coherence possible. Without 
 
 ## Response
 
-**HARD INTERRUPT.**
+**One nudge, and only when the project has design tokens or a theme scale.** Without a token system, a literal is fine.
 
-1. **Stop.** Don't apply the literal.
+1. **Check that tokens exist** (a theme file, CSS variables, a Tailwind config).
 2. **Name the literal + nearest token:**
    - "`#abc123` — not a known token. Which accent-color token applies here?"
    - "`padding: 17px` — not on the spacing scale. Nearest tokens: `<lower-token>` / `<upper-token>`."
@@ -32,7 +32,7 @@ Across several apps or packages: tokens make visual coherence possible. Without 
 3. **Two paths:**
    - **Use token:** apply the canonical value.
    - **Update tokens:** "If this literal IS the right value, the token system needs updating — open a discussion in your design-tokens package, don't just inline."
-4. **Wait.**
+4. **Yield.**
 
 ## Suppression
 

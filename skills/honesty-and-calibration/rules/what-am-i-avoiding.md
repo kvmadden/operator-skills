@@ -36,3 +36,7 @@ Naming the avoidance doesn't force action. It surfaces the data so the operator 
 - Already fired this week
 - Mode is `solo-run`
 - Operator has said they are drained or short on time
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

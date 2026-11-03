@@ -30,9 +30,9 @@ Soft (normal first-reopen):
 3. **If earned:** "OK — proceeding with the reopen. Logging the reason so future-readers understand."
 4. **Yield.**
 
-Hard if same thing has been reopened 3+ times in past month:
+If the operator says this is a repeat reopen (Claude cannot see past sessions):
 
-1. **Stop.** "This is reopen #N for `<thing>` in past month. Pattern signal."
+1. **Name it:** "This is a repeat reopen for `<thing>`."
 2. **Surface:** "Either the original ship was premature (no real done) or the reopen reflex needs resisting. Which?"
 
 ## Suppression

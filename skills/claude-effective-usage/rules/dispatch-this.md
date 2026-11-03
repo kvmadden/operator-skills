@@ -11,6 +11,8 @@ Claude Dispatch is built for async, multi-step work with a clear input → proce
 
 Dispatch fits when: clear deliverable + deadline, async (you'll come back to the result), multi-step (research → analysis → synthesis → delivery), and you don't need to steer each step. Code fits when: synchronous, tightly bound to local files, or the output is code you'll touch right after.
 
+Product features change. This rule describes Claude's surfaces as of November 2026. Check current documentation before relying on a specific feature.
+
 ## Response
 
 1. **Name the shape:** "This is async multi-step — clear input, clear deliverable, clear deadline."

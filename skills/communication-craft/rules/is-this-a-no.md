@@ -19,3 +19,7 @@ Soft no's are common wherever a direct no feels like burning a bridge. "Let me t
 - Response is genuinely "still considering" with an active named timeline
 - This person has historically followed up after these phrases
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

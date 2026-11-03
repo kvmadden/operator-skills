@@ -27,3 +27,7 @@ priority: high
 - Component is desktop-only by design
 - Already verified mobile in this session
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

@@ -24,8 +24,8 @@ The capture is the move — not the build. Capturing creates the data; not captu
 ## Response
 
 1. **Capture the idea quickly:** "Logging — `<idea>`. Problem: `<X>`. User: `<Y>`."
-2. **Append it** to an `IDEAS.md` (or equivalent) in the repo.
-3. **Don't lecture or push to act.** Just capture.
+2. **Offer to add it** to an ideas file the operator names. Write only after they agree, and never copy credentials or patient data into it.
+3. **Don't lecture or push to act.**
 4. **Yield.**
 
 ## Suppression

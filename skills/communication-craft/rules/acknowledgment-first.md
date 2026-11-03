@@ -19,3 +19,7 @@ Acknowledge first, then respond. Names responses that jump straight to disagreem
 - Acknowledgment already happened in prior turn
 - Disagreement is the explicit point (the operator and recipient both expect direct disagreement)
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

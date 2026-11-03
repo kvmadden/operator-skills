@@ -12,8 +12,7 @@ A good empty state:
 
 - Names what the surface IS (so users understand the value)
 - Points to the action that ends the empty state ("Add your first X")
-- Uses brand voice (not generic "No items")
-- Designed visually (not just a center-aligned grey line)
+- Says it plainly. Styling and brand voice come later with the rest of the polish (build-order)
 
 ## Response
 
@@ -22,7 +21,7 @@ A good empty state:
    - What is this surface for?
    - What's the action that ends the empty state?
    - What's the brand voice for the zero-state copy?
-3. **Build empty BEFORE happy path.**
+3. **Make the empty state work before polishing either state.** Function first, styling with the rest of the polish.
 4. **Yield.**
 
 ## Suppression
@@ -30,3 +29,7 @@ A good empty state:
 - Surface will never be empty (system always has data)
 - Empty state already designed
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

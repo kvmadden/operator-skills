@@ -34,3 +34,7 @@ Each shipped product can be evaluated on both dimensions. Product-strong and mar
 - Product is for operator only (named user = market of one)
 - Personal / creative work where process is its own outcome
 - Genuinely too early to evaluate market
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

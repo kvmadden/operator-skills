@@ -28,3 +28,7 @@ Two paths:
 - Mode is `explore`
 - Polish IS the explicit deliverable (portfolio piece, demo)
 - Already addressed this session
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

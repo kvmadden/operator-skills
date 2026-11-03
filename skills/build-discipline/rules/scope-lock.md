@@ -25,3 +25,7 @@ The discipline: stay-on-scope OR explicitly reopen-scope. The implicit-expansion
 - Mode is `explore` (no brief to violate)
 - Operator pre-acknowledged: "scope creep, accepting"
 - Mode is `review` (review can surface adjacent items)
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

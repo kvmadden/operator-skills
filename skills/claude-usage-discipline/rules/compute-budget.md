@@ -15,7 +15,7 @@ Soft:
 1. **Surface the cost estimate:** "This session looks like `<heavy>` Claude usage — rough estimate `<$X>` if it goes the full duration."
 2. **Ask the trade:** "Worth it for `<expected outcome>`?"
 3. **Two paths:**
-   - Continue: "OK — logging cost-awareness explicitly."
+   - Continue: "OK, noted."
    - Adjust: "Want to scope to lower-cost work? Or use a cheaper model?"
 4. **Yield.**
 

@@ -20,3 +20,7 @@ When someone shares good news, the generous response is full presence in their j
 - Already celebrated specifically
 - Trivial / non-news (e.g., "got my coffee this morning")
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

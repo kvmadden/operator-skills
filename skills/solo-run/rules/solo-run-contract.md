@@ -10,7 +10,7 @@ After intake collects the answers, the contract makes them durable and visible. 
 
 The contract is also a respect mechanism. Autonomy without explicit agreement is presumption. The contract makes the agreement concrete: here's what you said you wanted, here's what I'll do, here's what would halt me. The operator must explicitly say "go" before the run begins — silence is not consent.
 
-The contract is not modified mid-run. If the work needs to deviate, the rule is: halt, debrief, write a new contract. This preserves the contract's role as a stable reference.
+The contract's terms are not modified mid-run. HALT notes are appended below the terms. If the work needs to deviate, the rule is: halt, debrief, write a new contract. This preserves the contract's role as a stable reference.
 
 ## Response
 
@@ -75,7 +75,7 @@ Status row via the solo-run-log rule every <30 min default | customized>.
 5. **On 'go':** parent solo-run logs the start row + sets mode.
 6. **On 'edit X':** revise the field, regenerate, re-confirm.
 7. **On 'cancel':** delete the contract file, log a `solo-run-cancelled` row, return to normal session mode.
-8. **If 5 minutes pass without acceptance:** prompt once more. If another 5 minutes pass, default to cancel — the operator can re-invoke if they want.
+8. **If the operator does not reply, do not start.** Claude cannot act between messages, so silence means no run.
 
 ## Contract archival
 

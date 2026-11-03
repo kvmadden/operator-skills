@@ -20,3 +20,7 @@ The operator is interacting with a vendor or external resource through a purely 
 - The operator has already invested in this relationship recently
 - The operator names it as genuinely transactional / "just need the deliverable"
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

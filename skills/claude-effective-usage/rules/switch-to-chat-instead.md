@@ -11,6 +11,8 @@ Claude Code is the right surface when the artifact is the codebase — editing f
 
 Doing chat-shaped work in Code is a small loss every time: no Projects (context fragments across sessions), no Memory (you re-explain context), no Artifact panel (responses can't export as standalone documents), and the Code session is heavier weight.
 
+Product features change. This rule describes Claude's surfaces as of November 2026. Check current documentation before relying on a specific feature.
+
 ## Response
 
 1. **Name the surface mismatch:** "This feels chat-shaped, not code-shaped — pure exploration without tools."

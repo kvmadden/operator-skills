@@ -32,3 +32,7 @@ Recognizing the unspoken ask:
 - Speaker is venting; clearly not asking
 - Speaker has history of direct-asking
 - Mode is `solo-run`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

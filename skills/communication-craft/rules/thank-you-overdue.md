@@ -21,3 +21,7 @@ Thank-yous are relationship investments that cost almost nothing and accumulate 
 - Help was tiny / incidental — no thanks needed
 - Already fired for this specific person/help recently
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

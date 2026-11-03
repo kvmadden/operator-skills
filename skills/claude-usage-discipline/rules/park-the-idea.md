@@ -18,8 +18,8 @@ handoff note and start fresh without fear of dropping small ideas.
 ## Response
 
 1. **Notice + name (one line):** "That's a park-it — capturing so a reset can't lose it."
-2. **Write it down** - append the idea to a parked-ideas file in the repo so it
-   resurfaces next session.
+2. **Offer to write it down** in a parked-ideas file the operator names, so it
+   resurfaces next session. Write after they agree, without credentials or patient data.
 3. **Return to the task.** Parking is *defer*, not *do* — don't chase the tangent now.
 4. **Yield.**
 
@@ -31,3 +31,7 @@ If the operator clearly wants to pursue the idea now, that's not a park — foll
 - Operator is explicitly pursuing it now
 - Already parked this idea this session
 - Mode is `solo-run` (the debrief captures) or `explore` (chasing tangents is the point)
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

@@ -33,11 +33,9 @@ Soft path:
 3. **Offer the corrective:** Convert the assertion to input → output where possible.
 4. **Yield.**
 
-Hard path — when assertions are clearly on private state or call counts:
+When assertions only check private state or incidental call counts, say so once and offer the observable-behavior version. Then follow the operator.
 
-1. **Stop.** Don't ship the implementation test.
-2. **Name the cost:** "This test asserts on `<private state | call count>`. It'll break on refactor and add nothing — every refactor will need to update this test even when behavior is unchanged."
-3. **Refuse:** "Refusing to ship this test as-is. Either rewrite to assert on observable behavior or explicitly say 'I know — implementation test.'"
+Call counts and arguments are the contract when a side effect must happen exactly once or not at all: a payment, a sent message, an audit write, a dose order. Keep those assertions.
 
 ## Suppression
 

@@ -46,3 +46,7 @@ Mode cleared. Back to normal session.
 - Mode is not `solo-run` (no contract to debrief against)
 - Run was cancelled before start
 - Debrief already ran for this contract
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

@@ -11,7 +11,7 @@ What varies is config. What defines is code. Hardcoding what varies makes the ne
 
 Common extractions:
 
-- Colors → design tokens, NEVER inline `#xxxxxx`
+- Colors and spacing: tokens-not-values owns these when the project has design tokens
 - Copy → constants files or i18n; not inline JSX strings
 - Thresholds → env or config object, not magic numbers
 - Per-operator settings → user-settings store
@@ -29,3 +29,7 @@ Common extractions:
 - Mode is `explore`
 - One-line bug fix where extracting would balloon scope
 - Operator pre-acknowledged: "hardcoding, will extract in v2"
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

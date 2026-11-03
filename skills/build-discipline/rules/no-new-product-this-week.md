@@ -19,7 +19,7 @@ When `not-another-product` fires later in the week, it reads this flag — if "n
 2. **Ask if exception:**
    - "Any existing product close to shipping this week?"
    - "Any new product you've decided IS the week's start?"
-3. **Lock the answer:** write to mode / session state (`new-product-allowed: false` or `new-product-allowed: <name>`).
+3. **Say the bound in the conversation.** Claude keeps no state between sessions, so the operator records it wherever they keep plans.
 4. **Yield.**
 
 ## Suppression

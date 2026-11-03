@@ -26,3 +26,7 @@ Pre-send check for substantive communication. Predicts how the message will land
 - Audience-relationship is low-stakes
 - Mode is `explore`
 - Already ran landing-test this draft cycle
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

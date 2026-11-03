@@ -13,7 +13,7 @@ Conflating the two is the most common reason products stay at v0.x. v2 work alwa
 
 The discipline: when v2-shaped work is proposed mid-v1 build, name it as v2-shaped. Either defer it (note in `unbuilt-products` for after v1 ships) or accept that v1 just got bigger and time-to-ship just lengthened.
 
-The pattern is invisible per-feature ("this would be nice") but visible in aggregate ("v1 has been almost done for four months"). Hard delivery kicks in when v1 has been "almost done" for 30+ days AND v2-shaped work keeps appearing.
+The pattern is invisible per-feature ("this would be nice") but visible in aggregate ("v1 has been almost done for four months"). Clinical, safety and data-integrity edge cases are first-version work: a missing allergy record, a weight of zero, a renal dose adjustment, a null in a field that drives a decision. This rule never defers them.
 
 ## Response
 
@@ -25,13 +25,14 @@ The pattern is invisible per-feature ("this would be nice") but visible in aggre
    - **Add to v1 scope deliberately:** "OK — but acknowledge v1 just got bigger by `<estimate>`. Want to update kill-criteria too?"
 3. **Yield.**
 
-**Hard (when v1 has been "almost done" for 30+ days):**
+**When the operator says v1 has been close for weeks** (Claude cannot see that history itself), still one nudge, never a stop:
 
 1. **Stop.** "v1 has been 'almost done' for `<duration>`. Every v2-shaped addition pushes v1 farther."
 2. **Force the choice:** "Either ship v1 with the typical case working, OR formally accept v1 scope creep and update the timeline."
 
 ## Suppression
 
+- The edge case affects patient safety, clinical correctness, security, auth or data integrity. That is v1 work.
 - The "edge case" is genuinely v1 (e.g., a security / auth case — those are typical-case requirements)
 - v1 has shipped already — we're in v2 territory by definition
 - Mode is `explore` — sketches can include v2 thinking

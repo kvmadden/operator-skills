@@ -26,3 +26,7 @@ Surface the unsaid monthly so the deferred-truth pattern doesn't compound silent
 - Already addressed this month
 - No unsaid items since last surface
 - Mode is `solo-run`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

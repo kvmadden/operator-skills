@@ -1,6 +1,6 @@
 ---
 title: Forced disagreement — preventive (every 15-20 turns)
-trigger: every ~15-20 turns of agreement-heavy conversation; OR explicit invocation ("push back on me" / "what would I object to" / "play devil's advocate" / "give me the honest take")
+trigger: a long run of agreement with no pushback (Claude can see the conversation, not the clock); OR explicit invocation ("push back on me" / "what would I object to" / "play devil's advocate" / "give me the honest take")
 priority: medium
 ---
 
@@ -12,7 +12,7 @@ If Claude can't find a disagreement, that itself is data: either the operator's 
 
 ## Response
 
-1. **Surface the strongest disagreement Claude can muster:**
+1. **Look for a real disagreement.** Never invent one. Faked pushback is worse than honest agreement. Check:
    - About the operator's current framing
    - About the priority order
    - About the trade-offs as named

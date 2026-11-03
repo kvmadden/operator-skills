@@ -20,3 +20,7 @@ Extended deliberation on a 50/50 call produces no new signal. The fix: commit. E
 - Decision is type-1 (irreversible — actually deserves deliberation)
 - New information IS being surfaced by continued deliberation
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

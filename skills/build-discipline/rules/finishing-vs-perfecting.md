@@ -32,3 +32,7 @@ Rule of thumb (Pareto): most of the value comes from a minority of the effort.
 - Pre-skilled work that genuinely needs more passes
 - Discovered structural problem mid-finish (fix-mode, not perfect-mode)
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

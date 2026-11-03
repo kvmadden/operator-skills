@@ -23,3 +23,7 @@ If the operator says "no one yet" → cross-reference impact-check / useful-test
 - Production framing IS outcome (e.g., "I shipped tool to my own use this week" — operator is named user)
 - Audience/user already mentioned in session
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

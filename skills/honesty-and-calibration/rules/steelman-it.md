@@ -1,7 +1,7 @@
 ---
 title: Steelman it — strongest version before rejection
 trigger: >-
-  "no way" / "that won't work" / "that's a bad idea" / "we shouldn't do X" / "obviously no" — dismissal in <30 seconds without engaging the option's strength
+  "no way" / "that won't work" / "that's a bad idea" / "we shouldn't do X" / "obviously no" — a quick dismissal that does not engage the option's strongest case
 priority: medium
 ---
 
@@ -27,3 +27,7 @@ Steelman before reject. Stating the strongest version of an idea before dismissi
 - Option is genuinely silly
 - Mode is `explore`
 - Safety-critical option ("don't store credentials in plaintext" — no steelman needed)
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

@@ -30,3 +30,7 @@ Surface the pattern — don't push pursuing things — so the operator sees what
 - Already addressed this month
 - Mode is `solo-run`
 - No declined opportunities since last surface
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

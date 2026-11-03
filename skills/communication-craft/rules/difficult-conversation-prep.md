@@ -41,3 +41,7 @@ When the operator signals a difficult upcoming conversation — performance talk
 - Already prepped, or the conversation is happening immediately with no prep time
 - Conversation is explicitly informal ("no prep needed")
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

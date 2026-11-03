@@ -22,3 +22,7 @@ Pick a landing. Be wrong if necessary — you can revise — but land.
 - Genuinely undecided AND surveying with the recipient is the point
 - Draft is exploratory by design
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

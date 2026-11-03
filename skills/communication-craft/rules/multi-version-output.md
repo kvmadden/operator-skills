@@ -23,3 +23,7 @@ One version satisfies none. Multiple versions tailored per audience land. More w
 - One audience is genuinely the primary; others are CC-cohort
 - Mode is `explore`
 - Operator already named the trade-off and chose one version
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

@@ -26,3 +26,7 @@ The four things to name:
 - Domain already modeled in this session or referenced doc
 - Mode is `explore`
 - One-off helper that doesn't merit a domain pass
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

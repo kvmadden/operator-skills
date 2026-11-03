@@ -37,3 +37,7 @@ If none of those, keep single-file.
 - Mode is `explore`
 - Split already named in this session
 - Operator pre-acknowledged: "I know — premature, doing it anyway"
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

@@ -11,6 +11,8 @@ Claude Cowork is the right surface when the artifact is a document you'll iterat
 
 Document work in Code is suboptimal: no persistent draft (each session re-prompts the whole thing), no side-by-side editing, no version history of the document, no native export to Word/PDF/Docs.
 
+Product features change. This rule describes Claude's surfaces as of November 2026. Check current documentation before relying on a specific feature.
+
 ## Response
 
 1. **Name the document shape:** "This is document work — persistent draft, multiple iterations."

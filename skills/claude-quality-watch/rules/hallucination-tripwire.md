@@ -44,4 +44,4 @@ When a confident factual claim about current state is about to be made:
 - "skip verification this time" — proceeds without check; logged as override
 - "you don't need to verify, I trust the model here" — proceeds without check; logged
 
-On override, the claim is recorded as unverified so future-readers can see what was asserted-without-check.
+On override, say in the conversation that the claim is unverified. No log is kept.
