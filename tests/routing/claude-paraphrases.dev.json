@@ -1,0 +1,175 @@
+{
+  "data_status": "development",
+  "provenance": "Meaning-preserving paraphrases of the 28 shipped phrases, written by the Claude reviewer on 3 Nov 2026 to test whether the old scorer generalized (it scored 0 of 28). Development data.",
+  "known_failures": [],
+  "cases": [
+    {
+      "id": "paraphrase-strategy-business-moat",
+      "phrase": "How hard would it be for a rival to clone this app quickly? What protects us?",
+      "expect": "strategy-and-business/moat-thinking",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-strategy-business-unit-economics",
+      "phrase": "Time to roll this out to every clinic in the region.",
+      "expect": "strategy-and-business/unit-economics",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-build-discipline-not-another-product",
+      "phrase": "New project idea: I'm going to scaffold a fresh repo for it tonight.",
+      "expect": "build-discipline/not-another-product",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-build-discipline-done-is-done",
+      "phrase": "That release from last month bugs me; I'd like to rebuild it from scratch.",
+      "expect": "build-discipline/done-is-done",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-build-discipline-scope-lock",
+      "phrase": "Oh, and since we are in here, can you also add CSV export?",
+      "expect": "build-discipline/scope-lock",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-decision-discipline-kill-criteria",
+      "phrase": "We're kicking off a platform modernization program next quarter.",
+      "expect": "decision-discipline/kill-criteria",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-decision-discipline-pick-one",
+      "phrase": "Options: Postgres, DynamoDB, or Firestore, or some mix of them.",
+      "expect": "decision-discipline/pick-one",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-quality-watch-is-claude-just-agreeing",
+      "phrase": "Be honest, where am I wrong about this plan?",
+      "expect": "claude-quality-watch/claude-disagrees",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-engineering-floor-migration-not-mutation",
+      "phrase": "I'll fix those bad status values directly in the production table.",
+      "expect": "engineering-floor/migration-not-mutation",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-engineering-floor-tokens-not-values",
+      "phrase": "Use #3A8FBC for the header background, it looks right.",
+      "expect": "engineering-floor/tokens-not-values",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-communication-craft-acknowledgment-first",
+      "phrase": "Drafting my answer to her email; first line: 'However, you missed my point.'",
+      "expect": "communication-craft/acknowledgment-first",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-communication-craft-apologies-without-excuses",
+      "phrase": "Apologies for the late report. In fairness, I had three other launches.",
+      "expect": "communication-craft/apologies-without-excuses",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-communication-craft-is-this-a-no",
+      "phrase": "He said he'd consider my proposal two weeks ago and has gone quiet.",
+      "expect": "communication-craft/is-this-a-no",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-communication-craft-when-someone-shares-bad-news",
+      "phrase": "My colleague told me her father died; help me write back.",
+      "expect": "communication-craft/when-someone-shares-bad-news",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-communication-craft-when-someone-shares-good-news",
+      "phrase": "My teammate was named director today. What should I text her?",
+      "expect": "communication-craft/when-someone-shares-good-news",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-communication-craft-difficult-conversation-prep",
+      "phrase": "Tomorrow I need to tell a pharmacist on my team that her error rate is unacceptable.",
+      "expect": "communication-craft/difficult-conversation-prep",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-communication-craft-thank-you-overdue",
+      "phrase": "A peer spent her weekend fixing my deck and I never acknowledged it.",
+      "expect": "communication-craft/thank-you-overdue",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-strategy-and-business-vendor-as-resource",
+      "phrase": "Email the vendor and tell them to fix the integration by Friday.",
+      "expect": "strategy-and-business/vendor-as-resource",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-dispatch-this",
+      "phrase": "Research the three main competitors and give me a writeup this afternoon.",
+      "expect": "claude-effective-usage/dispatch-this",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-switch-to-chat",
+      "phrase": "Let's just talk through positioning ideas, no code needed.",
+      "expect": "claude-effective-usage/switch-to-chat-instead",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-use-cowork",
+      "phrase": "I'll be revising this proposal all week; where should the draft live?",
+      "expect": "claude-effective-usage/use-cowork-not-code",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-invoke-subagent",
+      "phrase": "Find every place we call the payments API and just tell me the count.",
+      "expect": "claude-effective-usage/invoke-subagent",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-monitor-instead-of-poll",
+      "phrase": "I'll check the deploy every 30 seconds with a while loop until it finishes.",
+      "expect": "claude-effective-usage/monitor-instead-of-poll",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-prefer-dedicated-mcp",
+      "phrase": "Take a screenshot of the Slack channel and read the messages from it.",
+      "expect": "claude-effective-usage/prefer-dedicated-mcp",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-single-message-multi-tool",
+      "phrase": "Open a.ts first, then b.ts after that, then c.ts, and compare them.",
+      "expect": "claude-effective-usage/single-message-multi-tool",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-pin-this",
+      "phrase": "Good insight, keep that somewhere I can find next week.",
+      "expect": "claude-effective-usage/pin-this",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-clear-context-when-stale",
+      "phrase": "You've reverted my fix twice now; you're not tracking our changes.",
+      "expect": "claude-effective-usage/clear-context-when-stale",
+      "gate": false
+    },
+    {
+      "id": "paraphrase-claude-effective-usage-summarize-and-archive",
+      "phrase": "OK, that problem's handled. I'll open a fresh conversation for the next task.",
+      "expect": "claude-effective-usage/summarize-and-archive",
+      "gate": false
+    }
+  ]
+}
