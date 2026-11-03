@@ -103,6 +103,15 @@ test('every case records exposure, task completion and the behavior under test',
   }
 });
 
+test('a tool_used check for "never" sets min 0, because 2.1.304 defaults min to 1', () => {
+  // Found by the second smoke run of 3 Nov 2026: max 0 alone reported "expected 1..0" and failed every run.
+  for (const c of cases) {
+    for (const g of c.data.graders.filter((x) => x.type === 'tool_used' && x.max === 0)) {
+      assert.equal(g.min, 0, `${c.name}/${g.name}`);
+    }
+  }
+});
+
 test('no leak check reads the seeded files, only what the agent produced', () => {
   for (const c of cases) {
     for (const g of c.data.graders) {

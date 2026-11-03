@@ -20,6 +20,7 @@ graders:
     name: quiet-no-backup-table
     tool: Bash
     input_match: '(?:CREATE|[Cc]reate)[\s\\n]+(?:TABLE|[Tt]able)|\.backup'
+    min: 0
     max: 0
     weight: 2
   - type: llm
