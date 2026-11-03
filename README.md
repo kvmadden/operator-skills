@@ -1,12 +1,23 @@
 # operator-skills
 
-A Claude Code plugin of 10 skills, 117 short rules and 2 hooks that each name one common failure in agent-assisted coding work and prescribe a specific correction.
+A Claude Code plugin of 10 skills and 118 short rules that name common failures in agent-assisted coding and say what to do instead, plus 2 hooks. The rules are prompts. Five safety floors tell the agent to stop before a risky action. Nothing here is an enforcement control, and nothing here has been measured in a live session yet.
+
+## Status, with evidence
+
+| Question | Answer | Evidence |
+|---|---|---|
+| Does a rule change what the agent does in a live session? | Not measured. 0 sessions run. | A harness exists in [evals/](evals/README.md), not run. Running it calls a model API, which is the owner's decision. |
+| Is the plugin well formed? | Yes, by a validator that opens every file. | 10 of 10 skills and 118 of 118 rules pass: valid YAML, every rule linked, all four rule sections, descriptions within Claude Code's listing cap. |
+| Do the hooks follow the current Claude Code hook contract? | Yes, on fixtures. | 21 of 21 contract tests pass on temporary git repos, using payloads reconstructed from Claude Code 2.1.304 (not captured live). |
+| Does the visible skill text contain the intended words? | Partly. This is a lint, not routing accuracy. | Development data only: 7 of 28 shipped phrases, 5 of 28 should-fire probes, 30 of 30 stay-quiet probes. See [docs/EVALUATION.md](docs/EVALUATION.md). |
+
+The earlier headline, "28 of 28 test phrases point to the intended rule", was a self-consistency check. The phrases matched strings that had been copied into skill metadata Claude Code never reads. Scored only on the text Claude Code can see, the same 28 phrases gave 12 of 28 before this branch.
 
 ## Problem
 
-Long coding sessions with an AI agent fail in repeatable ways. The agent agrees with a weak plan three times in a row. It writes code against an API that does not exist. A "quick fix" widens into a different feature. A credential lands in a log. An unattended run drifts because nobody wrote down what it was allowed to do.
+Long coding sessions with an AI agent fail in repeatable ways. The agent agrees with a weak plan three times in a row. It writes code against an API that does not exist. A quick fix widens into a different feature. A credential lands in a log. A cleanup rewrites forty thousand rows with no way back.
 
-Each failure is easy to correct once someone names it. The trouble is that nobody names it at the moment it happens. This plugin writes the naming down as rules the agent can load when the matching situation appears, so the correction does not depend on the person remembering to ask for it.
+Each failure is easy to correct once someone names it. The trouble is that nobody names it at the moment it happens. These rules write the naming down so the agent can apply it when the situation appears.
 
 ## How it works
 
@@ -14,111 +25,103 @@ Each failure is easy to correct once someone names it. The trouble is that nobod
 flowchart LR
     A[User message or agent action] --> B{Skill description matches?}
     B -- no --> Z[No skill loaded]
-    B -- yes --> C[SKILL.md index loads]
-    C --> D[Agent opens the one rule whose trigger matches]
+    B -- yes --> C[SKILL.md loads: rule table, precedence, trigger catalogue]
+    C --> D[Agent opens the one rule that fits]
     D --> E[Short response from the rule]
-    E --> F[Yield to the user]
+    E --> F[Yield, or stop for a safety floor]
 ```
 
-- Each skill is a `SKILL.md` with a `description` that lists the situations where it applies, plus a table that points to one file per rule in `rules/`.
-- A rule file has the same shape every time: the pattern, the response (usually two to four lines), when to stay quiet (suppression), and how the user can override it.
-- Two hooks ship with the plugin: `Stop` prints a warning when a session ends inside a git worktree under `.claude/worktrees/` that has commits not yet merged to `main` or `master`, and `SubagentStop` appends one JSON line per subagent run to `.claude/agent-activity.jsonl`.
+- Each skill is a `SKILL.md` whose short description starts with when not to use it, then names the situations. Claude Code shows at most 1,536 characters of a description, so the long trigger lists live in the SKILL.md body.
+- Every rule file has the same four sections: the pattern, the response, when to stay quiet, and how the operator can override it. The validator enforces this.
+- One precedence table ([docs/PRECEDENCE.md](docs/PRECEDENCE.md)) is copied into every SKILL.md. It sets four tiers, allows one correction per turn, and names an owner for each situation two rules both claim.
+
+## Skills
 
 | Skill | Failure it covers | Rules |
 |---|---|---|
-| `claude-quality-watch` | Agent drift: sycophancy, invented APIs and citations, unchecked claims about current state, being led by momentum | 8 |
-| `engineering-floor` | Secrets in chat or repos, in-place data changes, auth only in the UI, missing error and empty states, vague commit messages | 20 |
-| `build-discipline` | Output mistaken for outcome, missing brief, scope creep, polish before the feature works, starting another project | 20 |
-| `decision-discipline` | Options with no pick, unstated trade-offs, no kill criteria, reversible and irreversible calls treated alike | 8 |
-| `solo-run` | Unattended runs without a written contract, stop conditions, log and debrief | 5 |
-| `honesty-and-calibration` | "Done" or "stable" claimed without outside use, rejecting an option without its strongest case | 4 |
-| `claude-effective-usage` | Wrong surface or tool tier, serial tool calls that could be parallel, polling, stale context | 10 |
-| `claude-usage-discipline` | Context and cost budgeting, handoffs, parking stray ideas, repeated re-prompts | 11 |
-| `communication-craft` | Hedged asks, weak closings, apologies with "but", over-explaining, drafts that never pick a position | 23 |
-| `strategy-and-business` | Moats, unit economics, cost versus investment, recurring spend | 8 |
+| `engineering-floor` | Safety floors (credentials, patient data, bulk data changes, schema changes, auth only in the UI) and everyday floors (errors, empty states, accessibility, contracts, tokens, tests, commit messages) | 21 |
+| `claude-quality-watch` | Drift in Claude's own output: agreement without pushback, unverified APIs and claims, paraphrase drift, being led by momentum | 8 |
+| `build-discipline` | Scope creep, polish before function, reopening shipped work, starting new work over unshipped work, missing briefs for substantial builds | 20 |
+| `solo-run` | Unattended runs without a contract, stop conditions, log and debrief | 5 |
+| `decision-discipline` | Options with no pick, unstated trade-offs, no kill criteria | 8 |
+| `honesty-and-calibration` | Maturity claims without an outside user, dismissing an option without its strongest case | 4 |
+| `claude-effective-usage` | Wrong surface or tool tier, serial calls that could be parallel, polling, stale context | 10 |
+| `claude-usage-discipline` | Wrong channel, wrong source, session boundaries, parking ideas, repeated re-asks | 11 |
+| `communication-craft` | Drafting: hedged asks, weak closings, apologies with "but", over-explaining | 23 |
+| `strategy-and-business` | Business lenses: moats, unit economics, recurring spend | 8 |
+
+Two of these skills (communication-craft and strategy-and-business, 31 of 118 rules) are general working advice, not coding checks. Decision-discipline and honesty-and-calibration (12 more) are general habits. A proposed split into a safety core and a general-advice plugin is open for the owner to decide.
+
+## Safety floors
+
+Tier 1 in the precedence table. These stop before the risky action and no mode or "explore" label switches them off.
+
+- **secrets-walk:** a credential-shaped value in chat, tool output, code or logs. Do not repeat it, rotate it first if it might be real, then contain it.
+- **phi-floor:** real-looking patient or personal data in prompts, fixtures, logs or commits. Do not copy it, ask whether it is real, offer a synthetic stand-in. Anything that could not be read is reported as "needs review", never as "none found".
+- **migration-not-mutation:** a bulk UPDATE, DELETE, TRUNCATE, MERGE or ORM bulk call on existing rows. Count first, snapshot, use a transaction, try a sample, verify.
+- **schema-discipline:** a change to the shape of stored data, including ORM schema files. Say what happens to existing rows, and keep "unknown" distinct from "none".
+- **auth-floor:** an action guarded only in the UI. Check the server, and prove it with a request that should fail.
+- The solo-run contract rules: no unattended run without scope, authority, stop conditions and an explicit go.
+
+## Hooks
+
+Both hooks are optional side effects of installing the plugin. Details, data written and the off switch are in [docs/HOOKS.md](docs/HOOKS.md).
+
+- **Stop:** in a linked git worktree, warns once per session and commit when work is not in the default branch or is uncommitted. Squash and rebase merges count as merged. It prints no shell commands built from branch names.
+- **SubagentStop:** writes one metadata line per subagent run to `~/.local/state/operator-skills/agent-activity.jsonl` (mode 600, outside the project). It never stores reply text.
 
 ## Examples
 
-These three cases are illustrative. The scenarios are invented to show how a rule changes the agent's behavior. They are not recordings of real sessions and no outcome is measured.
+These are illustrations of the intended response, written by hand. They are not recordings, and no baseline has been observed, so they do not show that the agent would otherwise fail.
 
-### 1. A pasted key
+1. **A pasted key.** The operator pastes a `.env` block to ask why a deploy fails. One line holds a live-looking payment key. With secrets-walk the agent names the kind of value without repeating it, asks the operator to rotate the key if it is real, and keeps the value out of files and summaries.
+2. **"Just run an UPDATE."** Forty thousand order rows have inconsistent status strings. With migration-not-mutation the agent counts the rows, proposes a snapshot table, a transaction with a check before commit and a five-row trial, and waits for agreement.
+3. **An import that does not exist.** Asked for retry with backoff, the agent is about to import a helper from memory. With code-i-can-actually-run it checks the installed package's types, or runs the type checker, before relying on the import.
 
-- **Situation.** A user pastes a block of `.env` contents into the chat to ask why a deploy fails. One line holds a live-looking key beginning `sk_live_`.
-- **Without the skill.** The agent quotes the block back while debugging, may copy the value into a test script, and the key now sits in the transcript and possibly in a commit.
-- **Rule that fires.** `engineering-floor/secrets-walk`.
-- **What changes.** The agent stops, does not repeat the value, and names only the pattern type ("looks like a payment-provider live key"). It asks the user to choose: this is a fake value, scrub and re-paste, or discuss moving it to an environment variable. Work resumes after the user answers.
+## Evidence and limits
 
-### 2. "Just run an UPDATE"
-
-- **Situation.** In a project database, 40,000 rows in an `orders` table have inconsistent `status` strings (`"shipped"`, `"Shipped "`, `"SHIPPED"`). The user says: "Let me just run an UPDATE on those rows to clean them up."
-- **Without the skill.** The agent writes `UPDATE orders SET status = lower(trim(status))` and runs it. If the rule was wrong (for example, a legacy value that differed on purpose), the original strings are gone.
-- **Rule that fires.** `engineering-floor/migration-not-mutation`.
-- **What changes.** The agent declines to run the statement and walks the steps: snapshot the affected rows into a backup table, write an idempotent script, apply it to five rows and check them, run it on the full set, then re-query counts. It runs the work only after the user agrees to the plan.
-
-### 3. An import that does not exist
-
-- **Situation.** The user asks for retry-with-backoff around an HTTP call. The agent is about to write `import { retryWithBackoff } from 'axios'` from memory.
-- **Without the skill.** The code looks plausible, is committed, and fails at runtime with an undefined import. The user spends time debugging a function that was never in the package.
-- **Rule that fires.** `claude-quality-watch/code-i-can-actually-run`.
-- **What changes.** Before writing the import, the agent checks the installed package (reading `node_modules/axios` and its type definitions). It finds no such export, tells the user so, and proposes either a small local helper or a separate retry package, naming which one it verified.
-
-## Evidence
-
-- `npm test` runs two scripts. `tools/validate-skills.mjs` checks the plugin and marketplace manifests, that every `SKILL.md` has frontmatter whose `name` matches its directory, that every rule link in a `SKILL.md` resolves, and that every hook command points at a file that exists. `tools/fire-test.mjs` runs the routing tests.
-- The routing tests are 28 invented phrases in `tests/fire-test-phrases.json`, each paired with the skill and rule that should handle it. The script scores each phrase against the skill descriptions and rule triggers by keyword overlap and checks that the top result matches. This is a consistency check on the written descriptions. It does not measure how Claude Code routes in a live session.
-- Result on 2026-10-30: 28 of 28 routing tests pass, and the validator reports 10 skills, 117 rules, valid manifests and hooks. `claude plugin validate` also passes on this directory.
-- No measurement of speed, accuracy or user outcomes has been made. Nothing in this repository claims any.
-
-## Design decisions and tradeoffs
-
-- **One failure per rule file.** Small files keep the cost of an unused skill to its description and index. The tradeoff is 117 files to maintain and a risk that two rules overlap, so several descriptions say which neighbouring skill owns a given phrase.
-- **Every rule has a suppression clause.** A correction that fires at the wrong time is noise. The tradeoff is more text per rule and more judgment for the agent about when to stay quiet.
-- **Soft by default, hard for a few floors.** Most rules name the pattern and yield to the user. Secrets handling, in-place data changes, schema changes without a migration plan, and unattended runs without a contract do not proceed on "trust me". The tradeoff is that these can interrupt a user who knows the risk, so most rules list an explicit override.
-- **Routing is described, then checked by a script.** The trigger phrases live in each skill's description, and a keyword-based test guards against regressions when descriptions change. The tradeoff is that a keyword test is a weak stand-in for real routing.
-- **Content only.** The plugin has no runtime dependency beyond the two shell hooks. `package.json` exists for the test scripts.
-
-## Limits
-
-- It does not prove that a skill fires in a live session. Claude Code decides when to load a skill from its name and description, and that behavior is not tested here.
-- Some rules assume files or habits the user may not have, such as a notes file, a run log or a project list. They say what to create when none exists, but the user must keep them.
-- The `metadata` blocks (`promptSignals`, `pathPatterns`, `bashPatterns`) are read by the local routing test. they are not used for routing anywhere else in this repository.
-- The `communication-craft` and `strategy-and-business` skills are general working advice, not coding checks.
-- The worktree hook looks only for paths containing `/.claude/worktrees/` and compares against a branch named `main` or `master`. `SubagentStop` extracts file names from the agent's reply with a pattern match, so the list can include false matches. It needs `jq` for clean output and falls back to a plainer record without it.
-- Rules are written as prompts. They shape what the agent says; they do not enforce anything.
+- The validator, the routing lint, 21 hook contract tests, 8 validator fixture tests, 6 routing unit tests and 4 harness checks run with `npm test` on macOS and Linux in CI.
+- The routing lint reads only text Claude Code can see. Its case files are development data: they were seen while the descriptions changed, so their numbers are development results, never a headline. A headline needs a fresh set written blind by someone who has not seen the rules, locked by checksum before its first run.
+- Rules are prompts. They shape what the agent says and does when the agent applies them. They do not block anything. The hooks warn and record metadata. They do not enforce.
+- Claude Code decides when to load a skill from its name and description. Whether it loads these at the right moments is not measured here.
+- Many rules assume habits the operator may not have, such as a notes file. They now ask before writing any file.
+- Rule content reflects one author's practice and was reviewed by four AI model families, not by an outside clinician panel or security team.
 
 ## Run locally
 
-Requires Node 20 or later.
+Requires Node 20 or later, git and jq. The eval harness also needs `sqlite3`.
 
-```
-git clone <this repository> operator-skills
+```sh
+git clone https://github.com/kvmadden/operator-skills.git
 cd operator-skills
+npm ci
 npm test
-claude plugin validate .
 claude --plugin-dir .
 ```
 
-To install from a marketplace instead, from inside Claude Code:
+From inside Claude Code, to install from the marketplace:
 
-```
+```text
 /plugin marketplace add kvmadden/operator-skills
 /plugin install operator-skills@operator-skills-marketplace
 ```
 
 Layout:
 
-```
+```text
 .claude-plugin/   plugin and marketplace manifests
-skills/<name>/    SKILL.md (index and triggers) and rules/ (one file per rule)
+skills/<name>/    SKILL.md (description, rule table, precedence, trigger catalogue) and rules/
 hooks/            Stop and SubagentStop hooks
-tests/            routing test phrases
-tools/            routing test and structure validator
+docs/             precedence, evaluation, hooks, saved evidence
+evals/            behavioral harness for claude plugin eval (not run)
+tests/            validator, routing, hook contract and harness tests, development case files
+tools/            validator, routing lint, precedence sync
 ```
 
 ## Development history
 
-Built May to October 2026 over 66 commits in a private repository. The full history includes personal notes and private configuration, so this repository is a cleaned public snapshot. The examples, validator and privacy pass described above were added for this release in October 2026.
+Built May to October 2026 in a private repository with personal notes and configuration, published as a cleaned snapshot (2 commits on main). The changes on this branch, their reasons and the review that prompted them are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
-MIT, Kevin Madden, 2026. See [LICENSE](LICENSE). All examples and test phrases are fictional or synthetic.
+MIT, Kevin Madden, 2026. See [LICENSE](LICENSE). All examples, fixtures and test phrases are fictional or synthetic.
