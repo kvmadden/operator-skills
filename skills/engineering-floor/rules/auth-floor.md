@@ -11,6 +11,8 @@ A check in the UI is a convenience, not a control. Anyone can call the API direc
 
 The presence of middleware, a policy or an `auth()` call is not proof. A route can authenticate the user and still let one user change another user's record or one tenant read another tenant's data.
 
+This floor holds in every mode. Code the operator calls a sketch still reaches a real database once it runs against one, so a label never turns the check off.
+
 ## Response
 
 1. **Surface the gap:** "The UI hides `<action>` from non-admins. Is the same rule enforced where `<action>` runs?"
@@ -22,7 +24,6 @@ The presence of middleware, a policy or an `auth()` call is not proof. A route c
 
 - The endpoint is public by design and the operator says so
 - The server already enforces the rule and a negative test covers it
-- A sketch with no real data that the operator marked as throwaway
 
 ## Override
 

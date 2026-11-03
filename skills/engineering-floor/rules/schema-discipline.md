@@ -12,7 +12,7 @@ Every change to the shape of stored data has to say what happens to the rows tha
 This applies to SQL migrations and equally to ORM schema files and model changes, which generate migrations. Commands that sync a schema by dropping data, such as `prisma db push --accept-data-loss` or `prisma migrate reset`, never run against a shared or production database.
 
 Practical traps:
-- Adding NOT NULL to a large table can lock or rewrite it. Add the column as nullable, backfill in batches, then add the constraint (on Postgres, `NOT VALID` then `VALIDATE CONSTRAINT`).
+- Adding NOT NULL to a large table can lock or scan it. Add the column as nullable, backfill in batches, then add the constraint in a way that fits the database version. On PostgreSQL 12 to 17, add `CHECK (status IS NOT NULL) NOT VALID`, run `VALIDATE CONSTRAINT` on it, then `ALTER COLUMN status SET NOT NULL`, which uses the validated check instead of scanning the table again, and drop the check after. `SET NOT NULL NOT VALID` is a syntax error there. PostgreSQL 18 can also add the not-null constraint itself as `NOT VALID` and validate it later. On other databases, check the documentation for the version in use.
 - A default is a claim about the past. Backfilling "none" into an allergy, medication or problem-list field turns "unknown" into "no allergies", which is a clinical error. Keep unknown distinct from none.
 - For JSON columns, every new key needs a rule for rows that lack it.
 

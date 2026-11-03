@@ -1,7 +1,7 @@
 ---
 title: Secrets walk. A credential never spreads, and an exposed one is rotated first
 trigger: >-
-  a credential-shaped value in chat, tool output, code, config, logs or a commit: provider prefixes such as `sk-`, `sk-proj-`, `sk-svcacct-`, `sk-ant-`, `sk_live_`, `sk_test_`, `rk_live_`, `AKIA`, `ASIA`, `ghp_`, `gho_`, `ghs_`, `github_pat_`, `glpat-`, `xoxb-`, `xoxp-`, `AIza`, `npm_`, a JWT starting `eyJ`, a private key header starting `-----BEGIN`, a connection string with a password ("postgres://user:password@host"), "pasted my .env", or a long random value next to "key", "token", "secret" or "password"
+  a credential-shaped value in chat, tool output, code, config, logs or a commit: provider prefixes such as `sk-`, `sk-proj-`, `sk-svcacct-`, `sk-admin-`, `sk-ant-`, `sk_live_`, `sk_test_`, `rk_live_`, `rk_test_`, `whsec_`, `AKIA`, `ASIA`, `ghp_`, `gho_`, `ghu_`, `ghs_`, `ghr_`, `github_pat_`, `glpat-`, `xoxb-`, `xoxp-`, `AIza`, `npm_`, a JWT starting `eyJ` with two more dot-separated parts, a private key header ending `PRIVATE KEY-----`, a connection string with a password ("postgres://user:password@host"), "pasted my .env", or a long random value next to "key", "token", "secret" or "password"
 priority: high
 ---
 
@@ -13,9 +13,9 @@ Recognize these shapes. The list is guidance for the agent. This plugin does not
 
 | Type | Shape |
 |---|---|
-| OpenAI key | `sk-` then 20 or more characters, including project keys `sk-proj-` and service account keys `sk-svcacct-` |
+| OpenAI key | `sk-` then 20 or more characters, including project keys `sk-proj-`, service account keys `sk-svcacct-` and admin keys `sk-admin-` |
 | Anthropic key | `sk-ant-` then 20 or more characters |
-| Stripe secret or restricted key | `sk_live_`, `sk_test_`, `rk_live_`, `rk_test_` |
+| Stripe secret, restricted or webhook signing key | `sk_live_`, `sk_test_`, `rk_live_`, `rk_test_`, `whsec_` |
 | AWS access key ID | `AKIA` (long-term) or `ASIA` (temporary) then 16 uppercase letters or digits. The secret key next to it has no prefix |
 | GitHub token | `ghp_`, `gho_`, `ghu_`, `ghs_`, `ghr_`, `github_pat_` |
 | GitLab token | `glpat-` |
@@ -23,7 +23,7 @@ Recognize these shapes. The list is guidance for the agent. This plugin does not
 | Google API key | `AIza` then 35 characters |
 | npm token | `npm_` |
 | JWT, including many hosted database keys | `eyJ` then two more dot-separated parts |
-| Private key | any header of the form `-----BEGIN ... PRIVATE KEY-----`, including PKCS#8 `-----BEGIN PRIVATE KEY-----`, `-----BEGIN RSA PRIVATE KEY-----` and `-----BEGIN OPENSSH PRIVATE KEY-----` |
+| Private key | any header of the form `-----BEGIN ... PRIVATE KEY-----`, including PKCS#8 `-----BEGIN PRIVATE KEY-----`, `-----BEGIN ENCRYPTED PRIVATE KEY-----`, `-----BEGIN RSA PRIVATE KEY-----`, `-----BEGIN EC PRIVATE KEY-----` and `-----BEGIN OPENSSH PRIVATE KEY-----`. A `-----BEGIN CERTIFICATE-----` or `-----BEGIN PUBLIC KEY-----` block is public and is not a secret |
 | Connection string with a password | `scheme://user:password@host` for postgres, mysql, mongodb, mongodb+srv, redis, amqp and similar |
 | Other | 32 or more random-looking characters next to "key", "token", "secret" or "password" |
 
@@ -34,7 +34,7 @@ Recognize these shapes. The list is guidance for the agent. This plugin does not
 1. **Do not repeat it.** Do not quote, echo, copy, log, commit or summarize the value. Refer to it by kind and place only: "a Stripe live key on line 3 of the pasted block".
 2. **If it might be real, rotate first.** Ask the operator to revoke or rotate it with the provider now. Cleaning files or history comes after rotation, not instead of it, because the value may already be outside the machine.
 3. **Contain it:**
-   - In a repository file: move it to an environment variable or a secret manager, keep it out of commits, and check history (`git log -p -S`) for earlier copies. If it was ever pushed, rotation is the fix and history rewriting is cleanup.
+   - In a repository file: move it to an environment variable or a secret manager, keep it out of commits, and check history for earlier copies. Search with the provider prefix or a short prefix of the value, never the whole value, and list commits and files without printing their content, for example `git log --all --oneline --name-only -S 'sk_live_'`. A full value on the command line lands in shell history and the transcript, and `git log -p` prints every copy it finds. If it was ever pushed, rotation is the fix and history rewriting is cleanup.
    - In tool output: do not copy that output into files, notes, commit messages, handoffs or summaries.
 4. **Ask which case applies, then wait** for that part of the task:
    - "fake or test value": continue, for that specific value only
