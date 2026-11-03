@@ -113,6 +113,7 @@ if [ "${#bases[@]}" -gt 0 ]; then
       pending="$(comm -12 <(printf '%s\n' "$pending") <(printf '%s\n' "$list"))"
     fi
   done
+  # shellcheck disable=SC2086 # word splitting on whitespace-separated SHAs is intended
   set -- $pending
   ahead="$#"
   if [ "$ahead" -gt 0 ]; then
@@ -123,6 +124,7 @@ if [ "${#bases[@]}" -gt 0 ]; then
       combined="$(g diff "$mb" HEAD | g patch-id --stable | cut -d' ' -f1)"
       [ -n "$combined" ] || continue
       checked=0
+      # shellcheck disable=SC2013,SC2046 # one SHA per line, splitting is intended
       for c in $(g rev-list --no-merges --max-count=100 "$mb..$b"); do
         checked=$((checked + 1))
         pid="$(g show --format= "$c" | g patch-id --stable | cut -d' ' -f1)"
