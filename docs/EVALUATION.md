@@ -50,6 +50,10 @@ Saved runs: docs/evidence/routing-before-description-rewrite.txt, routing-after-
 
 tests/hook-contract.test.mjs runs both hooks against temporary git repositories and payload fixtures reconstructed from the Claude Code 2.1.304 bundle. 21 of 21 pass on macOS. CI runs them on macOS and Linux. Before this branch, a SubagentStop payload with the real fields produced no record, the Stop warning was printed as plain stdout that Claude Code does not show, and a squash-merged branch was reported as unmerged. The fixtures are not captured from a live session, which is a limit.
 
+## Context cost
+
+`claude plugin details operator-skills` (Claude Code's own estimate) reported about 8,556 always-on tokens per session for v1.0.0 and about 2,019 after the description rewrite. Always-on means added to every session before any skill fires. `claude plugin validate --strict` passes on this branch.
+
 ## Behavioral harness, not run
 
 evals/ holds eight paired cases for `claude plugin eval` with three arms: without the plugin, with it, and a placebo plugin of generic caution. See evals/README.md for the commands, the cost cap and the reporting rules. It has not been run, because running it sends repository content to a model API. That decision belongs to the owner.

@@ -9,6 +9,7 @@ A Claude Code plugin of 10 skills and 118 short rules that name common failures 
 | Does a rule change what the agent does in a live session? | Not measured. 0 sessions run. | A harness exists in [evals/](evals/README.md), not run. Running it calls a model API, which is the owner's decision. |
 | Is the plugin well formed? | Yes, by a validator that opens every file. | 10 of 10 skills and 118 of 118 rules pass: valid YAML, every rule linked, all four rule sections, descriptions within Claude Code's listing cap. |
 | Do the hooks follow the current Claude Code hook contract? | Yes, on fixtures. | 21 of 21 contract tests pass on temporary git repos, using payloads reconstructed from Claude Code 2.1.304 (not captured live). |
+| What does the plugin cost in context before any skill fires? | About 2,019 tokens per session, down from about 8,556. | `claude plugin details operator-skills` (Claude Code's own estimate) before and after the description rewrite. |
 | Does the visible skill text contain the intended words? | Partly. This is a lint, not routing accuracy. | Development data only: 7 of 28 shipped phrases, 5 of 28 should-fire probes, 30 of 30 stay-quiet probes. See [docs/EVALUATION.md](docs/EVALUATION.md). |
 
 The earlier headline, "28 of 28 test phrases point to the intended rule", was a self-consistency check. The phrases matched strings that had been copied into skill metadata Claude Code never reads. Scored only on the text Claude Code can see, the same 28 phrases gave 12 of 28 before this branch.
