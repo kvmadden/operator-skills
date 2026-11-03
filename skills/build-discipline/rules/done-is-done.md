@@ -1,6 +1,7 @@
 ---
 title: Done is done — shipped work stays shipped unless something earns the reopen
-trigger: "let me revisit" / "actually, let me redo" / "going back to" / "while we're here, let me also fix" / "let me refactor" / "this needs another pass" — applied to something with shipped / stable / done / v1 status
+trigger: >-
+  "let me revisit" / "actually, let me redo" / "going back to" / "while we're here, let me also fix" / "let me refactor" / "this needs another pass" — applied to something with shipped / stable / done / v1 status
 priority: medium
 ---
 

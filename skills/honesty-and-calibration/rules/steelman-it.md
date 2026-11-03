@@ -1,6 +1,7 @@
 ---
 title: Steelman it — strongest version before rejection
-trigger: "no way" / "that won't work" / "that's a bad idea" / "we shouldn't do X" / "obviously no" — dismissal in <30 seconds without engaging the option's strength
+trigger: >-
+  "no way" / "that won't work" / "that's a bad idea" / "we shouldn't do X" / "obviously no" — dismissal in <30 seconds without engaging the option's strength
 priority: medium
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: Prefer the dedicated MCP — right tool tier beats the generic one
-trigger: "just screenshot" / "screenshot Slack" / "look at the screen" / about to use a generic tool tier (computer-use, screenshots) when a dedicated app MCP exists — dedicated app MCP > browser MCP > computer-use; PDF MCP > raw file read; database MCP > shell SQL
+trigger: >-
+  "just screenshot" / "screenshot Slack" / "look at the screen" / about to use a generic tool tier (computer-use, screenshots) when a dedicated app MCP exists — dedicated app MCP > browser MCP > computer-use; PDF MCP > raw file read; database MCP > shell SQL
 priority: medium
 ---
 

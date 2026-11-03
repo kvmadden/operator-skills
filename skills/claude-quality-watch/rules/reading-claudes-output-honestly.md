@@ -1,6 +1,7 @@
 ---
 title: Reading Claude's output honestly — skim-and-trust catches
-trigger: "ship it" / "looks good" / "that works" / "perfect" / "great" / "yes" within seconds of a 200+ line output; rapid approval of multi-file changes without diff review
+trigger: >-
+  "ship it" / "looks good" / "that works" / "perfect" / "great" / "yes" within seconds of a 200+ line output; rapid approval of multi-file changes without diff review
 priority: medium
 ---
 

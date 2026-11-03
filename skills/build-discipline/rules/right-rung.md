@@ -1,6 +1,7 @@
 ---
 title: Right rung — refuse polish on a broken engine
-trigger: "let me polish" / "smooth this out" / "let's add an animation" / "tighten the spacing" / "the hover should" / "let's make this nicer" — combined with a broken engine (failing test, error in dev, end-to-end flow broken, real data not flowing)
+trigger: >-
+  "let me polish" / "smooth this out" / "let's add an animation" / "tighten the spacing" / "the hover should" / "let's make this nicer" — combined with a broken engine (failing test, error in dev, end-to-end flow broken, real data not flowing)
 priority: high
 ---
 

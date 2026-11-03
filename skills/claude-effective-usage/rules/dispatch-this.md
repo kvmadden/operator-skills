@@ -1,6 +1,7 @@
 ---
 title: Dispatch this — async multi-step work belongs in Claude Dispatch
-trigger: "by EOD" / "have this ready when I get back" / "investigate X and report" / "go gather all the Y and summarize" / "research [topic] and produce [output]" / "while I'm doing other things, can you"
+trigger: >-
+  "by EOD" / "have this ready when I get back" / "investigate X and report" / "go gather all the Y and summarize" / "research [topic] and produce [output]" / "while I'm doing other things, can you"
 priority: medium
 ---
 

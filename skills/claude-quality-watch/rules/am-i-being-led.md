@@ -1,6 +1,7 @@
 ---
 title: Direction-by-momentum — operator didn't actively choose
-trigger: "wait, why are we doing X?" / "how did we end up here?" / "I don't think this was my idea" / Claude self-catches confident push without operator endorsement
+trigger: >-
+  "wait, why are we doing X?" / "how did we end up here?" / "I don't think this was my idea" / Claude self-catches confident push without operator endorsement
 priority: high
 ---
 

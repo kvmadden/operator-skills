@@ -1,6 +1,7 @@
 ---
 title: Re-prompt cleaner — third re-ask means the question is wrong
-trigger: "no, I meant" / "let me try again" / "actually, what I want is" / "ok let me re-phrase" / 3+ near-identical prompts about the same topic in the last 10 turns; "ugh" / "no no no" / "that's not it either"
+trigger: >-
+  "no, I meant" / "let me try again" / "actually, what I want is" / "ok let me re-phrase" / 3+ near-identical prompts about the same topic in the last 10 turns; "ugh" / "no no no" / "that's not it either"
 priority: medium
 ---
 

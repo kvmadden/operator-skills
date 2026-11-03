@@ -1,6 +1,7 @@
 ---
 title: Am I skill overengineering — building the system vs doing the work
-trigger: "let's add a skill for" / "we need a skill" / "I'll spec a new one" / "build me skill X" / opening a new SKILL.md to author / proposing 3+ new skill ideas in one session
+trigger: >-
+  "let's add a skill for" / "we need a skill" / "I'll spec a new one" / "build me skill X" / opening a new SKILL.md to author / proposing 3+ new skill ideas in one session
 priority: high
 ---
 

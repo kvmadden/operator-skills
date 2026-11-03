@@ -1,6 +1,7 @@
 ---
 title: Question or statement — punctuation matches intent
-trigger: "?" at the end of a statement the operator has actually decided; "." at the end of a real question; asks buried in "let me know if you have thoughts" / soft-FYI framing; hedging that obscures whether action is requested
+trigger: >-
+  "?" at the end of a statement the operator has actually decided; "." at the end of a real question; asks buried in "let me know if you have thoughts" / soft-FYI framing; hedging that obscures whether action is requested
 priority: low
 ---
 

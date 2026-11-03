@@ -1,6 +1,7 @@
 ---
 title: Unbuilt products — capture the idea, don't act on it
-trigger: "I should build" / "what if I made" / "someone should build" / "would be cool if there was" / "wish there was a tool that" — any idea mentioned without commitment
+trigger: >-
+  "I should build" / "what if I made" / "someone should build" / "would be cool if there was" / "wish there was a tool that" — any idea mentioned without commitment
 priority: medium
 cadence: quarterly resurface of unbuilt list
 ---

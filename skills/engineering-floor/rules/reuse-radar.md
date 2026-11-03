@@ -1,6 +1,7 @@
 ---
 title: Reuse radar — check existing code before re-deriving
-trigger: "I'll create a [component / function / utility] for X" / "let me build a [thing] that does [Y]" / new file with name suggesting a common utility
+trigger: >-
+  "I'll create a [component / function / utility] for X" / "let me build a [thing] that does [Y]" / new file with name suggesting a common utility
 priority: medium
 ---
 

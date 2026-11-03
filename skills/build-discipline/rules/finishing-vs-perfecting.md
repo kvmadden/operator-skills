@@ -1,6 +1,7 @@
 ---
 title: Finishing vs perfecting — finished beats perfect
-trigger: "one more pass" / "after I fix X I'll be done" / piece has been "almost done" for weeks
+trigger: >-
+  "one more pass" / "after I fix X I'll be done" / piece has been "almost done" for weeks
 priority: high
 ---
 

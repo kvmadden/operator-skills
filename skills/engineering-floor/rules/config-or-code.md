@@ -1,6 +1,7 @@
 ---
 title: Config or code — extract what varies
-trigger: "let's hardcode" / "I'll just write it inline" / "set this to <value>" / any inline hex code, magic number, or template string being added
+trigger: >-
+  "let's hardcode" / "I'll just write it inline" / "set this to <value>" / any inline hex code, magic number, or template string being added
 priority: medium
 ---
 

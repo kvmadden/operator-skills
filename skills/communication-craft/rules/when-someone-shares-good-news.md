@@ -1,6 +1,7 @@
 ---
 title: celebrate-first — receive shared good news without deflect, qualify, or pivot
-trigger: Someone shares good news with the operator (a win, promotion, milestone, shipped work, recognition) and the operator is about to respond. Fires on celebratory shares. — phrasings: "just got promoted" / "shared good news"
+trigger: >-
+  Someone shares good news with the operator (a win, promotion, milestone, shipped work, recognition) and the operator is about to respond. Fires on celebratory shares. — phrasings: "just got promoted" / "shared good news"
 priority: medium
 ---
 

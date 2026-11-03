@@ -1,6 +1,7 @@
 ---
 title: Schema discipline — no shape change without a migration plan
-trigger: "let's add a field" / "rename this column" / "change the type to" / "restructure this" / "split this table" / "merge these" / "drop the [field]" / "make this required" / edits to `*.sql` migration files / type definitions for persisted data / JSONB shape changes
+trigger: >-
+  "let's add a field" / "rename this column" / "change the type to" / "restructure this" / "split this table" / "merge these" / "drop the [field]" / "make this required" / edits to `*.sql` migration files / type definitions for persisted data / JSONB shape changes
 priority: high
 ---
 

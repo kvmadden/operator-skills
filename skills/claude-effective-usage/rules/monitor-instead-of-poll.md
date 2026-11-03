@@ -1,6 +1,7 @@
 ---
 title: Monitor instead of poll — event-driven beats sleep-loops
-trigger: "sleep loop" / "poll the deploy" / "poll until" / "keep checking" / "wait for it to finish" / about to write a retry-with-delay loop for a condition that could be event-driven (deploys, status checks, background jobs)
+trigger: >-
+  "sleep loop" / "poll the deploy" / "poll until" / "keep checking" / "wait for it to finish" / about to write a retry-with-delay loop for a condition that could be event-driven (deploys, status checks, background jobs)
 priority: medium
 ---
 

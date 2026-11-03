@@ -10,5 +10,10 @@
     "validate": "node tools/validate-skills.mjs"
   },
   "license": "MIT",
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "yaml": "2.9.1"
+  }
 }

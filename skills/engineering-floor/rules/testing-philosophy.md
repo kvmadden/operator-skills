@@ -1,6 +1,7 @@
 ---
 title: Testing philosophy — test the contract, not the implementation
-trigger: "let me write a test" / "add a test for" / "I should test this" / "let me mock this" / `*.test.*` files being created / `expect(...).toHaveBeenCalled` / `.toHaveBeenCalledWith` patterns
+trigger: >-
+  "let me write a test" / "add a test for" / "I should test this" / "let me mock this" / `*.test.*` files being created / `expect(...).toHaveBeenCalled` / `.toHaveBeenCalledWith` patterns
 priority: medium
 ---
 

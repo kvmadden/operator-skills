@@ -1,6 +1,7 @@
 ---
 title: Hold space, don't fix — when someone shares bad news
-trigger: Someone shares hard news with the operator (a death, job loss, diagnosis, relationship ending, a serious setback) and the operator is about to respond. Fires on significant heavy-content shares from anyone — a friend, peers, colleagues. — phrasings: "shared some hard news" / "someone shared bad news"
+trigger: >-
+  Someone shares hard news with the operator (a death, job loss, diagnosis, relationship ending, a serious setback) and the operator is about to respond. Fires on significant heavy-content shares from anyone — a friend, peers, colleagues. — phrasings: "shared some hard news" / "someone shared bad news"
 priority: medium
 ---
 

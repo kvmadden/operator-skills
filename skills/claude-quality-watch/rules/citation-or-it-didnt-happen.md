@@ -1,6 +1,7 @@
 ---
 title: Stale current-state claim — memory not verified
-trigger: "as of now" / "currently" / "the latest version of [X] is" / "[Service] recently added" / "the new [feature] supports" / any temporally-bounded claim about state without fresh verification
+trigger: >-
+  "as of now" / "currently" / "the latest version of [X] is" / "[Service] recently added" / "the new [feature] supports" / any temporally-bounded claim about state without fresh verification
 priority: medium
 ---
 

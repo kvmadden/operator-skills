@@ -1,6 +1,7 @@
 ---
 title: Single message, multiple tools — batch independent calls in parallel
-trigger: "read this file, then" / "then that file" / "one at a time" / about to make multiple INDEPENDENT tool calls sequentially — Read→Read→Read for known files, grep→grep for separate patterns, several non-dependent Bash commands, or spawning agents one at a time
+trigger: >-
+  "read this file, then" / "then that file" / "one at a time" / about to make multiple INDEPENDENT tool calls sequentially — Read→Read→Read for known files, grep→grep for separate patterns, several non-dependent Bash commands, or spawning agents one at a time
 priority: medium
 ---
 

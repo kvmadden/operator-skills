@@ -1,6 +1,7 @@
 ---
 title: v1 versus v2 — typical case ships before edge cases
-trigger: "for v2" / "we should also" / "edge case" / "polish for later" / "optimize" / "make it scale" / "what if [unusual case]" / "for power users" — proposed before v1 has shipped
+trigger: >-
+  "for v2" / "we should also" / "edge case" / "polish for later" / "optimize" / "make it scale" / "what if [unusual case]" / "for power users" — proposed before v1 has shipped
 priority: medium
 ---
 

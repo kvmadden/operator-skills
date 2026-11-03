@@ -1,6 +1,7 @@
 ---
 title: Switch to Chat instead — open-ended exploration belongs in Claude Chat
-trigger: "let me think about" / "brainstorm with me" / "what do you think of" / "I'm trying to figure out" / "help me think through" / 5+ message back-and-forth with no tool calls or file edits
+trigger: >-
+  "let me think about" / "brainstorm with me" / "what do you think of" / "I'm trying to figure out" / "help me think through" / 5+ message back-and-forth with no tool calls or file edits
 priority: medium
 ---
 

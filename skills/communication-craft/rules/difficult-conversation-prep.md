@@ -1,6 +1,7 @@
 ---
 title: difficult-conversation-prep — structure a hard conversation before having it
-trigger: "I have to talk to [person] about", "difficult conversation with", "tough convo coming up", "I need to address", "performance conversation", "hard feedback" — the moment the operator announces an upcoming hard conversation
+trigger: >-
+  "I have to talk to [person] about", "difficult conversation with", "tough convo coming up", "I need to address", "performance conversation", "hard feedback" — the moment the operator announces an upcoming hard conversation
 priority: medium
 ---
 

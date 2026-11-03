@@ -1,6 +1,7 @@
 ---
 title: Decision log — substantive decisions get captured
-trigger: "let's go with" / "decided" / "the call is" / "I'm picking" / "going with" / "we're doing X not Y" / "final answer" / "locking this in" / "the decision is"
+trigger: >-
+  "let's go with" / "decided" / "the call is" / "I'm picking" / "going with" / "we're doing X not Y" / "final answer" / "locking this in" / "the decision is"
 priority: medium
 ---
 

@@ -1,6 +1,7 @@
 ---
 title: Brief first — no implementation without a one-page brief
-trigger: "let's build [X]" / "make me a [X]" / "I want a [X]" / "create a [X]" / "spin up a [X]" / "I need a [X]" — any implementation request without a prior brief
+trigger: >-
+  "let's build [X]" / "make me a [X]" / "I want a [X]" / "create a [X]" / "spin up a [X]" / "I need a [X]" — any implementation request without a prior brief
 priority: high
 ---
 

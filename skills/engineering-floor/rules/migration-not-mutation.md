@@ -1,6 +1,7 @@
 ---
 title: Migration not mutation — never UPDATE existing rows in place
-trigger: "let me UPDATE" / "let me just run an UPDATE" / "run an UPDATE" / "run an update on those rows" / "clean them up" / "run a one-off SQL" / "mutate the existing rows" / "fix up the data" / "let's clean these up" / "transform these rows in place" / "consolidate these duplicates" / "rename these values"
+trigger: >-
+  "let me UPDATE" / "let me just run an UPDATE" / "run an UPDATE" / "run an update on those rows" / "clean them up" / "run a one-off SQL" / "mutate the existing rows" / "fix up the data" / "let's clean these up" / "transform these rows in place" / "consolidate these duplicates" / "rename these values"
 priority: high
 ---
 

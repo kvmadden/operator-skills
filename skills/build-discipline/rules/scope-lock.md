@@ -1,6 +1,7 @@
 ---
 title: Scope lock — "and also" mid-build
-trigger: "and also" / "what if we added" / "while we're at it" — new piece surfacing mid-build
+trigger: >-
+  "and also" / "what if we added" / "while we're at it" — new piece surfacing mid-build
 priority: medium
 ---
 

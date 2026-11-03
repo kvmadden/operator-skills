@@ -1,6 +1,7 @@
 ---
 title: Useful test — for what kind of task, for whom, at what moment
-trigger: "useful" claimed without specificity
+trigger: >-
+  "useful" claimed without specificity
 priority: medium
 ---
 

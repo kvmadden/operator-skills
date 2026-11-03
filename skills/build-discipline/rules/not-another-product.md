@@ -1,6 +1,7 @@
 ---
 title: Not another product — check existing pile before starting new
-trigger: "I want to build" / "I want to start a new" / "I want to start a new app" / "spin it up tonight" / "spin this up tonight" / "I'm going to make a" / "new app idea" / "I'll spin up" / "starting a new" / "let me spin up" / "let's build [thing] also" / "what if I made a [Y]" — when existing projects have unshipped phases
+trigger: >-
+  "I want to build" / "I want to start a new" / "I want to start a new app" / "spin it up tonight" / "spin this up tonight" / "I'm going to make a" / "new app idea" / "I'll spin up" / "starting a new" / "let me spin up" / "let's build [thing] also" / "what if I made a [Y]" — when existing projects have unshipped phases
 priority: high
 ---
 

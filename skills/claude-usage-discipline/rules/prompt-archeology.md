@@ -1,6 +1,7 @@
 ---
 title: Prompt archeology — archive prompts that worked
-trigger: "perfect" / "exactly" / "that's it" / "nailed it" / "great answer" / "wow that worked" / "first try" / "no edits needed"
+trigger: >-
+  "perfect" / "exactly" / "that's it" / "nailed it" / "great answer" / "wow that worked" / "first try" / "no edits needed"
 priority: medium
 ---
 

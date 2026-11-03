@@ -1,6 +1,7 @@
 ---
 title: Pin this — crystallize a durable conclusion before it evaporates
-trigger: "save this" / "remember this" / "that's an important point" / "ok we're going with X" / "let's commit to Y" / a clear decision, insight, or commitment surfaces that the operator will reference again
+trigger: >-
+  "save this" / "remember this" / "that's an important point" / "ok we're going with X" / "let's commit to Y" / a clear decision, insight, or commitment surfaces that the operator will reference again
 priority: medium
 ---
 

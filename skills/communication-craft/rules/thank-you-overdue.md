@@ -1,6 +1,7 @@
 ---
 title: thank-you-overdue — surface meaningful help that hasn't been acknowledged
-trigger: Context shows someone helped the operator in a meaningful way AND no thank-you has been sent — "X helped me with Y", "Z's advice unblocked me", "thanks to W I figured out", or any acknowledgment-of-help moment without a recorded thank-you in return. — phrasings: "should I thank" / "never thanked them"
+trigger: >-
+  Context shows someone helped the operator in a meaningful way AND no thank-you has been sent — "X helped me with Y", "Z's advice unblocked me", "thanks to W I figured out", or any acknowledgment-of-help moment without a recorded thank-you in return. — phrasings: "should I thank" / "never thanked them"
 priority: medium
 ---
 

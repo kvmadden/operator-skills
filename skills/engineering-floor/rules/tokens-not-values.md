@@ -1,6 +1,7 @@
 ---
 title: Tokens not values — never inline design literals
-trigger: "let me hardcode" / "let me just hardcode" / "hardcode this color" / "hardcode the value" / "I'll just use" + hex code / inline hex codes (`#xxxxxx`, `rgb(...)`, `hsl(...)`) / Tailwind arbitrary values (`p-[17px]`, `text-[19px]`, `bg-[#abc123]`) / CSS literals (`padding: 17px`, `margin: 22px`, `border-radius: 7px`) / off-scale spacing / off-scale type sizes
+trigger: >-
+  "let me hardcode" / "let me just hardcode" / "hardcode this color" / "hardcode the value" / "I'll just use" + hex code / inline hex codes (`#xxxxxx`, `rgb(...)`, `hsl(...)`) / Tailwind arbitrary values (`p-[17px]`, `text-[19px]`, `bg-[#abc123]`) / CSS literals (`padding: 17px`, `margin: 22px`, `border-radius: 7px`) / off-scale spacing / off-scale type sizes
 priority: high
 ---
 

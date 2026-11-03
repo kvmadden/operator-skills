@@ -1,6 +1,7 @@
 ---
 title: Impact check — polish work without user validation
-trigger: "let me clean up" / "polishing" / "refining" / "let me make this nicer" / "tighten up" / "smoother" / "more elegant" — polish on a feature where no users yet exist
+trigger: >-
+  "let me clean up" / "polishing" / "refining" / "let me make this nicer" / "tighten up" / "smoother" / "more elegant" — polish on a feature where no users yet exist
 priority: medium
 ---
 

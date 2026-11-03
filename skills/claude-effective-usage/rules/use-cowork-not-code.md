@@ -1,6 +1,7 @@
 ---
 title: Use Cowork not Code — long-form document drafting belongs in Claude Cowork
-trigger: "persistent doc" / "keep editing across sessions" / "draft a proposal" / "write the brief" / "let's outline this essay" / "I need a spec doc" / 3+ rounds of "make it shorter" / "lengthen this section"
+trigger: >-
+  "persistent doc" / "keep editing across sessions" / "draft a proposal" / "write the brief" / "let's outline this essay" / "I need a spec doc" / 3+ rounds of "make it shorter" / "lengthen this section"
 priority: medium
 ---
 

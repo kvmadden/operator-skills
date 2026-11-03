@@ -1,6 +1,7 @@
 ---
 title: Finish the roadmap — closest-to-shipping over starting fresh
-trigger: "what should I work on" / "what's the next thing" / "where should I focus" / "I have time — what's most important" at high-energy session start
+trigger: >-
+  "what should I work on" / "what's the next thing" / "where should I focus" / "I have time — what's most important" at high-energy session start
 priority: medium
 ---
 

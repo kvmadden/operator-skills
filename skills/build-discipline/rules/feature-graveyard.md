@@ -1,6 +1,7 @@
 ---
 title: Feature graveyard — capture what was cut and why
-trigger: "let me delete this" / "removing the X feature" / "cutting this" / "this is gone" / "deprecating" — any feature being removed from the codebase
+trigger: >-
+  "let me delete this" / "removing the X feature" / "cutting this" / "this is gone" / "deprecating" — any feature being removed from the codebase
 priority: low
 ---
 
