@@ -22,7 +22,8 @@
 // a word boundary. A quoted phrase inside a "Do NOT use" clause suppresses the
 // skill. A skill fires at a score of 2 or more (word count of each distinct
 // matched phrase, 2 per token). A tie for first place is reported as a tie and
-// counts as a failure.
+// counts as a failure. A quoted phrase negated within the three words before
+// it is ignored.
 //
 // Data status: every case file this script reads was seen while the
 // descriptions were being changed, so all of it is development data. Numbers
@@ -95,12 +96,21 @@ export function splitDescription(listing) {
   return { positive: t.slice(0, start) + (end === -1 ? '' : after.slice(end + 10)), anti };
 }
 
+// A quoted phrase preceded within three words by a negation ("don't run an
+// UPDATE") is not counted. Tokens such as `sk-` are always counted, because a
+// credential is a credential whatever the sentence says about it.
+const NEGATION = /(?:^|\s)(?:don't|dont|do not|never|not|avoid|without)(?:\s+\S+){0,2}\s*$/;
+
 function matchAll(matchers, phrase) {
   const lower = normalize(phrase).toLowerCase();
   const exact = normalize(phrase);
   const hits = new Map();
   for (const m of matchers) {
-    if (m.re.test(m.lower ? lower : exact)) hits.set(m.raw, m.weight);
+    const text = m.lower ? lower : exact;
+    const found = m.re.exec(text);
+    if (!found) continue;
+    if (m.lower && NEGATION.test(text.slice(0, found.index))) continue;
+    hits.set(m.raw, m.weight);
   }
   return { score: [...hits.values()].reduce((a, b) => a + b, 0), hits: [...hits.keys()] };
 }
