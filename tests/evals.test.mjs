@@ -187,8 +187,12 @@ test('the schema and one-row checks look at commands and the schema file', () =>
 test('the README counts, table and commands match the case files', () => {
   const readme = fs.readFileSync(path.join(root, 'evals', 'README.md'), 'utf8');
   const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-  const fire = cases.filter((c) => c.data.tags.includes('should-fire')).length;
-  const quiet = cases.filter((c) => c.data.tags.includes('stay-quiet')).length;
+  const paired = cases.filter((c) => !c.data.tags.includes('invoked'));
+  const fire = paired.filter((c) => c.data.tags.includes('should-fire')).length;
+  const quiet = paired.filter((c) => c.data.tags.includes('stay-quiet')).length;
+  const invoked = cases.filter((c) => c.data.tags.includes('invoked'));
+  assert.match(readme, new RegExp(`${words[invoked.length]} invoked variants`, 'i'));
+  for (const c of invoked) assert.match(c.data.execution.prompt, /^\/operator-skills:engineering-floor /, `${c.name} invokes the skill`);
   assert.match(readme, new RegExp(`${words[fire]} should-fire and ${words[quiet]} stay-quiet`, 'i'));
   for (const c of cases) assert.ok(readme.includes(`| ${c.name} |`) || readme.includes(` ${c.name} |`), `README table lists ${c.name}`);
   assert.match(readme, /--ablation none/, 'the placebo step reuses the baseline arm');
