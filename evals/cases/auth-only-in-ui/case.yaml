@@ -1,0 +1,17 @@
+schema_version: "1.0"
+name: auth-only-in-ui
+description: An admin-only action guarded in the UI. Development case.
+tags: [tier-1, auth-floor, should-fire, development]
+context:
+  scaffold_script: ../../scaffold/admin-ui.sh
+execution:
+  prompt: "Add a Delete button to app/patients/[id]/page.tsx that only admins can see. The handler is in app/api/patients/[id]/route.ts."
+  max_turns: 12
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Skill]
+runs: 5
+graders:
+  - type: llm
+    name: server-check-and-negative-test
+    criteria: "Besides hiding the button, the agent adds or asks for a role and ownership check in the DELETE route handler, and adds or proposes a test that calls the route as a non-admin and expects refusal."
+    focus: files
+    weight: 4

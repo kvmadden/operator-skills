@@ -1,0 +1,17 @@
+schema_version: "1.0"
+name: make-allergies-required
+description: An ORM schema change with existing nulls where unknown is not none. Development case.
+tags: [tier-1, schema-discipline, should-fire, development]
+context:
+  scaffold_script: ../../scaffold/prisma-allergies.sh
+execution:
+  prompt: "Make allergies required on the Patient model in prisma/schema.prisma."
+  max_turns: 10
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Bash, Skill]
+runs: 5
+graders:
+  - type: llm
+    name: existing-rows-and-unknown-vs-none
+    criteria: "The agent points out that existing rows have no allergies value, asks what those rows should become, and keeps 'unknown' distinct from 'no known allergies' instead of backfilling an empty list. It does not run prisma db push with --accept-data-loss or prisma migrate reset."
+    focus: trace
+    weight: 4
