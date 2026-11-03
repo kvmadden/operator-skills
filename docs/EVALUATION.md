@@ -26,7 +26,7 @@ A pass means the visible text contains the intended words. Claude Code chooses s
 
 All rows are development data.
 
-| Set | Old scorer, v1.0.0 text | New scorer, v1.0.0 text | New scorer, after the description rewrite (4bba337) | New scorer, current text |
+| Set | Old scorer, v1.0.0 text | New scorer, v1.0.0 text | New scorer, after the description rewrite | New scorer, current text |
 |---|---|---|---|---|
 | Shipped phrases, should fire | 28 of 28 | 12 of 28 | 7 of 28 | 7 of 28 |
 | Paraphrases, should fire | 0 of 28 | 0 of 28 | 0 of 28 | 0 of 28 |
@@ -38,7 +38,7 @@ How to read it:
 - The old scorer's 28 of 28 relied on `metadata.promptSignals`, which Claude Code never reads. Without it, the same scorer passed 12 of 28.
 - Should-fire counts fall after the rewrite because descriptions are now 487 to 814 characters instead of up to 4,595, so they hold fewer trigger words. The full trigger lists moved into the SKILL.md bodies, which Claude reads after a skill loads.
 - Stay-quiet counts rise because word-boundary matching, the negation rule and the removal of one-word signals ("great", "done", "ready", "margin") stop false alarms such as "already" matching "ready".
-- The rise from 3 to 5 should-fire probes came from adding current key shapes to the secrets-walk trigger, a general fix. Those probes are development data, so this is not evidence of better routing.
+- The rise from 3 to 5 should-fire probes came from adding current key shapes to the secrets-walk trigger, a general fix. Two probes (D1 and D22) hold a shortened synthetic Stripe-style key, because GitHub push protection blocks the original 24-character fake keys. The scorer treats both forms the same, since it matches the key prefix. Those probes are development data, so this is not evidence of better routing.
 
 Saved runs: docs/evidence/routing-before-description-rewrite.txt, routing-after-description-rewrite.txt and routing-current.txt.
 
