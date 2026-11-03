@@ -7,12 +7,12 @@ A Claude Code plugin of 10 skills and 118 short rules that name common failures 
 | Question | Answer | Evidence |
 |---|---|---|
 | Does a rule change what the agent does in a live session? | Not measured. 0 sessions run. | A harness exists in [evals/](evals/README.md), not run. Running it calls a model API, which is the owner's decision. |
-| Is the plugin well formed? | Yes, by a validator that opens every file. | 10 of 10 skills and 118 of 118 rules pass: valid YAML, every rule linked, all four rule sections, descriptions within Claude Code's listing cap. |
-| Do the hooks follow the current Claude Code hook contract? | Yes, on fixtures. | 21 of 21 contract tests pass on temporary git repos, using payloads reconstructed from Claude Code 2.1.304 (not captured live). |
-| What does the plugin cost in context before any skill fires? | About 2,019 tokens per session, down from about 8,556. | `claude plugin details operator-skills` (Claude Code's own estimate) before and after the description rewrite. |
-| Does the visible skill text contain the intended words? | Partly. This is a lint, not routing accuracy. | Development data only: 7 of 28 shipped phrases, 5 of 28 should-fire probes, 30 of 30 stay-quiet probes. See [docs/EVALUATION.md](docs/EVALUATION.md). |
+| Is the plugin well formed? | Yes, by a validator that opens every file. | 10 of 10 skills and 118 of 118 rules pass: valid YAML, every rule linked, all four rule sections, descriptions within Claude Code's listing cap, trigger tables in sync. `claude plugin validate --strict` also passes ([saved output](docs/evidence/plugin-validate-strict.txt)). |
+| Do the hooks follow the current Claude Code hook contract? | Yes, on fixtures. | 35 of 35 contract tests pass on temporary git repos, using payloads reconstructed from Claude Code 2.1.304 (not captured live). |
+| What does the plugin cost in context before any skill fires? | About 2,029 tokens per session, down from about 8,556. | Claude Code's own estimate, saved in [docs/evidence/context-cost.txt](docs/evidence/context-cost.txt). A skill costs more when it loads than in v1.0.0, because each SKILL.md now holds the precedence block and its trigger table. |
+| Does the visible skill text contain the intended words? | Partly. This is a lint, not routing accuracy. | Development data only: 8 of 28 shipped phrases, 6 of 28 should-fire probes, 29 of 31 stay-quiet probes, with the two failures listed and explained. The first round's 30 of 30 depended on a scoring bug and is withdrawn. See [docs/EVALUATION.md](docs/EVALUATION.md). |
 
-The earlier headline, "28 of 28 test phrases point to the intended rule", was a self-consistency check. The phrases matched strings that had been copied into skill metadata Claude Code never reads. Scored only on the text Claude Code can see, the same 28 phrases gave 12 of 28 before this branch.
+The earlier headline, "28 of 28 test phrases point to the intended rule", was a self-consistency check. The phrases matched strings that had been copied into skill metadata Claude Code never reads. Scored only on the text Claude Code can see, the same 28 phrases give 11 of 28 on the v1.0.0 text.
 
 ## Problem
 
@@ -26,15 +26,15 @@ Each failure is easy to correct once someone names it. The trouble is that nobod
 flowchart LR
     A[User message or agent action] --> B{Skill description matches?}
     B -- no --> Z[No skill loaded]
-    B -- yes --> C[SKILL.md loads: rule table, precedence, trigger catalogue]
+    B -- yes --> C[SKILL.md loads: rule table, precedence, rule triggers]
     C --> D[Agent opens the one rule that fits]
     D --> E[Short response from the rule]
     E --> F[Yield, or stop for a safety floor]
 ```
 
-- Each skill is a `SKILL.md` whose short description starts with when not to use it, then names the situations. Claude Code shows at most 1,536 characters of a description, so the long trigger lists live in the SKILL.md body.
+- Each skill is a `SKILL.md` whose short description starts with when not to use it, then names the situations. Claude Code shows at most 1,536 characters of a description, so each SKILL.md body carries a table of every rule's trigger, generated from the rule files by `npm run sync:skills` and checked by the validator.
 - Every rule file has the same four sections: the pattern, the response, when to stay quiet, and how the operator can override it. The validator enforces this.
-- One precedence table ([docs/PRECEDENCE.md](docs/PRECEDENCE.md)) is copied into every SKILL.md. It sets four tiers, allows one correction per turn, and names an owner for each situation two rules both claim.
+- One precedence table ([docs/PRECEDENCE.md](docs/PRECEDENCE.md)) is copied into every SKILL.md. It sets four tiers. Every tier 1 rule that matches responds in the same turn, tiers 2 to 4 give at most one correction per turn, and each situation two rules both claim has a named owner.
 
 ## Skills
 
@@ -55,11 +55,11 @@ Two of these skills (communication-craft and strategy-and-business, 31 of 118 ru
 
 ## Safety floors
 
-Tier 1 in the precedence table. These stop before the risky action and no mode or "explore" label switches them off.
+Tier 1 in the precedence table. These stop before the risky action, every one that matches responds in the same turn, and no mode or "explore" label switches them off.
 
 - **secrets-walk:** a credential-shaped value in chat, tool output, code or logs. Do not repeat it, rotate it first if it might be real, then contain it.
-- **phi-floor:** real-looking patient or personal data in prompts, fixtures, logs or commits. Do not copy it, ask whether it is real, offer a synthetic stand-in. Anything that could not be read is reported as "needs review", never as "none found".
-- **migration-not-mutation:** a bulk UPDATE, DELETE, TRUNCATE, MERGE or ORM bulk call on existing rows. Count first, snapshot, use a transaction, try a sample, verify.
+- **phi-floor:** real-looking patient or personal data in prompts, fixtures, logs or commits. Do not copy it, ask whether it is real, offer generated records instead. Edited real records count as de-identified only after the organization's approved process. Anything that could not be read is reported as "needs review", never as "none found".
+- **migration-not-mutation:** a bulk UPDATE, DELETE, TRUNCATE, MERGE or ORM bulk call on existing rows. Count first, lock and snapshot the target rows in the same transaction as the change, try a sample, verify.
 - **schema-discipline:** a change to the shape of stored data, including ORM schema files. Say what happens to existing rows, and keep "unknown" distinct from "none".
 - **auth-floor:** an action guarded only in the UI. Check the server, and prove it with a request that should fail.
 - The solo-run contract rules: no unattended run without scope, authority, stop conditions and an explicit go.
@@ -68,8 +68,8 @@ Tier 1 in the precedence table. These stop before the risky action and no mode o
 
 Both hooks are optional side effects of installing the plugin. Details, data written and the off switch are in [docs/HOOKS.md](docs/HOOKS.md).
 
-- **Stop:** in a linked git worktree, warns once per session and commit when work is not in the default branch or is uncommitted. Squash and rebase merges count as merged. It prints no shell commands built from branch names.
-- **SubagentStop:** writes one metadata line per subagent run to `~/.local/state/operator-skills/agent-activity.jsonl` (mode 600, outside the project). It never stores reply text.
+- **Stop:** in a linked git worktree, warns when work is not in the default branch or is uncommitted, at most once per session for each state. Rebase, cherry-pick and squash merges count as merged while the default branch still holds the change. The warning carries counts and short SHAs, never commit subjects or shell commands.
+- **SubagentStop:** writes one metadata line per subagent run to `~/.local/state/operator-skills/agent-activity.jsonl` (mode 600, outside the project, rotated under a lock). It never stores reply text, paths or custom agent names.
 
 ## Examples
 
@@ -81,7 +81,7 @@ These are illustrations of the intended response, written by hand. They are not 
 
 ## Evidence and limits
 
-- The validator, the routing lint, 21 hook contract tests, 8 validator fixture tests, 6 routing unit tests and 4 harness checks run with `npm test` on macOS and Linux in CI.
+- The validator, the routing lint, 35 hook contract tests, 12 validator fixture tests, 16 routing unit tests, 9 rule content tests and 10 harness checks run with `npm test` on macOS and Linux in CI.
 - The routing lint reads only text Claude Code can see. Its case files are development data: they were seen while the descriptions changed, so their numbers are development results, never a headline. A headline needs a fresh set written blind by someone who has not seen the rules, locked by checksum before its first run.
 - Rules are prompts. They shape what the agent says and does when the agent applies them. They do not block anything. The hooks warn and record metadata. They do not enforce.
 - Claude Code decides when to load a skill from its name and description. Whether it loads these at the right moments is not measured here.
@@ -111,12 +111,12 @@ Layout:
 
 ```text
 .claude-plugin/   plugin and marketplace manifests
-skills/<name>/    SKILL.md (description, rule table, precedence, trigger catalogue) and rules/
+skills/<name>/    SKILL.md (description, rule table, precedence, rule triggers) and rules/
 hooks/            Stop and SubagentStop hooks
 docs/             precedence, evaluation, hooks, saved evidence
 evals/            behavioral harness for claude plugin eval (not run)
 tests/            validator, routing, hook contract and harness tests, development case files
-tools/            validator, routing lint, precedence sync
+tools/            validator, routing lint, sync for the generated parts of each SKILL.md
 ```
 
 ## Development history
