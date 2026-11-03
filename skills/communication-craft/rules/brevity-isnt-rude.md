@@ -27,3 +27,7 @@ Common length-bloat:
 - Tone-bearing relationship requires warmth (some cases)
 - Mode is `explore`
 - The length is the content (e.g., a deliberate long-form essay)
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

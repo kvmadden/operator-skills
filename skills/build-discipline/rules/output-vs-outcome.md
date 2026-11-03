@@ -1,6 +1,7 @@
 ---
 title: Output vs outcome — what got changed for whom?
-trigger: "I shipped X" / "I built X" / "I finished X" / "got X working" / "made good progress on X" — production-described work without naming who/what is different now
+trigger: >-
+  "I shipped X" / "I built X" / "I finished X" / "got X working" / "made good progress on X" — production-described work without naming who/what is different now
 priority: low
 ---
 
@@ -22,3 +23,7 @@ If the operator says "no one yet" → cross-reference impact-check / useful-test
 - Production framing IS outcome (e.g., "I shipped tool to my own use this week" — operator is named user)
 - Audience/user already mentioned in session
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

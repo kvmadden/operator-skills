@@ -1,0 +1,14 @@
+{
+  "session_id": "0f6d1c3e-4b8a-4c2d-9e1f-5a7b3c9d2e10",
+  "transcript_path": "/home/fixture/.claude/projects/fixture/0f6d1c3e-4b8a-4c2d-9e1f-5a7b3c9d2e10.jsonl",
+  "cwd": "/home/fixture/project",
+  "permission_mode": "default",
+  "agent_type": "general-purpose",
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_id": "a3f9c2e1b7d4",
+  "agent_transcript_path": "/home/fixture/.claude/projects/fixture/agent-a3f9c2e1b7d4.jsonl",
+  "last_assistant_message": "Updated the parser and its tests. All checks pass.",
+  "background_tasks": [],
+  "session_crons": []
+}

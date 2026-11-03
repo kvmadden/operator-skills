@@ -1,66 +1,202 @@
 #!/usr/bin/env bash
-# check-worktree-orphans-on-stop.sh — Claude Code Stop hook.
+# check-worktree-orphans-on-stop.sh: Claude Code Stop hook for operator-skills.
 #
-# When a Claude Code session ends inside a Cowork-spawned git worktree, check
-# if the worktree's branch has unmerged commits ahead of the default branch.
-# If so, print a warning so the operator decides what to do BEFORE the
-# worktree fades from view.
+# When the session directory is a linked git worktree (git-dir differs from
+# git-common-dir) and its work is not in the default branch, or the worktree
+# has uncommitted changes, this hook shows the user one short warning. Each
+# distinct state (HEAD, default-branch tip, clean or dirty, unmerged count)
+# is warned about once per session.
 #
-# Hook contract:
-#   - Stdout is shown to the operator after the assistant turn ends.
-#   - Exit 0 always (don't block session close).
-#   - Be fast. Under 100ms ideal. Never block.
+# Input contract (Claude Code 2.1.304, read from the installed bundle): stdin
+# is one JSON object with session_id, cwd, hook_event_name ("Stop") and
+# stop_hook_active, among other fields. Stop runs at the end of every
+# assistant turn.
 #
-# Detection:
-#   - cwd contains `/.claude/worktrees/` -> we're in a Cowork-spawned worktree
-#   - `git rev-list <default>..HEAD --count` > 0 -> unmerged commits exist
+# Output contract: one JSON object, {"systemMessage": "..."}, which Claude
+# Code shows to the user. Always exits 0. The message holds counts, short
+# SHAs, the branch name and the worktree path. It never holds commit
+# subjects and never holds shell commands.
 #
-# Default branch detection: tries `main` then `master`. Skips silently if neither.
+# What counts as merged: HEAD is reachable from the local or remote-tracking
+# default branch, or every path the branch changed since its merge base is
+# identical at the default-branch tip and at HEAD. That covers fast-forward,
+# rebase, cherry-pick and squash merges, and it reports work that was merged
+# and then reverted, and work that exists only in a merge commit. A later
+# change on the default branch to the same paths also makes the work look
+# unmerged, which errs toward warning.
+#
+# Safety: git runs with fsmonitor, untracked cache, external diff, textconv
+# and optional locks turned off, so repository configuration cannot make
+# this hook run a program or write to the index. State lives in a private
+# directory outside the project (see state-dir.sh) and is never written
+# through a symlink. If state cannot be saved, the warning still shows.
 
-set +e  # don't blow up the session on any subcommand failure
-cwd="$(pwd)"
+umask 077
+trap 'exit 0' ERR
+export GIT_OPTIONAL_LOCKS=0
 
-# Only fire if we're inside a Cowork-spawned worktree
-case "$cwd" in
-  */.claude/worktrees/*) ;;
-  *) exit 0 ;;
-esac
+payload="$(cat 2>/dev/null)" || payload=""
+have_jq=0
+command -v jq >/dev/null 2>&1 && have_jq=1
 
-# Need git available
-command -v git >/dev/null 2>&1 || exit 0
-
-# Determine default branch (main vs master)
-default_branch="main"
-if ! git -C "$cwd" rev-parse --verify "$default_branch" >/dev/null 2>&1; then
-  if git -C "$cwd" rev-parse --verify master >/dev/null 2>&1; then
-    default_branch="master"
+json_get() {
+  # Prints a top-level string or boolean field. Without jq only plain
+  # identifier-shaped values (session_id, stop_hook_active) can be read.
+  [ -n "$payload" ] || return 0
+  if [ "$have_jq" = "1" ]; then
+    printf '%s' "$payload" | jq -r --arg k "$1" \
+      'if type == "object" then (.[$k] | if type == "string" or type == "boolean" then tostring else empty end) else empty end' \
+      2>/dev/null || true
   else
-    exit 0  # no main/master — can't compute diff
+    printf '%s' "$payload" | tr -d '\n' | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\{0,1\}\([A-Za-z0-9-]\{1,64\}\)\"\{0,1\}[[:space:]]*[,}].*/\1/p" | head -1
+  fi
+}
+
+[ "$(json_get stop_hook_active)" = "true" ] && exit 0
+
+cwd=""
+[ "$have_jq" = "1" ] && cwd="$(json_get cwd)"
+[ -n "$cwd" ] || cwd="$PWD"
+session_id="$(json_get session_id)"
+
+command -v git >/dev/null 2>&1 || exit 0
+g() {
+  git -C "$cwd" -c core.fsmonitor=false -c core.untrackedCache=false -c diff.external= \
+    -c core.hooksPath=/dev/null "$@" 2>/dev/null
+}
+
+[ "$(g rev-parse --is-inside-work-tree)" = "true" ] || exit 0
+git_dir="$(g rev-parse --path-format=absolute --git-dir)" || exit 0
+common_dir="$(g rev-parse --path-format=absolute --git-common-dir)" || exit 0
+[ -n "$git_dir" ] && [ -n "$common_dir" ] || exit 0
+[ "$git_dir" != "$common_dir" ] || exit 0   # main checkout, not a linked worktree
+
+top="$(g rev-parse --show-toplevel)" || exit 0
+head_sha="$(g rev-parse --verify --quiet HEAD)" || exit 0
+[ -n "$head_sha" ] || exit 0
+short_sha="$(g rev-parse --short HEAD)" || short_sha="${head_sha:0:8}"
+branch="$(g symbolic-ref --quiet --short HEAD)" || branch=""
+
+# Default branch: origin/HEAD first, then init.defaultBranch, then common names.
+default_name=""
+remote_head="$(g symbolic-ref --quiet --short refs/remotes/origin/HEAD)" || remote_head=""
+if [ -n "$remote_head" ]; then
+  default_name="${remote_head#origin/}"
+else
+  configured="$(g config --get init.defaultBranch)" || configured=""
+  for candidate in "$configured" main master trunk develop; do
+    [ -n "$candidate" ] || continue
+    if g show-ref --verify --quiet "refs/heads/$candidate" || g show-ref --verify --quiet "refs/remotes/origin/$candidate"; then
+      default_name="$candidate"
+      break
+    fi
+  done
+fi
+bases=()
+if [ -n "$default_name" ]; then
+  if g show-ref --verify --quiet "refs/heads/$default_name"; then bases+=("refs/heads/$default_name"); fi
+  if g show-ref --verify --quiet "refs/remotes/origin/$default_name"; then bases+=("refs/remotes/origin/$default_name"); fi
+fi
+
+dirty_count="$(g status --porcelain=v1 --untracked-files=normal | wc -l | tr -d ' ')"
+[ -n "$dirty_count" ] || dirty_count=0
+
+paths_between() {
+  g diff --no-ext-diff --no-textconv --name-only --no-renames -z "$1" "$2" | tr '\0' '\n' | LC_ALL=C sort -u
+}
+
+ahead="unknown"
+base_tips="none"
+if [ -n "$branch" ] && [ "$branch" = "$default_name" ]; then
+  ahead=0   # the default branch itself: only uncommitted changes are reported
+elif [ "${#bases[@]}" -gt 0 ]; then
+  base_tips="$(for b in "${bases[@]}"; do g rev-parse --verify --quiet "$b"; done | tr '\n' ' ')"
+  unreachable="$(g rev-list --count HEAD --not "${bases[@]}")" || unreachable=""
+  if [ "$unreachable" = "0" ]; then
+    ahead=0
+  elif [ -n "$unreachable" ]; then
+    ahead="$unreachable"
+    for b in "${bases[@]}"; do
+      mb="$(g merge-base "$b" HEAD)" || continue
+      [ -n "$mb" ] || continue
+      changed="$(paths_between "$mb" HEAD)"
+      differing="$(paths_between "$b" HEAD)"
+      if [ -z "$changed" ] || [ -z "$(LC_ALL=C comm -12 <(printf '%s\n' "$changed") <(printf '%s\n' "$differing") | sed '/^$/d')" ]; then
+        ahead=0
+        break
+      fi
+    done
   fi
 fi
 
-# Count commits ahead of default
-ahead="$(git -C "$cwd" rev-list --count "${default_branch}..HEAD" 2>/dev/null)"
-[ -z "$ahead" ] && exit 0
-[ "$ahead" -le 0 ] && exit 0
+# Nothing to report: all work is in the default branch and the tree is clean.
+if [ "$ahead" = "0" ] && [ "$dirty_count" = "0" ]; then exit 0; fi
 
-# We have unmerged commits — print the warning
-branch="$(git -C "$cwd" rev-parse --abbrev-ref HEAD 2>/dev/null)"
-last_subject="$(git -C "$cwd" log -1 --format=%s 2>/dev/null | head -c 80)"
+dirty_flag=0
+[ "$dirty_count" -gt 0 ] 2>/dev/null && dirty_flag=1
+key="$head_sha|$base_tips|$dirty_flag|$ahead"
 
-cat <<EOF
+# Dedupe: one file per session holding every state already warned about.
+if [ -z "$session_id" ]; then
+  session_id="anon-$(printf '%s' "$top" | { shasum -a 256 2>/dev/null || sha256sum 2>/dev/null; } | cut -c1-16)"
+fi
+safe_session="$(printf '%s' "$session_id" | tr -cd 'A-Za-z0-9_-' | cut -c1-64)"
+[ -n "$safe_session" ] || safe_session="nosession"
+key_file=""
+# state-dir.sh is linted on its own (it is in hooks/*.sh).
+# shellcheck source=/dev/null
+if . "$(dirname "$0")/state-dir.sh" 2>/dev/null; then
+  state_dir="$(operator_skills_state_dir "$top")"
+  if [ -n "$state_dir" ]; then
+    check_dir="$state_dir/worktree-check"
+    if [ ! -L "$check_dir" ] && mkdir -p "$check_dir" 2>/dev/null && [ -d "$check_dir" ] && [ ! -L "$check_dir" ]; then
+      key_file="$check_dir/$safe_session"
+      if [ -e "$key_file" ] && { [ -L "$key_file" ] || [ ! -f "$key_file" ]; }; then key_file=""; fi
+    fi
+  fi
+fi
+if [ -n "$key_file" ] && [ -f "$key_file" ] && grep -Fxq -- "$key" "$key_file" 2>/dev/null; then
+  exit 0
+fi
 
-⚠  Worktree orphan check — this Claude session ran in a worktree with unmerged commits.
+nl=$'\n'
+msg="operator-skills: this session ran in a linked git worktree with work that may not be saved anywhere else.${nl}Worktree: $top"
+if [ -n "$branch" ]; then
+  msg="$msg${nl}Branch: $branch at $short_sha"
+else
+  msg="$msg${nl}Detached HEAD at $short_sha. Create a branch at that commit before removing the worktree, or the commits become hard to find."
+fi
+if [ "$ahead" = "unknown" ]; then
+  msg="$msg${nl}Merge state: unknown. No default branch was found (checked origin/HEAD, init.defaultBranch, main, master, trunk and develop), so this hook cannot tell which commits are unmerged. Needs review."
+elif [ "$ahead" != "0" ]; then
+  msg="$msg${nl}Commits not found in $default_name: $ahead (newest $short_sha)."
+fi
+if [ "$dirty_count" -gt 0 ] 2>/dev/null; then
+  if [ "$dirty_count" = "1" ]; then msg="$msg${nl}Uncommitted changes: 1 path."
+  else msg="$msg${nl}Uncommitted changes: $dirty_count paths."; fi
+fi
+msg="$msg${nl}Before removing this worktree, merge or push the work, or open a pull request. Removing a worktree with unmerged or uncommitted work can lose it."
 
-   branch:        $branch
-   commits ahead: $ahead
-   last commit:   $last_subject
+if [ "$have_jq" = "1" ]; then
+  out="$(jq -nc --arg m "$msg" '{systemMessage: $m}' 2>/dev/null)" || out=""
+fi
+if [ -z "${out:-}" ]; then
+  esc="${msg//\\/\\\\}"
+  esc="${esc//\"/\\\"}"
+  esc="${esc//$'\n'/\\n}"
+  esc="${esc//$'\r'/\\r}"
+  esc="${esc//$'\t'/\\t}"
+  esc="$(printf '%s' "$esc" | LC_ALL=C tr -d '\000-\010\013\014\016-\037')"
+  out="{\"systemMessage\":\"$esc\"}"
+fi
+printf '%s\n' "$out" || exit 0
 
-   Decide before this fades from view:
-     · merge to $default_branch:    cd \$(git -C "$cwd" rev-parse --show-toplevel | sed 's|/\.claude/.*||') && git merge $branch
-     · open PR:                     cd "$cwd" && gh pr create --base $default_branch --head $branch
-     · push for later:              cd "$cwd" && git push origin HEAD
-     · discard:                     git worktree remove "$cwd" && git branch -D $branch
-
-EOF
+# Save the state only after the warning was printed. Failure here is harmless.
+if [ -n "$key_file" ]; then
+  { printf '%s\n' "$key" >> "$key_file"; } 2>/dev/null || true
+  if [ "$(wc -l < "$key_file" 2>/dev/null | tr -d ' ')" -gt 200 ] 2>/dev/null; then
+    tmp_file="$key_file.tmp.$$"
+    { tail -n 200 "$key_file" > "$tmp_file" && mv -f "$tmp_file" "$key_file"; } 2>/dev/null || rm -f "$tmp_file" 2>/dev/null
+  fi
+fi
 exit 0

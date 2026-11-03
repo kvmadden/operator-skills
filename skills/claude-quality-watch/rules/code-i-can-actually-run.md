@@ -1,6 +1,7 @@
 ---
 title: Hallucinated code — made-up APIs / signatures / libraries
-trigger: generated code references an import / package / API / method signature / endpoint that Claude is guessing from training memory rather than verifying
+trigger: >-
+  about to write, or has just written, an import, method call, option, CLI flag or endpoint that has not been checked in this session against the installed package, its type definitions, its docs, a type check or a test run
 priority: high
 ---
 
@@ -17,13 +18,14 @@ Pattern types:
 
 ## Response
 
-Hard interrupt:
+The model cannot reliably tell when it is guessing, so the trigger is the missing check, not a feeling of doubt. Check, correct, then continue:
 
 1. **Stop the generation.** Don't ship code with unverified references.
 2. **Surface the unverified reference:** "I'm about to use `<library/API/signature>` — I should verify it exists before committing the code."
 3. **Verify:**
    - For libraries: read the package source in `node_modules/`
    - For methods: check the actual lib types / docs
+   - Mechanically: run the type checker, `node --check`, or the tests that import the code, and read the errors
    - For endpoints: test against the actual service or read its current docs
 4. **If verification fails:** find the actual replacement OR ask the operator to provide the right one.
 5. **Resume code generation with verified references.**

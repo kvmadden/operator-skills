@@ -1,6 +1,7 @@
 ---
 title: Useful test — for what kind of task, for whom, at what moment
-trigger: "useful" claimed without specificity
+trigger: >-
+  "useful" claimed without specificity
 priority: medium
 ---
 
@@ -31,3 +32,7 @@ If all three can be named → real-useful. If any can't → generic-useful (=mea
 - Operator's already named who/what/when
 - Mode is `explore`
 - Casual conversational usage (not a product claim)
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

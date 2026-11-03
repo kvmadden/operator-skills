@@ -1,107 +1,103 @@
 #!/usr/bin/env bash
-# subagent-stop.sh — Claude Code SubagentStop hook.
+# subagent-stop.sh: Claude Code SubagentStop hook for operator-skills.
 #
-# Fires when any subagent finishes via the Agent tool. Appends one JSON line
-# per run to ${CLAUDE_PROJECT_DIR}/.claude/agent-activity.jsonl so the
-# operator can audit which agents fired, in which project, and what they
-# touched.
+# Records one metadata line each time a subagent finishes. It never stores
+# reply text, prompts, file names, file contents or paths, so a credential or
+# a patient identifier in a reply, a directory name or a custom agent name
+# cannot be copied into this log.
 #
-# Hook contract:
-#   - Reads JSON payload from stdin (Claude Code passes hook context this way).
-#   - Writes a single JSONL line; never blocks; always exits 0.
+# Input contract, read from the installed Claude Code 2.1.304 bundle (not
+# captured from a live session): stdin is one JSON object with session_id,
+# transcript_path, cwd, permission_mode, hook_event_name ("SubagentStop"),
+# stop_hook_active, agent_id, agent_type, agent_transcript_path and
+# last_assistant_message.
 #
-# Payload fields used:
-#   - tool_input.subagent_type        — the agent name (e.g. "react-builder")
-#   - tool_input.description          — short description of the task
-#   - tool_response.content[].text    — agent's reply text (we keep first 2000 chars)
-#   - session_id                       — Claude Code session identifier
+# What it records: time, event, session_id and agent_id when they have the
+# expected id shape, agent_type when it is a built-in Claude Code agent type
+# (other names become "custom-" plus a 12-character hash), project_id (a
+# 12-character hash of the project path), stop_hook_active, and the length
+# of the last reply. Set OPERATOR_SKILLS_LOG_AGENT_NAMES=1 to keep custom
+# agent names that are plain identifiers.
 #
-# Output JSONL shape per row:
-#   { ts, agent, project, description, session_id, summary, files_touched, duration_seconds }
+# Output contract: prints nothing and exits 0 on every path.
 #
-# If jq is not installed, falls back to a best-effort grep/sed parser (less
-# reliable on edge-case characters but never blocks).
+# Where it writes: a private directory (mode 700, not a symlink, owned by
+# this user, never inside the project): $OPERATOR_SKILLS_STATE_DIR, or
+# ${XDG_STATE_HOME:-$HOME/.local/state}/operator-skills. The file is
+# agent-activity.jsonl, mode 600, never written through a symlink. Past
+# 1 MiB it moves to agent-activity.jsonl.1 under a lock, so two subagents
+# finishing together cannot destroy the archive.
+#
+# Off switch: OPERATOR_SKILLS_ACTIVITY_LOG=off. Requires jq. Without jq it
+# records nothing.
 
-set -euo pipefail
+umask 077
+trap 'exit 0' ERR
 
-# Default log location: per-project, alongside other Claude state.
-LOG_DIR="${CLAUDE_PROJECT_DIR:-$PWD}/.claude"
-LOG_FILE="$LOG_DIR/agent-activity.jsonl"
-mkdir -p "$LOG_DIR"
+[ "${OPERATOR_SKILLS_ACTIVITY_LOG:-on}" = "off" ] && exit 0
+command -v jq >/dev/null 2>&1 || exit 0
+# state-dir.sh is linted on its own (it is in hooks/*.sh).
+# shellcheck source=/dev/null
+. "$(dirname "$0")/state-dir.sh" || exit 0
 
-# Read the hook payload from stdin
-PAYLOAD="$(cat)"
+payload="$(cat 2>/dev/null)" || exit 0
+[ -n "$payload" ] || exit 0
 
-# Helper: extract a JSON field with jq if available, otherwise grep
-get_field() {
-  local field="$1"
-  if command -v jq >/dev/null 2>&1; then
-    echo "$PAYLOAD" | jq -r "$field // empty" 2>/dev/null || true
-  else
-    # Best-effort fallback (less reliable but no dependencies)
-    echo "$PAYLOAD" | grep -oE "\"${field##.}\"\\s*:\\s*\"[^\"]*\"" | head -1 | sed 's/.*"\([^"]*\)"$/\1/' || true
+fields="$(printf '%s' "$payload" | jq -r '
+  select(type == "object") |
+  [ (.hook_event_name // "" | tostring), (.session_id // "" | tostring), (.agent_id // "" | tostring),
+    (.agent_type // "" | tostring), (.cwd // "" | tostring), (.stop_hook_active | if . == null then "" else tostring end),
+    (if (.last_assistant_message | type) == "string" then (.last_assistant_message | length | tostring) else "" end) ]
+  | map(gsub("[\u0000-\u001f]"; " ")) | join("\u001f")' 2>/dev/null)" || exit 0
+[ -n "$fields" ] || exit 0
+IFS=$'\x1f' read -r event session agent_id agent_type project stop_active chars <<< "$fields"
+[ -n "$agent_id" ] || [ -n "$agent_type" ] || exit 0
+
+case "$session" in *[!A-Za-z0-9-]*|'') session="" ;; esac
+[ "${#session}" -le 64 ] || session=""
+case "$agent_id" in *[!A-Za-z0-9_-]*|'') agent_id="" ;; esac
+[ "${#agent_id}" -le 64 ] || agent_id=""
+case "$agent_type" in
+  general-purpose|Explore|Plan|statusline-setup|claude-code-guide|fork) ;;
+  '') ;;
+  *)
+    if [ "${OPERATOR_SKILLS_LOG_AGENT_NAMES:-0}" = "1" ] && [ "${#agent_type}" -le 64 ] && [[ "$agent_type" =~ ^[A-Za-z0-9:_-]+$ ]]; then :
+    else agent_type="custom-$(operator_skills_hash12 "$agent_type")"; fi ;;
+esac
+project_id=""
+[ -n "$project" ] && project_id="$(operator_skills_hash12 "$project")"
+
+state_dir="$(operator_skills_state_dir "$project")"
+[ -n "$state_dir" ] || exit 0
+log_file="$state_dir/agent-activity.jsonl"
+[ -L "$log_file" ] && exit 0
+
+record="$(jq -nc --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg event "$event" --arg session "$session" \
+  --arg agent_id "$agent_id" --arg agent_type "$agent_type" --arg project_id "$project_id" \
+  --arg stop_active "$stop_active" --arg chars "$chars" '
+  { ts: $ts,
+    event: ($event | if . == "" then null else . end),
+    session_id: ($session | if . == "" then null else . end),
+    agent_id: ($agent_id | if . == "" then null else . end),
+    agent_type: ($agent_type | if . == "" then null else . end),
+    project_id: ($project_id | if . == "" then null else . end),
+    stop_hook_active: (if $stop_active == "true" then true elif $stop_active == "false" then false else null end),
+    last_message_chars: ($chars | if . == "" then null else tonumber end) }' 2>/dev/null)" || exit 0
+[ -n "$record" ] || exit 0
+
+lock="$state_dir/.activity.lock"
+if operator_skills_lock "$lock"; then
+  if [ -f "$log_file" ] && [ ! -L "$log_file" ]; then
+    size="$(wc -c < "$log_file" 2>/dev/null | tr -d ' ')"
+    if [ -n "$size" ] && [ "$size" -gt 1048576 ] 2>/dev/null; then
+      mv -f "$log_file" "$log_file.1" 2>/dev/null || true
+    fi
   fi
-}
-
-# Extract fields
-AGENT="$(get_field '.tool_input.subagent_type')"
-DESCRIPTION="$(get_field '.tool_input.description')"
-SESSION_ID="$(get_field '.session_id')"
-TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-CWD="$(pwd)"
-
-# If we couldn't identify an agent, this isn't an Agent tool call — exit silently
-[ -z "$AGENT" ] && exit 0
-
-# Pull out the agent's response summary (first 2000 chars of all text blocks)
-if command -v jq >/dev/null 2>&1; then
-  SUMMARY="$(echo "$PAYLOAD" | jq -r '
-    .tool_response.content // [] |
-    map(select(.type == "text") | .text) |
-    join("\n") |
-    .[0:2000]
-  ' 2>/dev/null || echo "")"
-
-  # File paths mentioned in the response (heuristic: anything looking like a path)
-  FILES="$(echo "$SUMMARY" | grep -oE '[a-zA-Z0-9_./-]+\.(tsx?|jsx?|md|css|json|sql|sh|py|html|yaml|yml|toml)' | sort -u | head -20 | jq -R -s -c 'split("\n") | map(select(length > 0))' 2>/dev/null || echo "[]")"
+  [ -L "$log_file" ] || printf '%s\n' "$record" >> "$log_file" 2>/dev/null || true
+  rmdir "$lock" 2>/dev/null || true
 else
-  SUMMARY="$(echo "$PAYLOAD" | head -c 2000)"
-  FILES="[]"
+  # Could not take the lock: append without rotating, which cannot destroy the archive.
+  [ -L "$log_file" ] || printf '%s\n' "$record" >> "$log_file" 2>/dev/null || true
 fi
-
-# Duration would require a PreToolUse companion hook; default to 0 for now.
-DURATION=0
-
-# Compose the JSON record. Prefer jq for safe escaping; fall back to printf.
-if command -v jq >/dev/null 2>&1; then
-  jq -nc \
-    --arg ts "$TIMESTAMP" \
-    --arg agent "$AGENT" \
-    --arg cwd "$CWD" \
-    --arg desc "$DESCRIPTION" \
-    --arg session "$SESSION_ID" \
-    --arg summary "$SUMMARY" \
-    --argjson files "$FILES" \
-    --argjson duration $DURATION \
-    '{
-      ts: $ts,
-      agent: $agent,
-      project: $cwd,
-      description: $desc,
-      session_id: $session,
-      summary: $summary,
-      files_touched: $files,
-      duration_seconds: $duration
-    }' >> "$LOG_FILE"
-else
-  # Fallback: very basic JSON; risk of breaking on quotes in summary
-  printf '{"ts":"%s","agent":"%s","project":"%s","description":"%s","session_id":"%s","summary":"%s","files_touched":[],"duration_seconds":0}\n' \
-    "$TIMESTAMP" "$AGENT" "$CWD" \
-    "$(echo "$DESCRIPTION" | sed 's/"/\\"/g')" \
-    "$SESSION_ID" \
-    "$(echo "$SUMMARY" | sed 's/"/\\"/g' | tr -d '\n')" \
-    >> "$LOG_FILE"
-fi
-
-# Always exit 0 — never block the agent on hook failures
+[ -f "$log_file" ] && [ ! -L "$log_file" ] && chmod 600 "$log_file" 2>/dev/null
 exit 0

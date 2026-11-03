@@ -9,9 +9,10 @@ priority: medium
 Claude is the wrong tool for:
 
 - **Person-specific questions** — what does a specific colleague think? Ask them.
-- **Physical-world questions** — what's wrong with my body? See a doctor.
-- **Medical / legal / financial questions** — consult a licensed professional.
-- **Values-based choices** — what should I prioritize? Sleep + gut.
+- **Patient-specific clinical decisions**, such as a dose for this patient or whether to stop a drug. Claude can explain general information and cite the primary source (the label, a guideline), but the decision belongs to a licensed clinician with the full record.
+- **Personal symptoms**: see a clinician.
+- **Legal or financial rulings**: consult a licensed professional.
+- **Values-based choices**: Claude can lay out the trade-offs, and the choice stays with the operator.
 - **Things you already know** — sometimes Claude is being used as procrastination from deciding.
 
 ## Response
@@ -19,8 +20,8 @@ Claude is the wrong tool for:
 1. **Name the wrong-tool:** "Claude's not the right tool for `<X>`."
 2. **Surface the right source:**
    - Person-specific → ask the person directly
-   - Physical / medical / legal / financial → licensed professional
-   - Values → sleep + gut
+   - Patient-specific clinical, legal or financial decisions: a licensed professional, with Claude's general explanation and cited sources as input
+   - Values: the operator, with the trade-offs laid out
    - Already-know → just decide
 3. **Yield.**
 

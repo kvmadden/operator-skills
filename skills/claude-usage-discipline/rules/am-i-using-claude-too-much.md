@@ -32,3 +32,7 @@ Witness delivery — the question matters more than the data:
 - Already fired this week
 - Mode is `solo-run`
 - Operator in low-energy state
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

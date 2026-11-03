@@ -1,6 +1,7 @@
 ---
 title: Done is done — shipped work stays shipped unless something earns the reopen
-trigger: "let me revisit" / "actually, let me redo" / "going back to" / "while we're here, let me also fix" / "let me refactor" / "this needs another pass" — applied to something with shipped / stable / done / v1 status
+trigger: >-
+  "let me revisit" / "actually, let me redo" / "going back to" / "while we're here, let me also fix" / "let me refactor" / "this needs another pass" — applied to something with shipped / stable / done / v1 status
 priority: medium
 ---
 
@@ -29,9 +30,9 @@ Soft (normal first-reopen):
 3. **If earned:** "OK — proceeding with the reopen. Logging the reason so future-readers understand."
 4. **Yield.**
 
-Hard if same thing has been reopened 3+ times in past month:
+If the operator says this is a repeat reopen (Claude cannot see past sessions):
 
-1. **Stop.** "This is reopen #N for `<thing>` in past month. Pattern signal."
+1. **Name it:** "This is a repeat reopen for `<thing>`."
 2. **Surface:** "Either the original ship was premature (no real done) or the reopen reflex needs resisting. Which?"
 
 ## Suppression

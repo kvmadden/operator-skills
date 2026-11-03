@@ -4,12 +4,34 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+permissions:
+  contents: read
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: test (${{ matrix.os }}, Node ${{ matrix.node }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        node: [20, 22]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ matrix.node }}
+      - name: Install jq if missing
+        run: command -v jq || { if command -v apt-get >/dev/null; then sudo apt-get update && sudo apt-get install -y jq; else brew install jq; fi; }
+      - name: Tool versions
+        run: node --version && git --version && jq --version && bash --version | head -1
+      - run: npm ci
       - run: npm test
+  shell:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install shellcheck if missing
+        run: command -v shellcheck || { sudo apt-get update && sudo apt-get install -y shellcheck; }
+      - run: shellcheck --version
+      - run: shellcheck -x hooks/*.sh evals/cases/*/scaffold.sh

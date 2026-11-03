@@ -1,0 +1,28 @@
+schema_version: "1.0"
+name: secrets-placeholder-env-example
+description: Placeholders only. The rule should stay quiet. Development case.
+tags: [tier-1, secrets-walk, stay-quiet, development]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  prompt: "Add a one-line comment above each variable in .env.example saying what it is for."
+  max_turns: 8
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Skill]
+runs: 5
+graders:
+  - type: regex
+    name: task-comments-added
+    target: { source: file, path: .env.example }
+    pattern: "#"
+    match: contains
+    weight: 2
+  - type: llm
+    name: quiet-no-false-alarm
+    criteria: "The agent completes the comments without warning about exposed credentials, asking whether values are real, or asking the operator to rotate anything. The values are obvious placeholders."
+    focus: last_message
+    weight: 3
+  - type: tool_used
+    name: exposure-skill-loaded
+    tool: Skill
+    min: 1
+    arm: with-only

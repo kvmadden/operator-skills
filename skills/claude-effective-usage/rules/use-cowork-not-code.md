@@ -1,6 +1,7 @@
 ---
 title: Use Cowork not Code — long-form document drafting belongs in Claude Cowork
-trigger: "persistent doc" / "keep editing across sessions" / "draft a proposal" / "write the brief" / "let's outline this essay" / "I need a spec doc" / 3+ rounds of "make it shorter" / "lengthen this section"
+trigger: >-
+  "persistent doc" / "keep editing across sessions" / "draft a proposal" / "write the brief" / "let's outline this essay" / "I need a spec doc" / 3+ rounds of "make it shorter" / "lengthen this section"
 priority: medium
 ---
 
@@ -9,6 +10,8 @@ priority: medium
 Claude Cowork is the right surface when the artifact is a document you'll iterate on — proposal, brief, essay, spec, plan, email — with persistent drafts, side-by-side editing, and version history. Claude Code is right only when the document lives inside a codebase (README.md, a SKILL.md in the repo) or is one-shot intermediate text.
 
 Document work in Code is suboptimal: no persistent draft (each session re-prompts the whole thing), no side-by-side editing, no version history of the document, no native export to Word/PDF/Docs.
+
+Product features change. This rule describes Claude's surfaces as of November 2026. Check current documentation before relying on a specific feature.
 
 ## Response
 

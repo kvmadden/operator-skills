@@ -32,3 +32,7 @@ A good error state:
 - Surface is offline-only (no network failures possible)
 - Error states already designed
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

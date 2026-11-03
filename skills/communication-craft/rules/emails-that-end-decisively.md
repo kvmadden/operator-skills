@@ -37,3 +37,7 @@ Better:
 - Open-ended IS the right close (FYI / no action wanted)
 - Mode is `explore`
 - Audience relationship makes weak close appropriate
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

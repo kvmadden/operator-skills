@@ -1,6 +1,7 @@
 ---
 title: Name the version — "the new one" creates ambiguity that compounds
-trigger: "the new one" / "the latest version" / "the v2" / "the rebuild" / "the redo" / "the most recent" / "the updated one" without an actual version number or descriptive name
+trigger: >-
+  "the new one" / "the latest version" / "the v2" / "the rebuild" / "the redo" / "the most recent" / "the updated one" without an actual version number or descriptive name
 priority: low
 ---
 

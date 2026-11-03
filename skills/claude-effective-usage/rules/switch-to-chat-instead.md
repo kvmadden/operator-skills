@@ -1,6 +1,7 @@
 ---
 title: Switch to Chat instead — open-ended exploration belongs in Claude Chat
-trigger: "let me think about" / "brainstorm with me" / "what do you think of" / "I'm trying to figure out" / "help me think through" / 5+ message back-and-forth with no tool calls or file edits
+trigger: >-
+  "let me think about" / "brainstorm with me" / "what do you think of" / "I'm trying to figure out" / "help me think through" / 5+ message back-and-forth with no tool calls or file edits
 priority: medium
 ---
 
@@ -9,6 +10,8 @@ priority: medium
 Claude Code is the right surface when the artifact is the codebase — editing files, running commands, calling tools, building or debugging. Claude Chat is the right surface when the artifact is the conversation itself: open-ended brainstorming, "what do you think of X", pure-text analysis, "help me think through Y" without producing files.
 
 Doing chat-shaped work in Code is a small loss every time: no Projects (context fragments across sessions), no Memory (you re-explain context), no Artifact panel (responses can't export as standalone documents), and the Code session is heavier weight.
+
+Product features change. This rule describes Claude's surfaces as of November 2026. Check current documentation before relying on a specific feature.
 
 ## Response
 

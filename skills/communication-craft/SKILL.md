@@ -1,58 +1,7 @@
 ---
 name: communication-craft
-description: |
-  Use this skill whenever the operator is drafting a substantive message, document, or other piece of written communication AND a craft-discipline failure is in play (or about to be). Apply across email, Slack/Teams DMs, async docs, presentations, memos, status updates, intros, apologies, asks, drafts of all kinds. Triggers include phrases like "let me draft", "writing this email", "drafting a message", "let me put together" (drafting moments); "I'm sorry", "my apologies", "I apologize for", followed by "but" / "I was just" / "in my defense" (apology-undone); "I was wondering if", "would it be possible at some point", "if you had a chance to", "no rush but" (hedged asks); message growing past 3-4 paragraphs when 3 sentences would suffice, "I hope this finds you well" preamble fluff (length-bloat); endings like "thoughts?", "let me know", "happy to discuss", "open to feedback", "if you have any questions" (weak closings); "let me introduce", "connecting you with", "meet [X]" (intro drafting); "I'm just so swamped", "I wish I had time to", "if only someone would", "the [thing] is really hard right now" (indirect-ask signal); doc draft going past one page or framed as "comprehensive" / "thorough" / "complete" (one-pager violation); punctuation that doesn't match intent — "?" on a decided statement, "." on a real question, "let me know if you have thoughts" closing a thread that needs a decision (question-or-statement mismatch); async messages with emotional / political / sensitive content where tone could read cold or aggressive in text (async-tone-strip); communication crossing status lines — to a senior stakeholder, executive, peer, junior colleague, or cross-functional partner (status-aware); "the reason is" / "let me explain" appearing 2+ times, stacked "because" clauses, pre-emptive defense (over-explanation); one piece trying to land for multiple audiences in a single generic version (multi-audience smush); substantive message about to send without a pre-send predict-how-it-lands check (landing test); draft that surveys trade-offs without picking a position (landing the plane); end-of-session and weekly-review cadence (surface unsent drafts); monthly cadence (surface things thought-of-saying but never said); 90+ minutes seated without break (body reset). Apply even when the operator hasn't asked for a check — naming the craft pattern at the drafting moment is the value. Consult the skill's rules/ folder to identify the specific drafting shape and apply that rule's matching diagnostic. Soft teaching response. Do NOT use for informal / casual / low-stakes messages, `explore` mode drafting, communication to the operator themselves (notes / journal), drafts where the pattern is genuinely intentional, or feedback drafting (that is a separate skill from craft mechanics).
+description: "Do NOT use for casual or low-stakes messages, notes to self, drafts where the pattern is intentional, or code work. Use when the operator drafts or is about to send a substantive message or document, or replies to someone: an apology undone by an excuse (\"I'm sorry, but\"), a hedged ask (\"I was wondering if\"), a weak closing (\"let me know\"), padding, over-explaining, a document growing past one page, one version for several audiences, a sensitive message in async text, a message across status lines, an introduction, a soft no (\"let me think about it\"), hard or good news someone shared, a hard conversation coming up, or thanks that are overdue."
 license: MIT — see plugin LICENSE
-metadata:
-  priority: medium
-  promptSignals:
-    phrases:
-      - "let me draft"
-      - "let me reply"
-      - "let me reply to"
-      - "actually, the issue is"
-      - "the issue is she"
-      - "the issue is he"
-      - "she doesn't get what I meant"
-      - "he doesn't get what I meant"
-      - "writing this email"
-      - "drafting a message"
-      - "let me put together"
-      - "I'm sorry"
-      - "my apologies"
-      - "I apologize for"
-      - "I was wondering if"
-      - "would it be possible at some point"
-      - "if you had a chance to"
-      - "no rush but"
-      - "I hope this finds you well"
-      - "thoughts?"
-      - "let me know"
-      - "happy to discuss"
-      - "open to feedback"
-      - "if you have any questions"
-      - "let me introduce"
-      - "connecting you with"
-      - "meet [X]"
-      - "I'm just so swamped"
-      - "I wish I had time to"
-      - "if only someone would"
-      - "the reason is"
-      - "let me explain"
-      - "comprehensive doc"
-      - "for the team and for executives"
-      - "before I send this"
-      - "wish I'd said"
-      - "I drafted a thing but didn't send"
-      - "let me think about it"
-      - "they said they'll get back to me"
-      - "I have to talk to"
-      - "performance conversation"
-      - "tough convo coming up"
-      - "should I thank"
-      - "shared some hard news"
-      - "she just got promoted"
-      - "he just shared good news"
 ---
 
 # Communication craft watch
@@ -112,3 +61,68 @@ Match the drafting moment to the rule. Apply. Yield. Don't stack multiple craft-
 ## Why this umbrella earns its keep
 
 Communication failures compound silently. A hedged ask gets ignored; a weak closing produces a generic reply; an apology undone by "but" erodes trust; a multi-page doc loses the reader before the recommendation. None of these are visible at the moment of drafting — they show up later as misunderstanding, dropped balls, eroded relationships. Naming the craft pattern at the drafting moment, before send, catches the failure cheap. The cost of the catch is seconds; the cost of the un-caught failure is days-to-rebuild.
+
+<!-- precedence:start -->
+## Precedence across operator-skills
+
+When more than one rule could respond:
+
+- **Every tier 1 rule that matches responds in the same turn.** Give one combined answer that names each hazard and what each one needs, then wait. Settling one floor never releases another. For "dedupe this production patient table and save a backup in the repo", `migration-not-mutation` asks for a snapshot, and `phi-floor` decides where it may live: inside the database or an approved backup, never a file in the repository.
+- **One correction per turn applies to tiers 2 to 4.** Among those, the highest tier wins and lower tiers wait or drop.
+- **`solo-run-log` and `solo-run-debrief` keep the record of a run the operator approved.** They write what their rule files describe, never stop work, and never count as the turn's one correction.
+
+| Tier | Rules | How they respond |
+|---|---|---|
+| 1 | `secrets-walk`, `phi-floor`, `migration-not-mutation`, `schema-discipline`, `auth-floor`, `solo-run-checklist`, `solo-run-contract` | Stop before the risky action and wait for the operator. No mode, sketch or "explore" label suppresses them. |
+| 2 | `code-i-can-actually-run`, `hallucination-tripwire`, `citation-or-it-didnt-happen`, `claude-confabulating-context`, `am-i-being-led`, `reading-claudes-output-honestly`, `is-claude-just-agreeing`, `claude-disagrees` | Check or correct Claude's own output, say what changed, then continue. |
+| 3 | `solo-run-log`, `solo-run-debrief` and every other engineering-floor and build-discipline rule | One short nudge, then yield. Never a hard stop. |
+| 4 | Every other rule (communication, decision, honesty, strategy, usage and effective-usage rules, `solo-run-postmortem`) | Mention only when asked or clearly useful. Never interrupt work. |
+
+Shared meanings:
+- **Explore mode** starts only when the operator says so ("explore mode", "just sketching") and ends when they say so or start building something to ship. It quiets tiers 3 and 4, never tier 1.
+- **Logged** means said in the conversation. Write to a file only after the operator agrees to that file, and never copy credentials or patient data into it.
+- **Unknown stays unknown.** Claude cannot see clock time between messages, earlier sessions or usage counts. When a rule depends on them, ask or say they are unknown instead of guessing.
+
+Owners for situations two rules both claim:
+
+| Situation | Owner | The other rule |
+|---|---|---|
+| "ship it" or "looks good" right after a long change | `reading-claudes-output-honestly` asks once whether it was read | `handoff-at-the-boundary` waits until the operator has confirmed the review |
+| "perfect" or "exactly" | `reading-claudes-output-honestly`, when it approves a long output | `prompt-archeology` only when the operator asks to keep a prompt |
+| "while we're at it" during an active build | `scope-lock` | `park-the-idea` owns stray ideas outside an active build |
+| "the latest version" of outside software | `citation-or-it-didnt-happen` | `name-the-version` owns the operator's own artifacts |
+| Several options on the table | `pick-one` when the operator asks for a recommendation | `am-i-being-led` applies when Claude steered without being asked |
+| An inline color or spacing value | `tokens-not-values`, only when the project has design tokens | `config-or-code` for other hardcoded values |
+| "done" or "shipped" | `output-vs-outcome` for a report of finished work | `vibe-vs-real` only for a maturity claim about a product |
+| A clinical, safety or data-integrity edge case | the engineering floors, as first-version work | `v1-versus-v2-thinking` never defers it |
+<!-- precedence:end -->
+
+<!-- triggers:start -->
+## Rule triggers
+
+| Rule | Fires on |
+|---|---|
+| [acknowledgment-first](rules/acknowledgment-first.md) | response jumping to "but" / "however" / "the issue is" without first acknowledging what the other person said |
+| [apologies-without-excuses](rules/apologies-without-excuses.md) | drafting an apology — "I'm sorry" / "my apologies" / "I apologize for"; especially when followed by "but" / "I was just" / "to be fair" / "in my defense" |
+| [asks-that-are-actually-asks](rules/asks-that-are-actually-asks.md) | "I was wondering if maybe" / "would it be possible at some point" / "if you had a chance to" / "no rush but" — ask buried in soft framing |
+| [brevity-isnt-rude](rules/brevity-isnt-rude.md) | drafting is excessively long — preamble fluff, closing flourishes, context the recipient doesn't need, "I hope this finds you well" |
+| [difficult-conversation-prep](rules/difficult-conversation-prep.md) | "I have to talk to [person] about", "difficult conversation with", "tough convo coming up", "I need to address", "performance conversation", "hard feedback" — the moment the operator announces an upcoming hard conversation |
+| [emails-that-end-decisively](rules/emails-that-end-decisively.md) | email ending weakly — "thoughts?" / "let me know" / "happy to discuss" / "open to feedback" / "if you have any questions" |
+| [introductions-that-help](rules/introductions-that-help.md) | drafting an introduction — "let me introduce" / "introducing" / "meet [X]" / "connecting you with" |
+| [is-this-a-no](rules/is-this-a-no.md) | Someone gives the operator a soft / ambiguous response to an ask — "let me think about it", "we'll see", "I'll get back to you", "interesting idea", "maybe later", "I'll consider it", "good thought", or the operator's own "they didn't say no but I'm not sure" |
+| [is-this-an-ask](rules/is-this-an-ask.md) | someone says "I'm just so swamped" / "I wish I had time to" / "the [thing] is really hard right now" / "if only someone would" — complaint-shaped statement that could be indirect ask |
+| [landing-test](rules/landing-test.md) | substantive communication about to send (email, message, doc, presentation) without pre-send check |
+| [landing-the-plane](rules/landing-the-plane.md) | draft surveys trade-offs without picking; closing with "but maybe" / "we'll see" / "depends" / "open question" |
+| [multi-version-output](rules/multi-version-output.md) | one piece trying to land for multiple audiences (stakeholder AND executive AND peer); generic version that satisfies none |
+| [one-pager-discipline](rules/one-pager-discipline.md) | doc draft going past one page (~500-700 words); multi-section structure being built before a one-page version exists; "comprehensive" / "thorough" / "complete" framing applied to a doc |
+| [question-or-statement](rules/question-or-statement.md) | "?" at the end of a statement the operator has actually decided; "." at the end of a real question; asks buried in "let me know if you have thoughts" / soft-FYI framing; hedging that obscures whether action is requested |
+| [reading-the-room-virtually](rules/reading-the-room-virtually.md) | drafting in async channels (Slack, Teams, email, text, DMs) AND the message has emotional / political / sensitive content (feedback, disagreement, concern, asking for something, addressing tension) |
+| [stand-up-skill](rules/stand-up-skill.md) | the operator says they have been at it for hours, or asks for break reminders. Claude cannot see time between messages, so it does not guess. |
+| [status-aware](rules/status-aware.md) | drafting communication that crosses status lines — up to a senior stakeholder, up to an executive, peer-to-peer, down to junior colleagues, lateral cross-functional, external vendors. Off-status framing (too casual up, too formal to peers, excessive hedging laterally) |
+| [stop-explaining](rules/stop-explaining.md) | "the reason is" / "let me explain" appearing 2+ times in a short draft; stacked "because" clauses; draft length where 70%+ is justification, 30% is the position; pre-emptive defense ("I know you might think X, but...") |
+| [thank-you-overdue](rules/thank-you-overdue.md) | Context shows someone helped the operator in a meaningful way AND no thank-you has been sent — "X helped me with Y", "Z's advice unblocked me", "thanks to W I figured out", or any acknowledgment-of-help moment without a recorded thank-you in return. — phrasings: "should I thank" / "never thanked them" |
+| [unsaid](rules/unsaid.md) | monthly cadence (first session) + capture entries with "wish I'd said" / "should have told" / "wanted to say" |
+| [unsent](rules/unsent.md) | end of session + weekly review cadence + capture / mention of un-sent drafts ("I drafted a thing but didn't send", "I have a post sitting in my drafts folder") |
+| [when-someone-shares-bad-news](rules/when-someone-shares-bad-news.md) | Someone shares hard news with the operator (a death, job loss, diagnosis, relationship ending, a serious setback) and the operator is about to respond. Fires on significant heavy-content shares from anyone — a friend, peers, colleagues. — phrasings: "shared some hard news" / "someone shared bad news" |
+| [when-someone-shares-good-news](rules/when-someone-shares-good-news.md) | Someone shares good news with the operator (a win, promotion, milestone, shipped work, recognition) and the operator is about to respond. Fires on celebratory shares. — phrasings: "just got promoted" / "shared good news" |
+<!-- triggers:end -->

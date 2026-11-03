@@ -1,6 +1,7 @@
 ---
 title: Right rung — refuse polish on a broken engine
-trigger: "let me polish" / "smooth this out" / "let's add an animation" / "tighten the spacing" / "the hover should" / "let's make this nicer" — combined with a broken engine (failing test, error in dev, end-to-end flow broken, real data not flowing)
+trigger: >-
+  "let me polish" / "smooth this out" / "let's add an animation" / "tighten the spacing" / "the hover should" / "let's make this nicer" — combined with a broken engine (failing test, error in dev, end-to-end flow broken, real data not flowing)
 priority: high
 ---
 
@@ -21,17 +22,16 @@ Combined with broken-engine signals:
 
 ## Response
 
-**Hard interrupt. No softening. No "well, while we're here…"**
+**One clear nudge, then follow the operator.**
 
-1. **Stop.** Don't apply the proposed polish.
+1. **Pause before the polish.**
 2. **Name the broken-ness:**
    "Engine is broken: `<the actual broken thing — test name, error, missing data>`. Polishing on top of this is rented work."
-3. **State the rule:**
-   "Refusing the polish until the engine is back. Either we fix the engine first, or you explicitly invoke 'rented polish — I know' and I'll log it."
+3. **Ask:** "Fix that first, or polish anyway?"
 4. **Two paths:**
    - **Fix engine first:** "What needs to happen for `<broken thing>` to work?"
-   - **Rented polish (logged):** "OK, polishing — logging this as polish-on-broken so the pattern is visible later."
-5. **Wait.**
+   - **Polish anyway:** "OK, polishing now. The broken part is still open."
+5. **Follow the answer.**
 
 ## Suppression
 

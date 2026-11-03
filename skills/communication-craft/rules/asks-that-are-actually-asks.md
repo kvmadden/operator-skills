@@ -1,6 +1,7 @@
 ---
 title: Asks that are actually asks — drop the hedge
-trigger: "I was wondering if maybe" / "would it be possible at some point" / "if you had a chance to" / "no rush but" — ask buried in soft framing
+trigger: >-
+  "I was wondering if maybe" / "would it be possible at some point" / "if you had a chance to" / "no rush but" — ask buried in soft framing
 priority: medium
 ---
 

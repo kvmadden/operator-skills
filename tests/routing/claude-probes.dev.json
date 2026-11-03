@@ -1,0 +1,373 @@
+{
+  "data_status": "development",
+  "provenance": "Written by the Claude reviewer on 3 Nov 2026 while evaluating main at 64513a4, before any description change, then used while changing descriptions. Development data from then on. claude-R1 was added in the second review round, after the routing check changed, from Grok's finding 12.",
+  "expectations": "Taken from each rule's own trigger and suppression text. quiet means no skill should load. !skill means that skill must not be chosen.",
+  "gate": "Stay-quiet cases are gated in CI. Should-fire cases are reported only, because Claude Code routes semantically and short descriptions are not meant to contain every trigger word. The exception is four credential-shape cases (claude-D1, D3, D5 and D22), gated so that deleting a provider prefix or the private key header from the engineering-floor description fails CI. Credential shapes are lexical by nature.",
+  "known_failures": [
+    {
+      "id": "claude-B4",
+      "reason": "build-discipline quotes \"let me polish\" as an example of polish before the feature works. The lint matches the words and cannot see whether the feature works, and README wording is not that case. Until 3 Nov 2026 this probe passed only because of a bug: the old split treated the whole build-discipline description as its Do NOT use clause."
+    },
+    {
+      "id": "claude-R1",
+      "reason": "The placeholder in \"drop the [field]\" matches any one to four words, so \"drop the mic\" scores as a schema change. The model reads the meaning. The lint cannot."
+    }
+  ],
+  "known_failures_note": "Known failures are listed with their reasons in every run. Before the description rewrite of 3 Nov 2026, 10 stay-quiet probes fired: see docs/evidence/routing-before-description-rewrite.txt.",
+  "cases": [
+    {
+      "id": "claude-A1",
+      "phrase": "Add a task-runner script to package.json",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A2",
+      "phrase": "Our risk-based review flagged the Slovakia site export",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A3",
+      "phrase": "Copy .env.example to .env and fill in placeholder names",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A4",
+      "phrase": "Is the new endpoint already deployed to staging?",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A5",
+      "phrase": "Great, now add an index on patient_id",
+      "expect": "!claude-quality-watch",
+      "gate": true
+    },
+    {
+      "id": "claude-A6",
+      "phrase": "The build is currently failing on CI, can you look?",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A7",
+      "phrase": "This log line is useful when debugging the queue",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A8",
+      "phrase": "Swipe-to-dismiss gets wiped when the list reloads",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A9",
+      "phrase": "Translate the button labels into Polish and Czech",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A10",
+      "phrase": "The intake form was abandoned halfway; show the draft",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A11",
+      "phrase": "Save this file and rerun the tests",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A12",
+      "phrase": "Investigate why the login test fails locally",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A13",
+      "phrase": "What do you think of this function signature in utils.ts?",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A14",
+      "phrase": "Is this defensible under HIPAA if we log user IDs?",
+      "expect": "!strategy-and-business",
+      "gate": true
+    },
+    {
+      "id": "claude-A15",
+      "phrase": "Set margin: 22px on the card header",
+      "expect": "engineering-floor/tokens-not-values",
+      "gate": false
+    },
+    {
+      "id": "claude-B1",
+      "phrase": "Make me a Python function that parses HL7 timestamps",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-B2",
+      "phrase": "I need a regex that matches 11-digit NDC codes",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-B3",
+      "phrase": "Create a new branch for this fix",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-B4",
+      "phrase": "Let me polish the README wording before I push",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-B5",
+      "phrase": "Handle the edge case where the patient has no allergy records",
+      "expect": "!build-discipline/v1-versus-v2-thinking",
+      "gate": true
+    },
+    {
+      "id": "claude-B6",
+      "phrase": "Create a unit test for the dose calculator edge case where weight is zero",
+      "expect": "!build-discipline",
+      "gate": true
+    },
+    {
+      "id": "claude-B7",
+      "phrase": "That won't work, we can't send PHI to the logging vendor",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-B8",
+      "phrase": "No way we're committing the service-role key to the repo",
+      "expect": "!honesty-and-calibration/steelman-it",
+      "gate": true
+    },
+    {
+      "id": "claude-C1",
+      "phrase": "Don't run an UPDATE on those rows, just tell me how many there are",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-C2",
+      "phrase": "Our policy doc says never paste sk_live keys into chat; summarize it",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-C3",
+      "phrase": "Explain what a one-way door decision is",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-D1",
+      "phrase": "Here is my .env: STRIPE_SECRET_KEY=sk_live_51FIXTURE0NLY",
+      "expect": "engineering-floor/secrets-walk",
+      "gate": true
+    },
+    {
+      "id": "claude-D2",
+      "phrase": "DATABASE_URL=postgres://admin:Hunter2pass@db.internal:5432/ehr why does it fail",
+      "expect": "engineering-floor/secrets-walk",
+      "gate": false
+    },
+    {
+      "id": "claude-D3",
+      "phrase": "my key is sk-proj-Ab3dEf9hIjKlMnOpQrStUvWx, why 401?",
+      "expect": "engineering-floor/secrets-walk",
+      "gate": true
+    },
+    {
+      "id": "claude-D4",
+      "phrase": "SLACK_BOT_TOKEN=xoxb-2231-88812-QWErtyUIop is in the logs",
+      "expect": "engineering-floor/secrets-walk",
+      "gate": false
+    },
+    {
+      "id": "claude-D5",
+      "phrase": "-----BEGIN OPENSSH PRIVATE KEY----- b3BlbnNzaC1rZXk... deploy is failing",
+      "expect": "engineering-floor/secrets-walk",
+      "gate": true
+    },
+    {
+      "id": "claude-D6",
+      "phrase": "DELETE FROM appointments WHERE created_at < '2024-01-01';",
+      "expect": "engineering-floor/migration-not-mutation",
+      "gate": false
+    },
+    {
+      "id": "claude-D7",
+      "phrase": "Run UPDATE users SET role='admin' WHERE email LIKE '%@clinic.org'",
+      "expect": "engineering-floor/migration-not-mutation",
+      "gate": false
+    },
+    {
+      "id": "claude-D8",
+      "phrase": "Lowercase all the status values in the orders table",
+      "expect": "engineering-floor/migration-not-mutation",
+      "gate": false
+    },
+    {
+      "id": "claude-D9",
+      "phrase": "Let me bulk-edit those rows in prod real quick",
+      "expect": "engineering-floor/migration-not-mutation",
+      "gate": false
+    },
+    {
+      "id": "claude-D10",
+      "phrase": "Let's drop the legacy_dosage column",
+      "expect": "engineering-floor/schema-discipline",
+      "gate": false
+    },
+    {
+      "id": "claude-D11",
+      "phrase": "ALTER TABLE patients ADD COLUMN mrn TEXT NOT NULL",
+      "expect": "engineering-floor/schema-discipline",
+      "gate": false
+    },
+    {
+      "id": "claude-D12",
+      "phrase": "Add a migration to rename the column dob to date_of_birth",
+      "expect": "engineering-floor/schema-discipline",
+      "gate": false
+    },
+    {
+      "id": "claude-D13",
+      "phrase": "import { retryWithBackoff } from 'axios' and wrap the fetch",
+      "expect": "claude-quality-watch/code-i-can-actually-run",
+      "gate": false
+    },
+    {
+      "id": "claude-D14",
+      "phrase": "I'm heading out for 3 hours, keep working on the refactor",
+      "expect": "solo-run/solo-run-checklist",
+      "gate": false
+    },
+    {
+      "id": "claude-D15",
+      "phrase": "Run this overnight while I sleep and open a PR in the morning",
+      "expect": "solo-run/solo-run-checklist",
+      "gate": false
+    },
+    {
+      "id": "claude-D16",
+      "phrase": "We could use Redis, Memcached, or an in-memory LRU cache",
+      "expect": "decision-discipline/pick-one",
+      "gate": false
+    },
+    {
+      "id": "claude-D17",
+      "phrase": "Let me just hardcode the API base URL for now",
+      "expect": "engineering-floor/config-or-code",
+      "gate": false
+    },
+    {
+      "id": "claude-D18",
+      "phrase": "git commit -m 'wip'",
+      "expect": "engineering-floor/commit-message-honesty",
+      "gate": false
+    },
+    {
+      "id": "claude-D19",
+      "phrase": "The tests are failing but let me polish the loading animation first",
+      "expect": "build-discipline/right-rung",
+      "gate": false
+    },
+    {
+      "id": "claude-D20",
+      "phrase": "The latest version of React supports server actions, right?",
+      "expect": "claude-quality-watch/citation-or-it-didnt-happen",
+      "gate": false
+    },
+    {
+      "id": "claude-D21",
+      "phrase": "Ejecuta un UPDATE en esas filas para limpiarlas",
+      "expect": "engineering-floor/migration-not-mutation",
+      "gate": false
+    },
+    {
+      "id": "claude-E1",
+      "phrase": "Perfect, exactly what I wanted, ship it",
+      "expect": "claude-quality-watch/reading-claudes-output-honestly",
+      "gate": false
+    },
+    {
+      "id": "claude-E2",
+      "phrase": "How should I structure the prescriptions table?",
+      "expect": "engineering-floor/domain-modeling",
+      "gate": false
+    },
+    {
+      "id": "claude-E3",
+      "phrase": "OK that's done, ship it",
+      "expect": "claude-quality-watch/reading-claudes-output-honestly",
+      "gate": false
+    },
+    {
+      "id": "claude-E4",
+      "phrase": "Let me revisit the shipped onboarding flow, users hit a crash",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A16",
+      "phrase": "I walked through the handler and it looks right",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-A17",
+      "phrase": "Is v1.2 of the SDK compatible with Node 22?",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-D22",
+      "phrase": "Why does Stripe reject my key sk_live_51FIXTURE0NLY?",
+      "expect": "engineering-floor/secrets-walk",
+      "gate": true
+    },
+    {
+      "id": "claude-D23",
+      "phrase": "git commit -m \"fix stuff\"",
+      "expect": "engineering-floor/commit-message-honesty",
+      "gate": false
+    },
+    {
+      "id": "claude-D24",
+      "phrase": "Let me introduce Dana from pharmacy informatics to the data team",
+      "expect": "communication-craft/introductions-that-help",
+      "gate": false
+    },
+    {
+      "id": "claude-C4",
+      "phrase": "audit the skills and tune the descriptions",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-C5",
+      "phrase": "Skip the brief, I know what I want: make me a CSV parser",
+      "expect": "quiet",
+      "gate": true
+    },
+    {
+      "id": "claude-R1",
+      "phrase": "Time to drop the mic on this demo",
+      "expect": "quiet",
+      "gate": true
+    }
+  ]
+}

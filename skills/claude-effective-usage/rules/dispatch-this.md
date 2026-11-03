@@ -1,6 +1,7 @@
 ---
 title: Dispatch this — async multi-step work belongs in Claude Dispatch
-trigger: "by EOD" / "have this ready when I get back" / "investigate X and report" / "go gather all the Y and summarize" / "research [topic] and produce [output]" / "while I'm doing other things, can you"
+trigger: >-
+  "by EOD" / "have this ready when I get back" / "investigate X and report" / "go gather all the Y and summarize" / "research [topic] and produce [output]" / "while I'm doing other things, can you"
 priority: medium
 ---
 
@@ -9,6 +10,8 @@ priority: medium
 Claude Dispatch is built for async, multi-step work with a clear input → process → output shape and a deadline. Doing dispatch-shaped work synchronously in Claude Code blocks the session for the duration, can't run in parallel with other work, and leaves no structured task to revisit later.
 
 Dispatch fits when: clear deliverable + deadline, async (you'll come back to the result), multi-step (research → analysis → synthesis → delivery), and you don't need to steer each step. Code fits when: synchronous, tightly bound to local files, or the output is code you'll touch right after.
+
+Product features change. This rule describes Claude's surfaces as of November 2026. Check current documentation before relying on a specific feature.
 
 ## Response
 

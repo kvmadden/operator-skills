@@ -1,14 +1,23 @@
 {
-  "name": "claude-skills-plugin",
+  "name": "operator-skills",
   "version": "1.0.0",
   "private": true,
-  "description": "Content-only Claude Code plugin. package.json exists for the test scripts.",
+  "description": "Claude Code plugin of short rules for agent-assisted coding. package.json exists for the checks and tests.",
   "type": "module",
   "scripts": {
-    "test": "node tools/fire-test.mjs && node tools/validate-skills.mjs",
-    "test:fire": "node tools/fire-test.mjs",
-    "validate": "node tools/validate-skills.mjs"
+    "test": "node tools/validate-skills.mjs && node tools/fire-test.mjs && node --test tests/*.test.mjs",
+    "validate": "node tools/validate-skills.mjs",
+    "routing": "node tools/fire-test.mjs",
+    "test:hooks": "node --test tests/hook-contract.test.mjs",
+    "sync:skills": "node tools/sync-skills.mjs",
+    "sync:precedence": "node tools/sync-skills.mjs",
+    "lint:shell": "shellcheck -x hooks/*.sh evals/cases/*/scaffold.sh"
   },
   "license": "MIT",
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "yaml": "2.9.1"
+  }
 }

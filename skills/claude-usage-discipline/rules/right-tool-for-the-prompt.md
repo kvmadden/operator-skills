@@ -26,3 +26,7 @@ Common mismatches: heavy code refactor in chat (no file access); quick lookup in
 - Channel is genuinely fine
 - Operator pre-committed to this channel
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

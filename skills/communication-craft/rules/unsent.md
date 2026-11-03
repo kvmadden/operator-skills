@@ -27,3 +27,7 @@ Surface unsent drafts so the operator can reconsider — not to force sending, b
 
 - Already addressed
 - Mode is `solo-run`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

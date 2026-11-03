@@ -1,6 +1,7 @@
 ---
 title: Not another product — check existing pile before starting new
-trigger: "I want to build" / "I want to start a new" / "I want to start a new app" / "spin it up tonight" / "spin this up tonight" / "I'm going to make a" / "new app idea" / "I'll spin up" / "starting a new" / "let me spin up" / "let's build [thing] also" / "what if I made a [Y]" — when existing projects have unshipped phases
+trigger: >-
+  "I want to build" / "I want to start a new" / "I want to start a new app" / "spin it up tonight" / "spin this up tonight" / "I'm going to make a" / "new app idea" / "I'll spin up" / "starting a new" / "let me spin up" / "let's build [thing] also" / "what if I made a [Y]" — when existing projects have unshipped phases
 priority: high
 ---
 
@@ -12,15 +13,15 @@ The fix: when proposing new, check existing. If existing have unshipped phases, 
 
 ## Response
 
-Hard:
+One question, then follow the operator's choice:
 
-1. **Stop.** Don't start the new product.
-2. **Surface the existing pile:** "Currently un-shipped: `<list of products in concept / in-progress / built-awaiting-users status>`. Adding `<new>` makes it `<n+1>` parallel."
+1. **Ask about the pile.** Claude cannot see the operator's project list unless a file in the session names it, so ask: "What is still unshipped? Adding `<new>` makes it one more in parallel."
+2. **Offer the three paths below.**
 3. **Three paths:**
    - **Defer:** "Note `<new>` in an unbuilt-products list for later. Resume one of the existing instead."
    - **Replace:** "Pick one existing to officially KILL (set status archived). Then start the new."
-   - **Accept the pile:** "Explicitly say 'adding to the pile' and proceed. Logged as a deliberate choice, not a drift."
-4. **Wait.**
+   - **Accept the pile:** "Explicitly say 'adding to the pile' and proceed. Noted in the conversation as a deliberate choice."
+4. **Yield** to the operator's choice.
 
 ## Suppression
 

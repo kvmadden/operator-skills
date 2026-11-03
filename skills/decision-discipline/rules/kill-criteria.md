@@ -1,6 +1,7 @@
 ---
 title: Kill criteria — every new product / commitment gets abandonment conditions UPFRONT
-trigger: "let's start [product]" / "I'm going to build [thing]" / "new initiative" / "spinning up [X]" / "let me commit to [Y]" / a new project being proposed — without "kill if Y" clause
+trigger: >-
+  "let's start [product]" / "I'm going to build [thing]" / "new initiative" / "spinning up [X]" / "let me commit to [Y]" / a new project being proposed — without "kill if Y" clause
 priority: medium
 ---
 

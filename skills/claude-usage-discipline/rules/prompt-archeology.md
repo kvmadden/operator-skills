@@ -1,6 +1,7 @@
 ---
 title: Prompt archeology — archive prompts that worked
-trigger: "perfect" / "exactly" / "that's it" / "nailed it" / "great answer" / "wow that worked" / "first try" / "no edits needed"
+trigger: >-
+  "perfect" / "exactly" / "that's it" / "nailed it" / "great answer" / "wow that worked" / "first try" / "no edits needed"
 priority: medium
 ---
 
@@ -19,7 +20,7 @@ What to save:
 
 1. **Acknowledge the win:** "That landed."
 2. **Offer to archive:** "Save the prompt + context + what made it work? It'll be searchable next time you need a similar shape."
-3. **If yes:** capture verbatim + append it to a prompts file in the repo (for example `PROMPTS.md`).
+3. **If yes:** remove any credentials or patient data first, then save it to a prompts file the operator names, preferably outside version control.
 4. **If no:** "Got it — moving on."
 
 ## Suppression

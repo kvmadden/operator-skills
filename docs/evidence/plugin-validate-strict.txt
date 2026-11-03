@@ -1,0 +1,24 @@
+# Strict validation by Claude Code 2.1.304 on the branch tip after the second review round
+# Commands: claude plugin validate --strict . ; claude plugin validate --strict .claude-plugin/plugin.json ; claude plugin validate --strict skills
+# Run on 3 Nov 2026. Each exits 0.
+
+######## claude plugin validate --strict .
+
+Validating marketplace manifest: <repo>/.claude-plugin/marketplace.json
+
+✔ Validation passed
+(exit 0)
+
+######## claude plugin validate --strict .claude-plugin/plugin.json
+
+Validating plugin manifest: <repo>/.claude-plugin/plugin.json
+
+✔ Validation passed
+(exit 0)
+
+######## claude plugin validate --strict skills
+
+Validating components in: <repo>/skills
+
+✔ Validation passed
+(exit 0)

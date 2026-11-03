@@ -1,6 +1,7 @@
 ---
 title: Prior art check — has someone built this?
-trigger: "I want to build" / "I'll make a" / "new product idea" / "let me create" — without "I checked and there's nothing"
+trigger: >-
+  "I want to build" / "I'll make a" / "new product idea" / "let me create" — without "I checked and there's nothing"
 priority: medium
 ---
 

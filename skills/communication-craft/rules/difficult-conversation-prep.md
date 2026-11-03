@@ -1,6 +1,7 @@
 ---
 title: difficult-conversation-prep — structure a hard conversation before having it
-trigger: "I have to talk to [person] about", "difficult conversation with", "tough convo coming up", "I need to address", "performance conversation", "hard feedback" — the moment the operator announces an upcoming hard conversation
+trigger: >-
+  "I have to talk to [person] about", "difficult conversation with", "tough convo coming up", "I need to address", "performance conversation", "hard feedback" — the moment the operator announces an upcoming hard conversation
 priority: medium
 ---
 
@@ -40,3 +41,7 @@ When the operator signals a difficult upcoming conversation — performance talk
 - Already prepped, or the conversation is happening immediately with no prep time
 - Conversation is explicitly informal ("no prep needed")
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

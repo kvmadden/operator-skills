@@ -38,3 +38,7 @@ Format:
 - Informal intro (e.g., adding to a casual chat thread)
 - Both parties already know each other
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

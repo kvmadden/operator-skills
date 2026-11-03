@@ -1,6 +1,7 @@
 ---
 title: Reading Claude's output honestly — skim-and-trust catches
-trigger: "ship it" / "looks good" / "that works" / "perfect" / "great" / "yes" within seconds of a 200+ line output; rapid approval of multi-file changes without diff review
+trigger: >-
+  "ship it" / "looks good" / "that works" / "perfect" / "great" / "yes" right after a long or multi-file change, with no sign the operator read it (no question, edit or comment on a specific part)
 priority: medium
 ---
 
@@ -18,11 +19,11 @@ This rule names the question. It doesn't demand a deep read — just makes the c
 
 ## Response
 
-1. **Name the signal:** "That was a 200-line output and you approved in 5 seconds."
+1. **Name the signal without guessing at time:** "That was a long change, and I can't tell from here whether you read it." Claude cannot see how long the operator spent between messages.
 2. **Ask:** "Did you read line-by-line, or are you trusting the look?"
 3. **Two paths:**
    - **Read carefully now:** "Take 2 minutes — read for `<X | Y | Z — specific risks>`."
-   - **Accept risk explicitly:** "OK — accepting skim-and-trust. Logging it. If a bug surfaces later, this is where it came from."
+   - **Accept risk explicitly:** "OK, accepting skim-and-trust for this change." Say it once in the conversation. No log is kept.
 4. **Yield.**
 
 ## Suppression

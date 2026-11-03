@@ -27,3 +27,7 @@ Polish before functionality = polish on a broken engine. Soft naming by default;
 - Functionality / reliability / usability layers genuinely done
 - Polish IS the deliverable (portfolio piece, demo)
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

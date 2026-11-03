@@ -15,13 +15,15 @@ There are three triggers: the cadence (30 min), a stopping condition hit (which 
 
 ## Response
 
-1. **Verify mode is solo-run.** If not, suppress.
-2. **Check elapsed time since last log.** If <30 min AND no completion AND no stop-condition, suppress.
-3. **Check elapsed time since solo-run start.** If <5 min, suppress (let the work breathe first).
-4. **Write a single log row** to the run log file (e.g. `.claude/solo-run/log.md`). No chat output.
+1. **Verify mode is solo-run.** If no contract and "go" exist for a run in progress, suppress and write nothing.
+2. **Stop conditions come first.** If a stopping condition was hit, write the log row and the HALT line now (steps 6 and 7), whatever the time since the run started or since the last log.
+3. **Check elapsed time since last log** (read the clock with `date`, because Claude has no timer between messages). If <30 min AND no completion AND no stop-condition, suppress.
+4. **Check elapsed time since solo-run start.** If <5 min, suppress cadence logs only (let the work breathe first). Stop-hits and completions are always logged.
+5. **Use only the log file the contract names** (for example `.claude/solo-run/log.md`). Never copy credentials or patient data into it.
+6. **Write a single log row** to that file. No chat output.
    - Context: one line on where things stand
    - Extra: mode, phase=in-progress, contract path, trigger (`cadence` | `stop-hit` | `completion`), what changed since last log, what's next
-5. **If trigger is stop-hit:** also write a HALT line to the contract file, AND notify the operator in chat (the run can't continue without them):
+7. **If trigger is stop-hit:** also write a HALT line to the contract file, AND notify the operator in chat (the run can't continue without them):
 
 ```markdown
 ## HALT — <ISO timestamp>
@@ -31,14 +33,14 @@ There are three triggers: the cadence (30 min), a stopping condition hit (which 
 **Waiting on:** <operator's input needed>
 ```
 
-6. **If trigger is completion:** include the completed scope item in the log extras so the debrief can summarize what shipped.
-7. **Yield.**
+8. **If trigger is completion:** include the completed scope item in the log extras so the debrief can summarize what shipped.
+9. **Yield.**
 
 ## Suppression
 
 - Mode is not solo-run
 - <30 minutes since the last log AND no completion AND no stop-condition (avoid log spam)
-- Within the first 5 minutes of the run
+- Within the first 5 minutes of the run, for cadence logs only. Stop conditions are always logged.
 - Operator has already returned and run has ended
 
 ## Override

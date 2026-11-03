@@ -1,6 +1,7 @@
 ---
 title: Feature graveyard — capture what was cut and why
-trigger: "let me delete this" / "removing the X feature" / "cutting this" / "this is gone" / "deprecating" — any feature being removed from the codebase
+trigger: >-
+  "let me delete this" / "removing the X feature" / "cutting this" / "this is gone" / "deprecating" — any feature being removed from the codebase
 priority: low
 ---
 
@@ -26,7 +27,7 @@ The friction is tiny (four lines), the long-term return is high (future-you quer
    - Why built: `<purpose>`
    - Why cut: `<reason>`
    - Lesson: `<what to remember next time>`
-3. **Append it** to a `FEATURE_GRAVEYARD.md` (or equivalent) in the repo.
+3. **Offer to append it** to a `FEATURE_GRAVEYARD.md` (or equivalent). Write after the operator agrees.
 4. **Yield.**
 
 ## Suppression

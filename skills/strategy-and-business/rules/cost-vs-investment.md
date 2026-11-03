@@ -30,3 +30,7 @@ Mixing them up:
 - Genuinely hybrid (some cost, some investment)
 - Mode is `explore`
 - Time-critical (no analysis room)
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

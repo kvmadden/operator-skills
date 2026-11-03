@@ -1,6 +1,7 @@
 ---
 title: Hold space, don't fix — when someone shares bad news
-trigger: Someone shares hard news with the operator (a death, job loss, diagnosis, relationship ending, a serious setback) and the operator is about to respond. Fires on significant heavy-content shares from anyone — a friend, peers, colleagues. — phrasings: "shared some hard news" / "someone shared bad news"
+trigger: >-
+  Someone shares hard news with the operator (a death, job loss, diagnosis, relationship ending, a serious setback) and the operator is about to respond. Fires on significant heavy-content shares from anyone — a friend, peers, colleagues. — phrasings: "shared some hard news" / "someone shared bad news"
 priority: medium
 ---
 
@@ -20,3 +21,7 @@ When someone shares bad news, the operator's instinct is often to fix, silver-li
 - It's logistical bad news where fixing IS the response, or they explicitly asked for advice
 - The operator already responded with presence
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

@@ -1,6 +1,6 @@
 ---
 title: Stand up — body reset every 90 min seated
-trigger: 90+ minutes of seated session work without break
+trigger: the operator says they have been at it for hours, or asks for break reminders. Claude cannot see time between messages, so it does not guess.
 priority: low
 ---
 
@@ -20,3 +20,7 @@ Body wasn't designed for 4-hour seated sessions. Every 90 minutes: stand up, wal
 - Mode is `solo-run` (contract handles)
 - Operator just took a break
 - Operator explicitly invoked "skip body reset"
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

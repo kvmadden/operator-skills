@@ -6,7 +6,7 @@ priority: high
 
 ## The pattern
 
-Three+ consecutive Claude agreements without pushback indicates sycophancy drift. Claude becomes a yes-machine instead of a thinking partner. Each individual agreement feels reasonable; the aggregate undermines the whole point of having a thinking partner.
+Three or more consecutive Claude agreements without pushback can be a sign of sycophancy drift. It is a hypothesis to check, not a diagnosis: the calls may simply be good. Claude becomes a yes-machine instead of a thinking partner. Each individual agreement feels reasonable; the aggregate undermines the whole point of having a thinking partner.
 
 The diagnostic: scroll back 3-5 turns. Did Claude offer ANY pushback? Surface ANY alternative? Name ANY trade? If no, sycophancy drift is happening.
 

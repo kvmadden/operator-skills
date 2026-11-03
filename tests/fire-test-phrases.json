@@ -1,7 +1,6 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Synthetic fire test set. Each entry describes a trigger phrase + the umbrella/rule that SHOULD dispatch. Run via `node tools/fire-test.mjs` to catch dispatch regressions before they hit real sessions. New rules + new triggers should add to this set so the regression coverage grows with the plugin.",
-  "schema_version": "1",
+  "data_status": "development",
+  "description": "The 28 phrases that shipped with v1.0.0. Their wording overlaps phrases that were copied into skill metadata Claude Code never reads, so they test self-consistency, not routing. Kept unchanged as development regression cases. Reported, not gated.",
   "phrases": [
     {
       "id": "strategy-business-moat",
@@ -199,6 +198,5 @@
       "expected_rule": "summarize-and-archive",
       "notes": "Long resolved thread + pivot → capture conclusions then archive"
     }
-  ],
-  "regressions": []
+  ]
 }

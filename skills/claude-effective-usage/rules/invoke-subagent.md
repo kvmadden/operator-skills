@@ -1,6 +1,7 @@
 ---
 title: Invoke a subagent — bounded task that maps to a specialized agent
-trigger: "bounded task" / "search across the whole codebase" / "just give me the conclusion" / a bounded task with clear input that maps to a specialized agent, OR a codebase-wide search where you only need the conclusion
+trigger: >-
+  "bounded task" / "search across the whole codebase" / "just give me the conclusion" / a bounded task with clear input that maps to a specialized agent, OR a codebase-wide search where you only need the conclusion
 priority: medium
 ---
 

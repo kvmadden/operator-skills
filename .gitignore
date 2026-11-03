@@ -1,4 +1,8 @@
 node_modules/
-package-lock.json
 .DS_Store
 *.log
+# Raw claude plugin eval output holds transcripts, including the planted synthetic key.
+# Only the reduced summaries are committed.
+evals/results/*
+!evals/results/*-summary.json
+evals/cases/results/

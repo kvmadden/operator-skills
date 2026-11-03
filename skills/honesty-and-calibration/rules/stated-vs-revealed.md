@@ -27,3 +27,7 @@ What the operator says they want and what they actually do often diverge. Both a
 - Insufficient data (<4 weeks)
 - Operator already noted the gap and has a plan
 - Mode is `explore`
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

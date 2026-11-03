@@ -1,0 +1,11 @@
+{
+  "session_id": "0f6d1c3e-4b8a-4c2d-9e1f-5a7b3c9d2e10",
+  "transcript_path": "/home/fixture/.claude/projects/fixture/0f6d1c3e-4b8a-4c2d-9e1f-5a7b3c9d2e10.jsonl",
+  "cwd": "/home/fixture/project",
+  "permission_mode": "default",
+  "hook_event_name": "Stop",
+  "stop_hook_active": false,
+  "last_assistant_message": "Done. The migration file is ready for review.",
+  "background_tasks": [],
+  "session_crons": []
+}

@@ -1,6 +1,7 @@
 ---
 title: Stop explaining — over-justification undermines the position
-trigger: "the reason is" / "let me explain" appearing 2+ times in a short draft; stacked "because" clauses; draft length where 70%+ is justification, 30% is the position; pre-emptive defense ("I know you might think X, but...")
+trigger: >-
+  "the reason is" / "let me explain" appearing 2+ times in a short draft; stacked "because" clauses; draft length where 70%+ is justification, 30% is the position; pre-emptive defense ("I know you might think X, but...")
 priority: medium
 ---
 

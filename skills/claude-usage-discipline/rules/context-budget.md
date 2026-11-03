@@ -30,3 +30,7 @@ The fix isn't continuing — it's checkpointing and resetting.
 - Mid-critical task (don't reset mid-flow on something time-sensitive)
 - Mode is `solo-run`
 - Just checkpointed in last hour
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

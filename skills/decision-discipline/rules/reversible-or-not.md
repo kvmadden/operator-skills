@@ -30,3 +30,7 @@ Most decisions are type-2 and get over-deliberated. Some are type-1 and get unde
 - Mode is `explore`
 - Type already named
 - Decision is genuinely ambiguous (then default to deliberation = type-1)
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.

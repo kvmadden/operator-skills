@@ -30,3 +30,7 @@ The bar:
 - Operator-as-user is genuinely named (and it's a tool the operator uses)
 - Mode is `explore`
 - Already validated in this session
+
+## Override
+
+- "skip" or "not now" ends this for the current task. Do not raise it again for the same thing unless something new happens.
