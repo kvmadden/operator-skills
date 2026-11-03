@@ -31,5 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install shellcheck if missing
+        run: command -v shellcheck || { sudo apt-get update && sudo apt-get install -y shellcheck; }
       - run: shellcheck --version
-      - run: shellcheck hooks/*.sh evals/scaffold/*.sh
+      - run: shellcheck -x hooks/*.sh evals/scaffold/*.sh
