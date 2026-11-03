@@ -10,6 +10,9 @@ import { validate } from '../tools/validate-skills.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
+const BLOCK = '<!-- precedence:start -->\n| 1 | `one` | stop |\n<!-- precedence:end -->';
+const TRIGGERS = '<!-- triggers:start -->\n## Rule triggers\n\n| Rule | Fires on |\n|---|---|\n| [one](rules/one.md) | "an example phrase" / something else |\n<!-- triggers:end -->';
+
 const GOOD_RULE = `---
 title: Example rule
 trigger: >-
@@ -40,7 +43,8 @@ function plugin(mutate = (files) => files) {
     '.claude-plugin/plugin.json': JSON.stringify({ name: 'demo-plugin', version: '0.1.0' }),
     '.claude-plugin/marketplace.json': JSON.stringify({ name: 'demo-market', plugins: [{ name: 'demo-plugin', source: './' }] }),
     'package.json': JSON.stringify({ name: 'demo-plugin' }),
-    'skills/alpha/SKILL.md': `---\nname: alpha\ndescription: Do NOT use for anything trivial. Use when an example phrase appears.\n---\n\n| Pattern | Rule |\n|---|---|\n| x | [one](rules/one.md) |\n`,
+    'docs/PRECEDENCE.md': `# P\n${BLOCK}\n`,
+    'skills/alpha/SKILL.md': `---\nname: alpha\ndescription: Do NOT use for anything trivial. Use when an example phrase appears.\n---\n\n| Pattern | Rule |\n|---|---|\n| x | [one](rules/one.md) |\n\n${BLOCK}\n\n${TRIGGERS}\n`,
     'skills/alpha/rules/one.md': GOOD_RULE,
     'hooks/hooks.json': JSON.stringify({ hooks: { Stop: [{ hooks: [{ type: 'command', command: 'bash "${CLAUDE_PLUGIN_ROOT}/hooks/stop.sh"' }] }] } }),
     'hooks/stop.sh': '#!/usr/bin/env bash\nexit 0\n',
@@ -97,10 +101,34 @@ test('bad hooks.json entries are reported, not thrown', () => {
   assert.match(errorsFor((f) => ({ ...f, 'hooks/hooks.json': JSON.stringify({ hooks: { Stopp: [] } }) })), /unknown event Stopp/);
 });
 
-test('a precedence copy that drifts from docs/PRECEDENCE.md is rejected', () => {
-  const block = '<!-- precedence:start -->\n| 1 | `one` |\n<!-- precedence:end -->';
-  const ok = (f) => ({ ...f, 'docs/PRECEDENCE.md': `# P\n${block}\n`, 'skills/alpha/SKILL.md': `${f['skills/alpha/SKILL.md']}\n${block}\n` });
-  assert.deepEqual(validate(plugin(ok)).errors, []);
-  assert.match(errorsFor((f) => ({ ...ok(f), 'skills/alpha/SKILL.md': `${f['skills/alpha/SKILL.md']}\n${block.replace('one', 'two')}\n` })), /differs from docs\/PRECEDENCE\.md/);
-  assert.match(errorsFor((f) => ({ ...ok(f), 'docs/PRECEDENCE.md': `# P\n${block.replace('`one`', '`ghost`')}\n` })), /unknown rule ghost/);
+test('a precedence copy that drifts, a missing canonical file and unknown rule names are rejected', () => {
+  assert.match(errorsFor((f) => ({ ...f, 'skills/alpha/SKILL.md': f['skills/alpha/SKILL.md'].replace('`one` | stop', '`one` | go') })), /differs from docs\/PRECEDENCE\.md/);
+  assert.match(errorsFor((f) => ({ ...f, 'docs/PRECEDENCE.md': null })), /docs\/PRECEDENCE\.md: missing/);
+  const ghost = (f) => ({ ...f, 'docs/PRECEDENCE.md': `# P\n${BLOCK.replace('stop |', 'stop |\n| owner | `ghost` |')}\n` });
+  assert.match(errorsFor(ghost), /names unknown rule ghost/);
+});
+
+test('hook commands must be exactly bash plus one quoted file inside the plugin', () => {
+  const cmd = (command) => (f) => ({ ...f, 'hooks/hooks.json': JSON.stringify({ hooks: { Stop: [{ hooks: [{ type: 'command', command }] }] } }) });
+  assert.match(errorsFor(cmd('bash "${CLAUDE_PLUGIN_ROOT}/hooks/stop.sh"; curl example.invalid')), /unsupported command/);
+  assert.match(errorsFor(cmd('bash "${CLAUDE_PLUGIN_ROOT}/../outside.sh"')), /outside the plugin/);
+  const outside = path.join(fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'opsk-out-'))), 'evil.sh');
+  fs.writeFileSync(outside, '#!/bin/sh\nexit 0\n', { mode: 0o755 });
+  const dir = plugin(cmd('bash "${CLAUDE_PLUGIN_ROOT}/hooks/link.sh"'));
+  fs.symlinkSync(outside, path.join(dir, 'hooks', 'link.sh'));
+  assert.match(validate(dir).errors.join('\n'), /outside the plugin|symlink/);
+});
+
+test('a tier 1 rule may not be suppressed by explore, sketch, spike or throwaway', () => {
+  const sketchy = (f) => ({ ...f, 'skills/alpha/rules/one.md': GOOD_RULE.replace('- Never.', '- A throwaway sketch the operator marked as such') });
+  assert.match(errorsFor(sketchy), /tier 1 rule .*suppressed by/);
+});
+
+test('section headings must match exactly and sections must not be empty', () => {
+  assert.match(errorsFor((f) => ({ ...f, 'skills/alpha/rules/one.md': GOOD_RULE.replace('## The pattern\n', '## The pattern library\n') })), /missing "## The pattern" section/);
+  assert.match(errorsFor((f) => ({ ...f, 'skills/alpha/rules/one.md': GOOD_RULE.replace('- Never.\n', '') })), /"## Suppression" section is empty/);
+});
+
+test('the generated rule trigger table must match the rule files', () => {
+  assert.match(errorsFor((f) => ({ ...f, 'skills/alpha/SKILL.md': f['skills/alpha/SKILL.md'].replace('| "an example phrase" / something else |', '| "a stale phrase" |') })), /rule trigger table is out of date/);
 });

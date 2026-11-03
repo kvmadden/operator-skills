@@ -54,14 +54,18 @@ Solo builders and indie operators tend to evaluate work in craft-terms (does it 
 <!-- precedence:start -->
 ## Precedence across operator-skills
 
-When more than one rule could respond, use this order. Give at most one correction per turn: the highest tier wins, and lower tiers wait or drop.
+When more than one rule could respond:
+
+- **Every tier 1 rule that matches responds in the same turn.** Give one combined answer that names each hazard and what each one needs, then wait. Settling one floor never releases another. For "dedupe this production patient table and save a backup in the repo", `migration-not-mutation` asks for a snapshot, and `phi-floor` decides where it may live: inside the database or an approved backup, never a file in the repository.
+- **One correction per turn applies to tiers 2 to 4.** Among those, the highest tier wins and lower tiers wait or drop.
+- **`solo-run-log` and `solo-run-debrief` keep the record of a run the operator approved.** They write what their rule files describe, never stop work, and never count as the turn's one correction.
 
 | Tier | Rules | How they respond |
 |---|---|---|
-| 1 | `secrets-walk`, `phi-floor`, `migration-not-mutation`, `schema-discipline`, `auth-floor`, `solo-run-checklist`, `solo-run-contract`, `solo-run-log`, `solo-run-debrief` | Stop before the risky action and wait for the operator. No mode, sketch or "explore" label suppresses them. |
+| 1 | `secrets-walk`, `phi-floor`, `migration-not-mutation`, `schema-discipline`, `auth-floor`, `solo-run-checklist`, `solo-run-contract` | Stop before the risky action and wait for the operator. No mode, sketch or "explore" label suppresses them. |
 | 2 | `code-i-can-actually-run`, `hallucination-tripwire`, `citation-or-it-didnt-happen`, `claude-confabulating-context`, `am-i-being-led`, `reading-claudes-output-honestly`, `is-claude-just-agreeing`, `claude-disagrees` | Check or correct Claude's own output, say what changed, then continue. |
-| 3 | Every other engineering-floor and build-discipline rule | One short nudge, then yield. Never a hard stop. |
-| 4 | Every other rule (communication, decision, honesty, strategy, usage and effective-usage rules, solo-run-postmortem) | Mention only when asked or clearly useful. Never interrupt work. |
+| 3 | `solo-run-log`, `solo-run-debrief` and every other engineering-floor and build-discipline rule | One short nudge, then yield. Never a hard stop. |
+| 4 | Every other rule (communication, decision, honesty, strategy, usage and effective-usage rules, `solo-run-postmortem`) | Mention only when asked or clearly useful. Never interrupt work. |
 
 Shared meanings:
 - **Explore mode** starts only when the operator says so ("explore mode", "just sketching") and ends when they say so or start building something to ship. It quiets tiers 3 and 4, never tier 1.
@@ -72,18 +76,27 @@ Owners for situations two rules both claim:
 
 | Situation | Owner | The other rule |
 |---|---|---|
-| "ship it" or "looks good" right after a long change | reading-claudes-output-honestly asks once whether it was read | handoff-at-the-boundary waits until the operator has confirmed the review |
-| "perfect" or "exactly" | reading-claudes-output-honestly, when it approves a long output | prompt-archeology only when the operator asks to keep a prompt |
-| "while we're at it" during an active build | scope-lock | park-the-idea owns stray ideas outside an active build |
-| "the latest version" of outside software | citation-or-it-didnt-happen | name-the-version owns the operator's own artifacts |
-| Several options on the table | pick-one when the operator asks for a recommendation | am-i-being-led applies when Claude steered without being asked |
-| An inline color or spacing value | tokens-not-values, only when the project has design tokens | config-or-code for other hardcoded values |
-| "done" or "shipped" | output-vs-outcome for a report of finished work | vibe-vs-real only for a maturity claim about a product |
-| A clinical, safety or data-integrity edge case | the engineering floors, as first-version work | v1-versus-v2-thinking never defers it |
+| "ship it" or "looks good" right after a long change | `reading-claudes-output-honestly` asks once whether it was read | `handoff-at-the-boundary` waits until the operator has confirmed the review |
+| "perfect" or "exactly" | `reading-claudes-output-honestly`, when it approves a long output | `prompt-archeology` only when the operator asks to keep a prompt |
+| "while we're at it" during an active build | `scope-lock` | `park-the-idea` owns stray ideas outside an active build |
+| "the latest version" of outside software | `citation-or-it-didnt-happen` | `name-the-version` owns the operator's own artifacts |
+| Several options on the table | `pick-one` when the operator asks for a recommendation | `am-i-being-led` applies when Claude steered without being asked |
+| An inline color or spacing value | `tokens-not-values`, only when the project has design tokens | `config-or-code` for other hardcoded values |
+| "done" or "shipped" | `output-vs-outcome` for a report of finished work | `vibe-vs-real` only for a maturity claim about a product |
+| A clinical, safety or data-integrity edge case | the engineering floors, as first-version work | `v1-versus-v2-thinking` never defers it |
 <!-- precedence:end -->
 
-## Trigger catalogue
+<!-- triggers:start -->
+## Rule triggers
 
-Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads. Where this older text disagrees with a rule file or the precedence section above, the rule file and the precedence section win.
-
-> Use this skill whenever the operator evaluates a product, initiative, or commitment through a BUSINESS lens — moats, unit economics, P&L, market dynamics, scaling, recurring spend, cost vs investment framing. Triggers include phrases like "is this defensible", "what's the moat", "competitors could copy", "let's scale this", "more users", "wider rollout", "the unit economics", "cost per user", "revenue side", "cost side", "margin", "what's the P&L", "is the math working", "does anyone want it", "market for this", "willingness to pay", "the talent pipeline", "who's next for [role]", "succession plan", "let's audit our subscriptions", "what are we paying for", "what's earning its keep", "cost vs investment", "one-time vs ongoing", "this expense vs that investment". Consult the skill's rules/ folder to identify which lens fits (moat-thinking, unit-economics, market-vs-product, pipeline-thinking, p-and-l, cost-vs-investment, subscription-audit, vendor-as-resource) and apply that rule's evaluation framework. Soft teaching response — names the business question + asks the operator's read; doesn't prescribe specific answers. Different from `decision-discipline` (which is about HOW to decide); this is about evaluating-things-as-businesses. Do NOT use for pure execution questions ("how do I implement X"), creative-craft evaluation ("does this song sound good"), relationship work, or when the operator is in `explore` mode and ideation is the point.
+| Rule | Fires on |
+|---|---|
+| [cost-vs-investment](rules/cost-vs-investment.md) | evaluating a spend / time / commitment without distinguishing cost (consumed, no return) from investment (front-loaded, compounds over time) |
+| [market-vs-product](rules/market-vs-product.md) | evaluating product success purely on product terms (works, polished, clean code) without considering market (who wants it, who'd pay, demand signal) |
+| [moat-thinking](rules/moat-thinking.md) | evaluating a product's defensibility / product-strategy moments / "what's our advantage" / "what's the moat" / "what's the moat on" / "is this defensible" / "what's defensible" / "competitors could copy this" / "could competitors copy" / "is this a moat" / portfolio investment decisions |
+| [p-and-l-thinking](rules/p-and-l-thinking.md) | evaluating a project / initiative / product without P&L lens / "is this worth it" / "should I keep working on X" / attention-allocation decisions |
+| [pipeline-thinking](rules/pipeline-thinking.md) | reasoning about talent / staffing / development as point-in-time / scrambling for a role only when it opens / no successor identified / "who would do X if Y left" |
+| [subscription-audit](rules/subscription-audit.md) | quarterly cadence / explicit "subscription audit" invocation / "I should look at my subscriptions" / recurring-spend mention |
+| [unit-economics](rules/unit-economics.md) | considering scaling a product without unit-economics analysis / "let's scale this" / "more users" / "wider rollout" / "open this up" |
+| [vendor-as-resource](rules/vendor-as-resource.md) | Phrases like "I just need them to do X", "send them the request", "they should provide" — pure transactional language toward a vendor or external resource, with no relationship-investment moments in recent interactions. |
+<!-- triggers:end -->

@@ -9,8 +9,9 @@
     "validate": "node tools/validate-skills.mjs",
     "routing": "node tools/fire-test.mjs",
     "test:hooks": "node --test tests/hook-contract.test.mjs",
-    "sync:precedence": "node tools/sync-precedence.mjs",
-    "lint:shell": "shellcheck hooks/*.sh"
+    "sync:skills": "node tools/sync-skills.mjs",
+    "sync:precedence": "node tools/sync-skills.mjs",
+    "lint:shell": "shellcheck -x hooks/*.sh evals/scaffold/*.sh"
   },
   "license": "MIT",
   "engines": {

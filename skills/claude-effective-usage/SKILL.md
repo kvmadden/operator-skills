@@ -57,14 +57,18 @@ The most common quiet losses in a Claude session: doing chat-shaped work in a he
 <!-- precedence:start -->
 ## Precedence across operator-skills
 
-When more than one rule could respond, use this order. Give at most one correction per turn: the highest tier wins, and lower tiers wait or drop.
+When more than one rule could respond:
+
+- **Every tier 1 rule that matches responds in the same turn.** Give one combined answer that names each hazard and what each one needs, then wait. Settling one floor never releases another. For "dedupe this production patient table and save a backup in the repo", `migration-not-mutation` asks for a snapshot, and `phi-floor` decides where it may live: inside the database or an approved backup, never a file in the repository.
+- **One correction per turn applies to tiers 2 to 4.** Among those, the highest tier wins and lower tiers wait or drop.
+- **`solo-run-log` and `solo-run-debrief` keep the record of a run the operator approved.** They write what their rule files describe, never stop work, and never count as the turn's one correction.
 
 | Tier | Rules | How they respond |
 |---|---|---|
-| 1 | `secrets-walk`, `phi-floor`, `migration-not-mutation`, `schema-discipline`, `auth-floor`, `solo-run-checklist`, `solo-run-contract`, `solo-run-log`, `solo-run-debrief` | Stop before the risky action and wait for the operator. No mode, sketch or "explore" label suppresses them. |
+| 1 | `secrets-walk`, `phi-floor`, `migration-not-mutation`, `schema-discipline`, `auth-floor`, `solo-run-checklist`, `solo-run-contract` | Stop before the risky action and wait for the operator. No mode, sketch or "explore" label suppresses them. |
 | 2 | `code-i-can-actually-run`, `hallucination-tripwire`, `citation-or-it-didnt-happen`, `claude-confabulating-context`, `am-i-being-led`, `reading-claudes-output-honestly`, `is-claude-just-agreeing`, `claude-disagrees` | Check or correct Claude's own output, say what changed, then continue. |
-| 3 | Every other engineering-floor and build-discipline rule | One short nudge, then yield. Never a hard stop. |
-| 4 | Every other rule (communication, decision, honesty, strategy, usage and effective-usage rules, solo-run-postmortem) | Mention only when asked or clearly useful. Never interrupt work. |
+| 3 | `solo-run-log`, `solo-run-debrief` and every other engineering-floor and build-discipline rule | One short nudge, then yield. Never a hard stop. |
+| 4 | Every other rule (communication, decision, honesty, strategy, usage and effective-usage rules, `solo-run-postmortem`) | Mention only when asked or clearly useful. Never interrupt work. |
 
 Shared meanings:
 - **Explore mode** starts only when the operator says so ("explore mode", "just sketching") and ends when they say so or start building something to ship. It quiets tiers 3 and 4, never tier 1.
@@ -75,18 +79,29 @@ Owners for situations two rules both claim:
 
 | Situation | Owner | The other rule |
 |---|---|---|
-| "ship it" or "looks good" right after a long change | reading-claudes-output-honestly asks once whether it was read | handoff-at-the-boundary waits until the operator has confirmed the review |
-| "perfect" or "exactly" | reading-claudes-output-honestly, when it approves a long output | prompt-archeology only when the operator asks to keep a prompt |
-| "while we're at it" during an active build | scope-lock | park-the-idea owns stray ideas outside an active build |
-| "the latest version" of outside software | citation-or-it-didnt-happen | name-the-version owns the operator's own artifacts |
-| Several options on the table | pick-one when the operator asks for a recommendation | am-i-being-led applies when Claude steered without being asked |
-| An inline color or spacing value | tokens-not-values, only when the project has design tokens | config-or-code for other hardcoded values |
-| "done" or "shipped" | output-vs-outcome for a report of finished work | vibe-vs-real only for a maturity claim about a product |
-| A clinical, safety or data-integrity edge case | the engineering floors, as first-version work | v1-versus-v2-thinking never defers it |
+| "ship it" or "looks good" right after a long change | `reading-claudes-output-honestly` asks once whether it was read | `handoff-at-the-boundary` waits until the operator has confirmed the review |
+| "perfect" or "exactly" | `reading-claudes-output-honestly`, when it approves a long output | `prompt-archeology` only when the operator asks to keep a prompt |
+| "while we're at it" during an active build | `scope-lock` | `park-the-idea` owns stray ideas outside an active build |
+| "the latest version" of outside software | `citation-or-it-didnt-happen` | `name-the-version` owns the operator's own artifacts |
+| Several options on the table | `pick-one` when the operator asks for a recommendation | `am-i-being-led` applies when Claude steered without being asked |
+| An inline color or spacing value | `tokens-not-values`, only when the project has design tokens | `config-or-code` for other hardcoded values |
+| "done" or "shipped" | `output-vs-outcome` for a report of finished work | `vibe-vs-real` only for a maturity claim about a product |
+| A clinical, safety or data-integrity edge case | the engineering floors, as first-version work | `v1-versus-v2-thinking` never defers it |
 <!-- precedence:end -->
 
-## Trigger catalogue
+<!-- triggers:start -->
+## Rule triggers
 
-Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads. Where this older text disagrees with a rule file or the precedence section above, the rule file and the precedence section win.
-
-> Use this skill whenever the operator could work with Claude more effectively — by picking the right surface, the right tool tier, or the right session hygiene. Three families: (1) RIGHT SURFACE — choosing among Claude Code / Chat / Cowork / Dispatch. Triggers like "by EOD", "have this ready when I get back", "investigate X and report", "go gather all the Y and summarize" (async multi-step → Dispatch); "brainstorm with me", "what do you think of", "help me think through", "think out loud" (open exploration → Chat); "draft a proposal", "write the brief", "compose an email", "I need a spec doc" (document drafting → Cowork). (2) TOOL-TIER EFFICIENCY — about to use computer-use / screenshots when a dedicated app MCP exists; about to poll or sleep-loop for a condition that could be event-driven; about to make several independent tool calls sequentially when they could run in parallel in one message; a bounded task that maps to a specialized agent or a codebase-wide search. (3) SESSION HYGIENE — "save this" / "remember this" / "that's an important point" / a decision or insight worth keeping (pin a durable conclusion); "you keep forgetting" / "we already did this" / response quality drifting (clear or compact stale context); a long resolved thread that's starting to drift (summarize + archive). Consult the rules/ folder for the specific pattern and apply its corrective. Soft teaching response — names the better path and yields. Never forces a surface switch or runs /clear autonomously (those are operator actions). Do NOT use when the operator is mid-build on the correct surface, in solo-run mode, or has explicitly chosen the current surface/tool.
+| Rule | Fires on |
+|---|---|
+| [clear-context-when-stale](rules/clear-context-when-stale.md) | Claude repeating itself / making the same mistake twice / treating refactored things as their old shape / re-asking answered questions / the operator saying "you keep forgetting" / "we already did this" / "you're going in circles" |
+| [dispatch-this](rules/dispatch-this.md) | "by EOD" / "have this ready when I get back" / "investigate X and report" / "go gather all the Y and summarize" / "research [topic] and produce [output]" / "while I'm doing other things, can you" |
+| [invoke-subagent](rules/invoke-subagent.md) | "bounded task" / "search across the whole codebase" / "just give me the conclusion" / a bounded task with clear input that maps to a specialized agent, OR a codebase-wide search where you only need the conclusion |
+| [monitor-instead-of-poll](rules/monitor-instead-of-poll.md) | "sleep loop" / "poll the deploy" / "poll until" / "keep checking" / "wait for it to finish" / about to write a retry-with-delay loop for a condition that could be event-driven (deploys, status checks, background jobs) |
+| [pin-this](rules/pin-this.md) | "save this" / "remember this" / "that's an important point" / "ok we're going with X" / "let's commit to Y" / a clear decision, insight, or commitment surfaces that the operator will reference again |
+| [prefer-dedicated-mcp](rules/prefer-dedicated-mcp.md) | "just screenshot" / "screenshot Slack" / "look at the screen" / about to use a generic tool tier (computer-use, screenshots) when a dedicated app MCP exists — dedicated app MCP > browser MCP > computer-use; PDF MCP > raw file read; database MCP > shell SQL |
+| [single-message-multi-tool](rules/single-message-multi-tool.md) | "read this file, then" / "then that file" / "one at a time" / about to make multiple INDEPENDENT tool calls sequentially — Read→Read→Read for known files, grep→grep for separate patterns, several non-dependent Bash commands, or spawning agents one at a time |
+| [summarize-and-archive](rules/summarize-and-archive.md) | 30+ turns with the core question resolved and drift starting / "we basically solved this" / "ok we got it" / "great, that worked" / "let me start a new chat for the next thing" |
+| [switch-to-chat-instead](rules/switch-to-chat-instead.md) | "let me think about" / "brainstorm with me" / "what do you think of" / "I'm trying to figure out" / "help me think through" / 5+ message back-and-forth with no tool calls or file edits |
+| [use-cowork-not-code](rules/use-cowork-not-code.md) | "persistent doc" / "keep editing across sessions" / "draft a proposal" / "write the brief" / "let's outline this essay" / "I need a spec doc" / 3+ rounds of "make it shorter" / "lengthen this section" |
+<!-- triggers:end -->

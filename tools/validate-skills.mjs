@@ -13,11 +13,16 @@
 // - no inert routing metadata (promptSignals, pathPatterns, bashPatterns)
 // - every rules/*.md file is linked from its SKILL.md and every link resolves
 // - every rule file parses, has a title and a trigger, and has the four
-//   sections the README promises: The pattern, Response, Suppression, Override
-// - every SKILL.md carries the same precedence block as docs/PRECEDENCE.md,
-//   and every rule slug named in the tier table exists
-// - hooks/hooks.json uses known events, command hooks only, and points at
-//   executable files under ${CLAUDE_PLUGIN_ROOT}
+//   sections the README promises, with exactly these headings and a non-empty
+//   body: The pattern, Response, Suppression, Override
+// - docs/PRECEDENCE.md exists with its markers, every SKILL.md carries the
+//   same precedence block, and every rule named in its tables exists
+// - no tier 1 rule lists explore, sketch, spike or throwaway as a suppression
+// - every SKILL.md carries the rule trigger table generated from its rule
+//   files, so the text Claude reads after loading a skill matches the rules
+// - hooks/hooks.json uses known events and command hooks of exactly the form
+//   bash "${CLAUDE_PLUGIN_ROOT}/<path>", where <path> is a regular,
+//   executable file inside the plugin and not a symlink
 //
 // Usage: node tools/validate-skills.mjs [plugin-root]
 import fs from 'node:fs';
@@ -28,11 +33,15 @@ import YAML from 'yaml';
 export const DESCRIPTION_MAX = 1024;
 export const LISTING_BUDGET = 8000;
 export const RULE_SECTIONS = ['The pattern', 'Response', 'Suppression', 'Override'];
+export const TIER1_BANNED_SUPPRESSIONS = ['explore', 'sketch', 'spike', 'throwaway'];
 const KNOWN_EVENTS = new Set(['PreToolUse', 'PostToolUse', 'PostToolUseFailure', 'UserPromptSubmit', 'Stop', 'StopFailure',
   'SubagentStart', 'SubagentStop', 'SessionStart', 'SessionEnd', 'Notification', 'PreCompact', 'PostCompact', 'PermissionRequest']);
 const NAME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const HOOK_COMMAND_RE = /^bash "\$\{CLAUDE_PLUGIN_ROOT\}\/([A-Za-z0-9._/-]+)"$/;
 export const PRECEDENCE_START = '<!-- precedence:start -->';
 export const PRECEDENCE_END = '<!-- precedence:end -->';
+export const TRIGGERS_START = '<!-- triggers:start -->';
+export const TRIGGERS_END = '<!-- triggers:end -->';
 
 export function frontmatter(text) {
   const m = text.match(/^---\n([\s\S]*?)\n---(?:\n|$)/);
@@ -46,16 +55,92 @@ export function frontmatter(text) {
   }
 }
 
-export function precedenceBlock(text) {
-  const a = text.indexOf(PRECEDENCE_START);
-  const b = text.indexOf(PRECEDENCE_END);
+export function markedBlock(text, start, end) {
+  const a = text.indexOf(start);
+  const b = text.indexOf(end);
   if (a === -1 || b === -1 || b < a) return null;
-  return text.slice(a, b + PRECEDENCE_END.length);
+  return text.slice(a, b + end.length);
+}
+
+export const precedenceBlock = (text) => markedBlock(text, PRECEDENCE_START, PRECEDENCE_END);
+
+// The rule trigger table for one skill, built from its rule files' trigger
+// fields in file name order. npm run sync:skills writes it into SKILL.md.
+export function triggerTable(skillDir) {
+  const rdir = path.join(skillDir, 'rules');
+  if (!fs.existsSync(rdir)) return null;
+  const rows = [];
+  for (const file of fs.readdirSync(rdir).filter((f) => f.endsWith('.md')).sort()) {
+    const fm = frontmatter(fs.readFileSync(path.join(rdir, file), 'utf8'));
+    const trigger = fm.error ? '' : String(fm.data.trigger ?? '').replace(/\s+/g, ' ').trim().replace(/\|/g, '\\|');
+    rows.push(`| [${file.slice(0, -3)}](rules/${file}) | ${trigger} |`);
+  }
+  if (!rows.length) return null;
+  return `${TRIGGERS_START}\n## Rule triggers\n\n| Rule | Fires on |\n|---|---|\n${rows.join('\n')}\n${TRIGGERS_END}`;
+}
+
+// Rule slugs named in backticks in any table row of the precedence block,
+// with the tier of the numbered row that names them, or null for other rows.
+export function precedenceSlugs(block) {
+  const slugs = new Map();
+  for (const line of block.split('\n').filter((l) => l.startsWith('|') && !/^\|[-\s|]+\|$/.test(l))) {
+    const tier = (line.match(/^\|\s*(\d+)\s*\|/) || [])[1];
+    for (const m of line.matchAll(/`([a-zA-Z0-9-]+)`/g)) {
+      if (!slugs.has(m[1]) || (tier && slugs.get(m[1]) === null)) slugs.set(m[1], tier ? Number(tier) : null);
+    }
+  }
+  return slugs;
+}
+
+function sections(body) {
+  const out = new Map();
+  for (const part of body.split(/^## /m).slice(1)) {
+    const nl = part.indexOf('\n');
+    const heading = (nl === -1 ? part : part.slice(0, nl)).trim();
+    if (!out.has(heading)) out.set(heading, nl === -1 ? '' : part.slice(nl + 1));
+  }
+  return out;
+}
+
+function checkHooks(root, errors, readJson) {
+  if (!fs.existsSync(path.join(root, 'hooks', 'hooks.json'))) return;
+  const events = readJson('hooks/hooks.json')?.hooks;
+  if (!events || typeof events !== 'object' || Array.isArray(events)) { errors.push('hooks.json: "hooks" must be an object'); return; }
+  const realRoot = fs.realpathSync(root);
+  for (const [event, list] of Object.entries(events)) {
+    if (!KNOWN_EVENTS.has(event)) errors.push(`hooks.json: unknown event ${event}`);
+    if (!Array.isArray(list)) { errors.push(`hooks.json: ${event} must be an array`); continue; }
+    for (const entry of list) {
+      if (!entry || !Array.isArray(entry.hooks)) { errors.push(`hooks.json: ${event} entry has no hooks array`); continue; }
+      for (const h of entry.hooks) {
+        if (h?.type !== 'command' || typeof h.command !== 'string') { errors.push(`hooks.json: ${event} hook must be type "command" with a command string`); continue; }
+        if (!h.command.includes('${CLAUDE_PLUGIN_ROOT}')) { errors.push(`hooks.json: ${event} command does not use \${CLAUDE_PLUGIN_ROOT}`); continue; }
+        const m = h.command.match(HOOK_COMMAND_RE);
+        if (!m) { errors.push(`hooks.json: ${event} has an unsupported command. Use exactly bash "\${CLAUDE_PLUGIN_ROOT}/<path>"`); continue; }
+        const rel = m[1];
+        const target = path.resolve(root, rel);
+        if (rel.split('/').includes('..') || !target.startsWith(path.resolve(root) + path.sep)) { errors.push(`hooks.json: ${rel} is outside the plugin`); continue; }
+        let st;
+        try { st = fs.lstatSync(target); } catch { errors.push(`hooks.json: missing ${rel}`); continue; }
+        if (st.isSymbolicLink()) {
+          let real = null;
+          try { real = fs.realpathSync(target); } catch { /* a dangling link */ }
+          errors.push(real && real.startsWith(realRoot + path.sep)
+            ? `hooks.json: ${rel} is a symlink. Point at the file itself`
+            : `hooks.json: ${rel} is a symlink to a file outside the plugin`);
+          continue;
+        }
+        if (!st.isFile()) { errors.push(`hooks.json: ${rel} is not a regular file`); continue; }
+        if (!fs.realpathSync(target).startsWith(realRoot + path.sep)) { errors.push(`hooks.json: ${rel} resolves outside the plugin`); continue; }
+        if ((st.mode & 0o111) === 0) errors.push(`hooks.json: ${rel} is not executable`);
+      }
+    }
+  }
 }
 
 export function validate(root) {
   const errors = [];
-  const stats = { skills: 0, rules: 0, listingChars: 0, precedenceCopies: 0 };
+  const stats = { skills: 0, rules: 0, listingChars: 0, precedenceCopies: 0, triggerTables: 0 };
   const ruleSlugs = new Set();
   const readJson = (rel) => {
     try { return JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8')); }
@@ -80,10 +165,13 @@ export function validate(root) {
 
   let canonicalPrecedence = null;
   const precedencePath = path.join(root, 'docs', 'PRECEDENCE.md');
-  if (fs.existsSync(precedencePath)) {
+  if (!fs.existsSync(precedencePath)) errors.push('docs/PRECEDENCE.md: missing. It is the single source for the precedence block');
+  else {
     canonicalPrecedence = precedenceBlock(fs.readFileSync(precedencePath, 'utf8'));
     if (!canonicalPrecedence) errors.push('docs/PRECEDENCE.md: precedence markers missing');
   }
+  const named = canonicalPrecedence ? precedenceSlugs(canonicalPrecedence) : new Map();
+  const tier1 = new Set([...named].filter(([, tier]) => tier === 1).map(([slug]) => slug));
 
   const skillsDir = path.join(root, 'skills');
   if (!fs.existsSync(skillsDir)) errors.push('skills/: missing');
@@ -112,9 +200,16 @@ export function validate(root) {
     }
     if (canonicalPrecedence) {
       const block = precedenceBlock(fm.body);
-      if (!block) errors.push(`${dir}/SKILL.md: precedence block missing (run npm run sync:precedence)`);
-      else if (block !== canonicalPrecedence) errors.push(`${dir}/SKILL.md: precedence block differs from docs/PRECEDENCE.md (run npm run sync:precedence)`);
+      if (!block) errors.push(`${dir}/SKILL.md: precedence block missing (run npm run sync:skills)`);
+      else if (block !== canonicalPrecedence) errors.push(`${dir}/SKILL.md: precedence block differs from docs/PRECEDENCE.md (run npm run sync:skills)`);
       else stats.precedenceCopies++;
+    }
+    const expectedTriggers = triggerTable(full);
+    if (expectedTriggers) {
+      const block = markedBlock(fm.body, TRIGGERS_START, TRIGGERS_END);
+      if (!block) errors.push(`${dir}/SKILL.md: rule trigger table missing (run npm run sync:skills)`);
+      else if (block !== expectedTriggers) errors.push(`${dir}/SKILL.md: rule trigger table is out of date (run npm run sync:skills)`);
+      else stats.triggerTables++;
     }
 
     const linked = new Set();
@@ -126,51 +221,33 @@ export function validate(root) {
     if (!fs.existsSync(rdir)) continue;
     for (const ruleFile of fs.readdirSync(rdir).filter((f) => f.endsWith('.md')).sort()) {
       stats.rules++;
-      ruleSlugs.add(ruleFile.slice(0, -3));
+      const slug = ruleFile.slice(0, -3);
+      ruleSlugs.add(slug);
       const rel = `rules/${ruleFile}`;
       if (!linked.has(rel)) errors.push(`${dir}/${rel}: not linked from SKILL.md (orphan rule)`);
-      const rtext = fs.readFileSync(path.join(rdir, ruleFile), 'utf8');
-      const rfm = frontmatter(rtext);
+      const rfm = frontmatter(fs.readFileSync(path.join(rdir, ruleFile), 'utf8'));
       if (rfm.error) { errors.push(`${dir}/${rel}: ${rfm.error}`); continue; }
       if (typeof rfm.data.title !== 'string' || !rfm.data.title.trim()) errors.push(`${dir}/${rel}: title missing`);
       if (typeof rfm.data.trigger !== 'string' || !rfm.data.trigger.trim()) errors.push(`${dir}/${rel}: trigger missing`);
       if (rfm.data.priority !== undefined && !['high', 'medium', 'low'].includes(rfm.data.priority)) errors.push(`${dir}/${rel}: priority must be high, medium or low`);
-      const headings = [...rfm.body.matchAll(/^##\s+(.+?)\s*$/gm)].map((h) => h[1]);
+      const found = sections(rfm.body);
       for (const section of RULE_SECTIONS) {
-        if (!headings.some((h) => h === section || h.startsWith(`${section} `) || h.startsWith(`${section}(`))) errors.push(`${dir}/${rel}: missing "## ${section}" section`);
+        if (!found.has(section)) errors.push(`${dir}/${rel}: missing "## ${section}" section`);
+        else if (!found.get(section).trim()) errors.push(`${dir}/${rel}: "## ${section}" section is empty`);
       }
-    }
-  }
-  if (stats.listingChars > LISTING_BUDGET) errors.push(`plugin listing is about ${stats.listingChars} characters, over the ${LISTING_BUDGET} budget`);
-  if (canonicalPrecedence) {
-    for (const line of canonicalPrecedence.split('\n').filter((l) => /^\|\s*\d+\s*\|/.test(l))) {
-      for (const slug of line.matchAll(/`([a-zA-Z0-9-]+)`/g)) {
-        if (!ruleSlugs.has(slug[1])) errors.push(`docs/PRECEDENCE.md: tier table names unknown rule ${slug[1]}`);
-      }
-    }
-  }
-
-  const hooksPath = path.join(root, 'hooks', 'hooks.json');
-  if (fs.existsSync(hooksPath)) {
-    const hooks = readJson('hooks/hooks.json');
-    const events = hooks?.hooks;
-    if (!events || typeof events !== 'object' || Array.isArray(events)) errors.push('hooks.json: "hooks" must be an object');
-    else for (const [event, list] of Object.entries(events)) {
-      if (!KNOWN_EVENTS.has(event)) errors.push(`hooks.json: unknown event ${event}`);
-      if (!Array.isArray(list)) { errors.push(`hooks.json: ${event} must be an array`); continue; }
-      for (const entry of list) {
-        if (!entry || !Array.isArray(entry.hooks)) { errors.push(`hooks.json: ${event} entry has no hooks array`); continue; }
-        for (const h of entry.hooks) {
-          if (h?.type !== 'command' || typeof h.command !== 'string') { errors.push(`hooks.json: ${event} hook must be type "command" with a command string`); continue; }
-          const rel = (h.command.match(/\$\{CLAUDE_PLUGIN_ROOT\}\/([^\s"'\\]+)/) || [])[1];
-          if (!rel) { errors.push(`hooks.json: ${event} command does not use \${CLAUDE_PLUGIN_ROOT}`); continue; }
-          const target = path.join(root, rel);
-          if (!fs.existsSync(target)) errors.push(`hooks.json: missing ${rel}`);
-          else if ((fs.statSync(target).mode & 0o111) === 0) errors.push(`hooks.json: ${rel} is not executable`);
+      if (tier1.has(slug) && found.has('Suppression')) {
+        for (const word of TIER1_BANNED_SUPPRESSIONS) {
+          if (new RegExp(`\\b${word}`, 'i').test(found.get('Suppression'))) errors.push(`${dir}/${rel}: tier 1 rule ${slug} is suppressed by "${word}", which docs/PRECEDENCE.md forbids`);
         }
       }
     }
   }
+  if (stats.listingChars > LISTING_BUDGET) errors.push(`plugin listing is about ${stats.listingChars} characters, over the ${LISTING_BUDGET} budget`);
+  for (const slug of named.keys()) {
+    if (!ruleSlugs.has(slug)) errors.push(`docs/PRECEDENCE.md: names unknown rule ${slug}`);
+  }
+
+  checkHooks(root, errors, readJson);
   return { errors, stats };
 }
 
@@ -184,5 +261,6 @@ if (invokedDirectly) {
     process.exit(1);
   }
   console.log(`OK: ${stats.skills} skills, ${stats.rules} rules, every rule linked and complete, `
-    + `${stats.precedenceCopies} precedence copies in sync, hooks valid, listing about ${stats.listingChars} of ${LISTING_BUDGET} characters.`);
+    + `${stats.precedenceCopies} precedence copies and ${stats.triggerTables} trigger tables in sync, hooks valid, `
+    + `listing about ${stats.listingChars} of ${LISTING_BUDGET} characters.`);
 }
