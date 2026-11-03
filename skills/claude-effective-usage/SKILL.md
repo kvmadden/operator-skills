@@ -1,44 +1,7 @@
 ---
 name: claude-effective-usage
-description: |
-  Use this skill whenever the operator could work with Claude more effectively — by picking the right surface, the right tool tier, or the right session hygiene. Three families: (1) RIGHT SURFACE — choosing among Claude Code / Chat / Cowork / Dispatch. Triggers like "by EOD", "have this ready when I get back", "investigate X and report", "go gather all the Y and summarize" (async multi-step → Dispatch); "brainstorm with me", "what do you think of", "help me think through", "think out loud" (open exploration → Chat); "draft a proposal", "write the brief", "compose an email", "I need a spec doc" (document drafting → Cowork). (2) TOOL-TIER EFFICIENCY — about to use computer-use / screenshots when a dedicated app MCP exists; about to poll or sleep-loop for a condition that could be event-driven; about to make several independent tool calls sequentially when they could run in parallel in one message; a bounded task that maps to a specialized agent or a codebase-wide search. (3) SESSION HYGIENE — "save this" / "remember this" / "that's an important point" / a decision or insight worth keeping (pin a durable conclusion); "you keep forgetting" / "we already did this" / response quality drifting (clear or compact stale context); a long resolved thread that's starting to drift (summarize + archive). Consult the rules/ folder for the specific pattern and apply its corrective. Soft teaching response — names the better path and yields. Never forces a surface switch or runs /clear autonomously (those are operator actions). Do NOT use when the operator is mid-build on the correct surface, in solo-run mode, or has explicitly chosen the current surface/tool.
+description: 'Do NOT use when the operator is mid-build on the right surface, chose the current tool on purpose, or a solo run is active. Never run /clear or /compact for the operator. Use when a better surface or tool tier exists: async multi-step research with a deadline ("have this ready when I get back"), open brainstorming with no files or tools ("brainstorm with me"), long document drafting kept across sessions, a dedicated app connector instead of screenshots, a completion signal instead of a sleep loop, independent tool calls that can run in parallel, a bounded search better handed to a subagent, a conclusion worth saving ("remember this"), or stale context ("you keep forgetting").'
 license: MIT — see plugin LICENSE
-metadata:
-  priority: medium
-  promptSignals:
-    phrases:
-      - "by EOD"
-      - "have this ready when I get back"
-      - "investigate"
-      - "research this and"
-      - "gather all the"
-      - "brainstorm with me"
-      - "what do you think of"
-      - "help me think through"
-      - "draft a proposal"
-      - "write the brief"
-      - "compose an email"
-      - "I need a spec doc"
-      - "just screenshot"
-      - "let me look at the screen"
-      - "keep checking"
-      - "poll until"
-      - "wait for it to finish"
-      - "read these files"
-      - "save this"
-      - "remember this"
-      - "that's an important point"
-      - "you keep forgetting"
-      - "we already did this"
-      - "you just told me that"
-      - "we basically solved this"
-      - "let me start a new chat"
-      - "persistent doc"
-      - "bounded task"
-      - "search across the whole codebase"
-      - "sleep loop"
-      - "poll the deploy"
-      - "read this file, then"
 ---
 
 # Claude effective usage
@@ -90,3 +53,9 @@ Patterns for getting more out of Claude — right surface, right tool tier, righ
 ## Why this umbrella earns its keep
 
 The most common quiet losses in a Claude session: doing chat-shaped work in a heavy Code session, pixel-clicking when an MCP exists, serial tool calls that could be parallel, letting durable conclusions evaporate, and running a session past the point its context stays sharp. Each is cheap to catch and compounds across every session. Bundling them under one umbrella means the operator doesn't track ten slugs — the umbrella fires on a broad signal set and each rule stays small.
+
+## Trigger catalogue
+
+Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads.
+
+> Use this skill whenever the operator could work with Claude more effectively — by picking the right surface, the right tool tier, or the right session hygiene. Three families: (1) RIGHT SURFACE — choosing among Claude Code / Chat / Cowork / Dispatch. Triggers like "by EOD", "have this ready when I get back", "investigate X and report", "go gather all the Y and summarize" (async multi-step → Dispatch); "brainstorm with me", "what do you think of", "help me think through", "think out loud" (open exploration → Chat); "draft a proposal", "write the brief", "compose an email", "I need a spec doc" (document drafting → Cowork). (2) TOOL-TIER EFFICIENCY — about to use computer-use / screenshots when a dedicated app MCP exists; about to poll or sleep-loop for a condition that could be event-driven; about to make several independent tool calls sequentially when they could run in parallel in one message; a bounded task that maps to a specialized agent or a codebase-wide search. (3) SESSION HYGIENE — "save this" / "remember this" / "that's an important point" / a decision or insight worth keeping (pin a durable conclusion); "you keep forgetting" / "we already did this" / response quality drifting (clear or compact stale context); a long resolved thread that's starting to drift (summarize + archive). Consult the rules/ folder for the specific pattern and apply its corrective. Soft teaching response — names the better path and yields. Never forces a surface switch or runs /clear autonomously (those are operator actions). Do NOT use when the operator is mid-build on the correct surface, in solo-run mode, or has explicitly chosen the current surface/tool.

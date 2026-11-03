@@ -1,81 +1,7 @@
 ---
 name: build-discipline
-description: |
-  Use this skill whenever the operator is at a build moment AND a build-discipline failure is in play — anywhere across the lifecycle from idea, to authoring, to shipping, to revisiting shipped work. Triggers include phrases like "I shipped", "I built", "I finished", "got it working", "made good progress" (output-vs-outcome — name what changed for whom); "let me polish", "let me clean up", "polishing", "refining", "let me make this nicer", "tighten up", "smoother", "more elegant", "let's add an animation", "the hover should", "let's tighten the spacing" (impact-check — polish without user validation, or build-order / right-rung — polish before functionality works); "and also", "while we're at it", "what if we added", "one more thing", "real quick let's also" (scope-lock mid-build); "let me revisit", "actually let me redo", "going back to", "let me refactor", "this needs another pass" applied to shipped work (done-is-done); "let me delete this", "removing the X feature", "cutting this", "this is gone", "deprecating" (feature-graveyard — capture what was cut and why); "what should I work on", "what's the next thing", "where should I focus", "I have time — what's most important" (finish-the-roadmap — closest-to-shipping wins); "one more pass", "after I fix X I'll be done", piece has been "almost done" for weeks (finishing-vs-perfecting); "the new one", "the latest version", "the v2", "the rebuild", "the most recent", "the updated one" without an actual name (name-the-version); "I want to build", "I'm going to make a", "new app idea", "I'll spin up", "starting a new", "let's build [thing] also", "what if I made a [Y]" (not-another-product when unshipped projects exist; prior-art-check before any new product); "I should build", "what if I made", "someone should build", "would be cool if there was", "wish there was a tool that" (unbuilt-products — capture, don't act); "let's build [X]", "make me a [X]", "I want a [X]", "create a [X]", "spin up a [X]", "I need a [X]" without a brief (brief-first); new repo / new project / new product folder without README (readme-as-product); "let's add a skill for", "we need a skill", "I'll spec a new one", "build me skill X" / proposing 3+ new skill ideas in one session (am-I-skill-overengineering); "for v2", "edge case", "polish for later", "optimize", "make it scale", "what if [unusual case]", "for power users" before v1 ships (v1-versus-v2-thinking); finished piece sitting unshared / "I'll release later" / treating release-mechanics as drudgery (shipping-as-craft); "I just like X", "that doesn't feel right" without examination (taste-as-discipline); first session of the week or explicit "set the new-product rule for this week" (no-new-product-this-week). Apply even when the operator hasn't asked for a check — naming the pattern at the moment is the value. Consult the skill's rules/ folder to identify the specific build-discipline pattern (am-I-skill-overengineering, brief-first, build-order, done-is-done, feature-graveyard, finish-the-roadmap, finishing-vs-perfecting, impact-check, name-the-version, no-new-product-this-week, not-another-product, output-vs-outcome, prior-art-check, readme-as-product, right-rung, scope-lock, shipping-as-craft, taste-as-discipline, unbuilt-products, v1-versus-v2-thinking) and apply that rule's matching response. Soft teaching response by default; hard interrupt for severe violations (polishing a broken engine via build-order or right-rung; finishing-vs-perfecting when piece has been "almost done" for weeks; am-I-skill-overengineering when ratio is tipped). Do NOT use in `explore` mode, when the operator has explicitly named the trade and accepted the cost, for work where another skill already covers the discipline, or for one-line throwaway fixes. Do NOT use for a bare status CLAIM about a thing's maturity ('this is stable / shipped / done / live / v1' asserted without real-user signal) — that's honesty-and-calibration/vibe-vs-real; build-discipline owns the ACTIVITY report ('I shipped X', 'I built Y', 'I finished Z') via output-vs-outcome (name what changed for whom). On 'let me clean up' / 'let me refactor', name whichever read fits rather than splitting: the build-quality read (impact-check / build-order: is this polish before functionality?) or the avoidance read (is this dodging the hard thing?).
+description: "Do NOT use for one-line fixes, for work the operator marked as exploration, when the operator already named the trade-off, or for a bare status claim about maturity (honesty-and-calibration owns that). Use at build moments when scope, order or follow-through slips: new scope mid-build (\"while we're at it\", \"what if we added\"), polish before the feature works (\"let me polish\"), reopening shipped work (\"let me redo\"), a new product or repo while others sit unshipped (\"I want to build\"), a substantial new product or multi-file feature with no brief, removing a feature without noting why, vague version names (\"the new one\"), and scale or power-user work proposed before the first version works. Clinical, safety and data-integrity edge cases are first-version work, not later polish."
 license: MIT — see plugin LICENSE
-metadata:
-  priority: high
-  promptSignals:
-    phrases:
-      - "I shipped"
-      - "I built"
-      - "I finished"
-      - "got it working"
-      - "made good progress"
-      - "let me polish"
-      - "let me clean up"
-      - "polishing"
-      - "refining"
-      - "let me make this nicer"
-      - "tighten up"
-      - "smoother"
-      - "more elegant"
-      - "let's add an animation"
-      - "the hover should"
-      - "and also"
-      - "while we're at it"
-      - "what if we added"
-      - "one more thing"
-      - "real quick let's also"
-      - "let me revisit"
-      - "actually let me redo"
-      - "let me refactor"
-      - "this needs another pass"
-      - "let me delete this"
-      - "removing the X feature"
-      - "cutting this"
-      - "deprecating"
-      - "what should I work on"
-      - "what's the next thing"
-      - "where should I focus"
-      - "one more pass"
-      - "after I fix X I'll be done"
-      - "almost done"
-      - "the new one"
-      - "the latest version"
-      - "the v2"
-      - "the rebuild"
-      - "I want to build"
-      - "I want to start a new"
-      - "I want to start a new app"
-      - "start a new app"
-      - "spin it up tonight"
-      - "spin up a new app"
-      - "spin this up tonight"
-      - "I'm going to make a"
-      - "new app idea"
-      - "I'll spin up"
-      - "starting a new"
-      - "let me spin up"
-      - "I should build"
-      - "what if I made"
-      - "someone should build"
-      - "would be cool if there was"
-      - "let's build"
-      - "make me a"
-      - "I want a"
-      - "create a"
-      - "spin up a"
-      - "I need a"
-      - "let's add a skill for"
-      - "we need a skill"
-      - "for v2"
-      - "edge case"
-      - "polish for later"
-      - "make it scale"
-      - "I'll release later"
-      - "I just like X"
-      - "that doesn't feel right"
 ---
 
 # Build discipline meta
@@ -121,3 +47,9 @@ Match the build moment to the rule. Apply. Yield.
 - Block all polish (polish has its place; after functionality)
 - Demand market validation before any work (exploration is fine)
 - Force "ship to users" when operator-as-user counts
+
+## Trigger catalogue
+
+Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads.
+
+> Use this skill whenever the operator is at a build moment AND a build-discipline failure is in play — anywhere across the lifecycle from idea, to authoring, to shipping, to revisiting shipped work. Triggers include phrases like "I shipped", "I built", "I finished", "got it working", "made good progress" (output-vs-outcome — name what changed for whom); "let me polish", "let me clean up", "polishing", "refining", "let me make this nicer", "tighten up", "smoother", "more elegant", "let's add an animation", "the hover should", "let's tighten the spacing" (impact-check — polish without user validation, or build-order / right-rung — polish before functionality works); "and also", "while we're at it", "what if we added", "one more thing", "real quick let's also" (scope-lock mid-build); "let me revisit", "actually let me redo", "going back to", "let me refactor", "this needs another pass" applied to shipped work (done-is-done); "let me delete this", "removing the X feature", "cutting this", "this is gone", "deprecating" (feature-graveyard — capture what was cut and why); "what should I work on", "what's the next thing", "where should I focus", "I have time — what's most important" (finish-the-roadmap — closest-to-shipping wins); "one more pass", "after I fix X I'll be done", piece has been "almost done" for weeks (finishing-vs-perfecting); "the new one", "the latest version", "the v2", "the rebuild", "the most recent", "the updated one" without an actual name (name-the-version); "I want to build", "I'm going to make a", "new app idea", "I'll spin up", "starting a new", "let's build [thing] also", "what if I made a [Y]" (not-another-product when unshipped projects exist; prior-art-check before any new product); "I should build", "what if I made", "someone should build", "would be cool if there was", "wish there was a tool that" (unbuilt-products — capture, don't act); "let's build [X]", "make me a [X]", "I want a [X]", "create a [X]", "spin up a [X]", "I need a [X]" without a brief (brief-first); new repo / new project / new product folder without README (readme-as-product); "let's add a skill for", "we need a skill", "I'll spec a new one", "build me skill X" / proposing 3+ new skill ideas in one session (am-I-skill-overengineering); "for v2", "edge case", "polish for later", "optimize", "make it scale", "what if [unusual case]", "for power users" before v1 ships (v1-versus-v2-thinking); finished piece sitting unshared / "I'll release later" / treating release-mechanics as drudgery (shipping-as-craft); "I just like X", "that doesn't feel right" without examination (taste-as-discipline); first session of the week or explicit "set the new-product rule for this week" (no-new-product-this-week). Apply even when the operator hasn't asked for a check — naming the pattern at the moment is the value. Consult the skill's rules/ folder to identify the specific build-discipline pattern (am-I-skill-overengineering, brief-first, build-order, done-is-done, feature-graveyard, finish-the-roadmap, finishing-vs-perfecting, impact-check, name-the-version, no-new-product-this-week, not-another-product, output-vs-outcome, prior-art-check, readme-as-product, right-rung, scope-lock, shipping-as-craft, taste-as-discipline, unbuilt-products, v1-versus-v2-thinking) and apply that rule's matching response. Soft teaching response by default; hard interrupt for severe violations (polishing a broken engine via build-order or right-rung; finishing-vs-perfecting when piece has been "almost done" for weeks; am-I-skill-overengineering when ratio is tipped). Do NOT use in `explore` mode, when the operator has explicitly named the trade and accepted the cost, for work where another skill already covers the discipline, or for one-line throwaway fixes. Do NOT use for a bare status CLAIM about a thing's maturity ('this is stable / shipped / done / live / v1' asserted without real-user signal) — that's honesty-and-calibration/vibe-vs-real; build-discipline owns the ACTIVITY report ('I shipped X', 'I built Y', 'I finished Z') via output-vs-outcome (name what changed for whom). On 'let me clean up' / 'let me refactor', name whichever read fits rather than splitting: the build-quality read (impact-check / build-order: is this polish before functionality?) or the avoidance read (is this dodging the hard thing?).

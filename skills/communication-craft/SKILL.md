@@ -1,58 +1,7 @@
 ---
 name: communication-craft
-description: |
-  Use this skill whenever the operator is drafting a substantive message, document, or other piece of written communication AND a craft-discipline failure is in play (or about to be). Apply across email, Slack/Teams DMs, async docs, presentations, memos, status updates, intros, apologies, asks, drafts of all kinds. Triggers include phrases like "let me draft", "writing this email", "drafting a message", "let me put together" (drafting moments); "I'm sorry", "my apologies", "I apologize for", followed by "but" / "I was just" / "in my defense" (apology-undone); "I was wondering if", "would it be possible at some point", "if you had a chance to", "no rush but" (hedged asks); message growing past 3-4 paragraphs when 3 sentences would suffice, "I hope this finds you well" preamble fluff (length-bloat); endings like "thoughts?", "let me know", "happy to discuss", "open to feedback", "if you have any questions" (weak closings); "let me introduce", "connecting you with", "meet [X]" (intro drafting); "I'm just so swamped", "I wish I had time to", "if only someone would", "the [thing] is really hard right now" (indirect-ask signal); doc draft going past one page or framed as "comprehensive" / "thorough" / "complete" (one-pager violation); punctuation that doesn't match intent — "?" on a decided statement, "." on a real question, "let me know if you have thoughts" closing a thread that needs a decision (question-or-statement mismatch); async messages with emotional / political / sensitive content where tone could read cold or aggressive in text (async-tone-strip); communication crossing status lines — to a senior stakeholder, executive, peer, junior colleague, or cross-functional partner (status-aware); "the reason is" / "let me explain" appearing 2+ times, stacked "because" clauses, pre-emptive defense (over-explanation); one piece trying to land for multiple audiences in a single generic version (multi-audience smush); substantive message about to send without a pre-send predict-how-it-lands check (landing test); draft that surveys trade-offs without picking a position (landing the plane); end-of-session and weekly-review cadence (surface unsent drafts); monthly cadence (surface things thought-of-saying but never said); 90+ minutes seated without break (body reset). Apply even when the operator hasn't asked for a check — naming the craft pattern at the drafting moment is the value. Consult the skill's rules/ folder to identify the specific drafting shape and apply that rule's matching diagnostic. Soft teaching response. Do NOT use for informal / casual / low-stakes messages, `explore` mode drafting, communication to the operator themselves (notes / journal), drafts where the pattern is genuinely intentional, or feedback drafting (that is a separate skill from craft mechanics).
+description: "Do NOT use for casual or low-stakes messages, notes to self, drafts where the pattern is intentional, or code work. Use when the operator drafts or is about to send a substantive message or document, or replies to someone: an apology undone by an excuse (\"I'm sorry, but\"), a hedged ask (\"I was wondering if\"), a weak closing (\"let me know\"), padding, over-explaining, a document growing past one page, one version for several audiences, a sensitive message in async text, a message across status lines, an introduction, a soft no (\"let me think about it\"), hard or good news someone shared, a hard conversation coming up, or thanks that are overdue."
 license: MIT — see plugin LICENSE
-metadata:
-  priority: medium
-  promptSignals:
-    phrases:
-      - "let me draft"
-      - "let me reply"
-      - "let me reply to"
-      - "actually, the issue is"
-      - "the issue is she"
-      - "the issue is he"
-      - "she doesn't get what I meant"
-      - "he doesn't get what I meant"
-      - "writing this email"
-      - "drafting a message"
-      - "let me put together"
-      - "I'm sorry"
-      - "my apologies"
-      - "I apologize for"
-      - "I was wondering if"
-      - "would it be possible at some point"
-      - "if you had a chance to"
-      - "no rush but"
-      - "I hope this finds you well"
-      - "thoughts?"
-      - "let me know"
-      - "happy to discuss"
-      - "open to feedback"
-      - "if you have any questions"
-      - "let me introduce"
-      - "connecting you with"
-      - "meet [X]"
-      - "I'm just so swamped"
-      - "I wish I had time to"
-      - "if only someone would"
-      - "the reason is"
-      - "let me explain"
-      - "comprehensive doc"
-      - "for the team and for executives"
-      - "before I send this"
-      - "wish I'd said"
-      - "I drafted a thing but didn't send"
-      - "let me think about it"
-      - "they said they'll get back to me"
-      - "I have to talk to"
-      - "performance conversation"
-      - "tough convo coming up"
-      - "should I thank"
-      - "shared some hard news"
-      - "she just got promoted"
-      - "he just shared good news"
 ---
 
 # Communication craft watch
@@ -112,3 +61,9 @@ Match the drafting moment to the rule. Apply. Yield. Don't stack multiple craft-
 ## Why this umbrella earns its keep
 
 Communication failures compound silently. A hedged ask gets ignored; a weak closing produces a generic reply; an apology undone by "but" erodes trust; a multi-page doc loses the reader before the recommendation. None of these are visible at the moment of drafting — they show up later as misunderstanding, dropped balls, eroded relationships. Naming the craft pattern at the drafting moment, before send, catches the failure cheap. The cost of the catch is seconds; the cost of the un-caught failure is days-to-rebuild.
+
+## Trigger catalogue
+
+Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads.
+
+> Use this skill whenever the operator is drafting a substantive message, document, or other piece of written communication AND a craft-discipline failure is in play (or about to be). Apply across email, Slack/Teams DMs, async docs, presentations, memos, status updates, intros, apologies, asks, drafts of all kinds. Triggers include phrases like "let me draft", "writing this email", "drafting a message", "let me put together" (drafting moments); "I'm sorry", "my apologies", "I apologize for", followed by "but" / "I was just" / "in my defense" (apology-undone); "I was wondering if", "would it be possible at some point", "if you had a chance to", "no rush but" (hedged asks); message growing past 3-4 paragraphs when 3 sentences would suffice, "I hope this finds you well" preamble fluff (length-bloat); endings like "thoughts?", "let me know", "happy to discuss", "open to feedback", "if you have any questions" (weak closings); "let me introduce", "connecting you with", "meet [X]" (intro drafting); "I'm just so swamped", "I wish I had time to", "if only someone would", "the [thing] is really hard right now" (indirect-ask signal); doc draft going past one page or framed as "comprehensive" / "thorough" / "complete" (one-pager violation); punctuation that doesn't match intent — "?" on a decided statement, "." on a real question, "let me know if you have thoughts" closing a thread that needs a decision (question-or-statement mismatch); async messages with emotional / political / sensitive content where tone could read cold or aggressive in text (async-tone-strip); communication crossing status lines — to a senior stakeholder, executive, peer, junior colleague, or cross-functional partner (status-aware); "the reason is" / "let me explain" appearing 2+ times, stacked "because" clauses, pre-emptive defense (over-explanation); one piece trying to land for multiple audiences in a single generic version (multi-audience smush); substantive message about to send without a pre-send predict-how-it-lands check (landing test); draft that surveys trade-offs without picking a position (landing the plane); end-of-session and weekly-review cadence (surface unsent drafts); monthly cadence (surface things thought-of-saying but never said); 90+ minutes seated without break (body reset). Apply even when the operator hasn't asked for a check — naming the craft pattern at the drafting moment is the value. Consult the skill's rules/ folder to identify the specific drafting shape and apply that rule's matching diagnostic. Soft teaching response. Do NOT use for informal / casual / low-stakes messages, `explore` mode drafting, communication to the operator themselves (notes / journal), drafts where the pattern is genuinely intentional, or feedback drafting (that is a separate skill from craft mechanics).

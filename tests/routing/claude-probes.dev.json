@@ -3,18 +3,7 @@
   "provenance": "Written by the Claude reviewer on 3 Nov 2026 while evaluating main at 64513a4, before any description change, then used while changing descriptions. Development data from then on.",
   "expectations": "Taken from each rule's own trigger and suppression text. quiet means no skill should load. !skill means that skill must not be chosen.",
   "gate": "Stay-quiet cases are gated in CI. Should-fire cases are reported only, because Claude Code routes semantically and short descriptions are not meant to contain every trigger word.",
-  "known_failures": [
-    "claude-A3",
-    "claude-A6",
-    "claude-A11",
-    "claude-A13",
-    "claude-A14",
-    "claude-B4",
-    "claude-B7",
-    "claude-B8",
-    "claude-C2",
-    "claude-E4"
-  ],
+  "known_failures": [],
   "cases": [
     {
       "id": "claude-A1",
@@ -365,5 +354,5 @@
       "gate": true
     }
   ],
-  "known_failures_note": "Failing on the v1.0.0 descriptions with the new scorer, before the description rewrite. See docs/evidence/routing-before-description-rewrite.txt."
+  "known_failures_note": "None after the description rewrite of 3 Nov 2026. Before it, 10 stay-quiet probes fired: see docs/evidence/routing-before-description-rewrite.txt."
 }

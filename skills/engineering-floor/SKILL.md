@@ -1,81 +1,7 @@
 ---
 name: engineering-floor
-description: |
-  Use this skill whenever the operator is authoring, editing, designing, or shipping code AND an engineering-discipline floor is at risk of being violated — including data shape changes, secrets handling, error flow design, accessibility, and the everyday floors of a vibe-coded session. Triggers (high-priority floors first): credential-shaped strings (`sk-`, `sk_live`, `sk_test`, `AKIA`, `ghp_`, `github_pat_`, `eyJ...`, `PEM private-key headers`), `.env` content being pasted, Bash output containing credentials, hardcoded credentials in source (secrets-walk — never enters chat, repos, or logs); "let me UPDATE", "run a one-off SQL", "mutate the existing rows", "fix up the data", "let's clean these up", "transform these rows in place", "consolidate these duplicates", "rename these values" (migration-not-mutation — never UPDATE in place); "let's add a field", "rename this column", "change the type to", "restructure this", "split this table", "merge these", "drop the [field]", "make this required", edits to `*.sql` migration files, type definitions for persisted data, JSONB shape changes (schema-discipline — no shape change without migration plan); auth check at UI without API/RLS enforcement (auth-floor — security boundary is at the API, not the UI); new UI without contrast / focus / touch-target / keyboard considerations (accessibility-floor — four non-negotiables at write-time). Standard-priority floor triggers: "let me hardcode", "I'll just write it inline", "set this to <value>", inline hex codes, magic numbers, template strings (config-or-code — extract what varies); inline hex codes (`#xxxxxx`, `rgb(...)`, `hsl(...)`), Tailwind arbitrary values (`p-[17px]`, `bg-[#abc123]`), CSS literals (`padding: 17px`, `margin: 22px`), off-scale spacing or type sizes (tokens-not-values); "let me catch this", "wrap it in a try", "handle the error", "swallow the exception" (error-philosophy — catch where you can act, bubble where you can't); API endpoint design / multi-step workflow / async pipeline / system design without error modeling (error-modeling); network-dependent UI being designed without error path (timeout, 500, malformed response) explicitly considered (error-state-first); list / grid / table / dashboard being designed without empty-state consideration (empty-state-first); "let me extract this", premature file / component / module split (single-file-check — don't split before reuse is real); "I'll create a [component / function / utility] for X" without checking existing code (reuse-radar); function body being written without contract sketched, "what does this function take" / "interface between" (contracts-and-interfaces — name the contract before the body); domain data shapes (Orders, Invoices, Shipments) being designed / tables or types being authored without prior entity-relationship articulation (domain-modeling — plain English first); system complexity threshold, friction managing a single big thing (system-decomposition — draw the seams deliberately); UI surface being declared "done" without mobile-viewport verification (mobile-first-check); "let me write a test", "add a test for", `*.test.*` files being created, `.toHaveBeenCalled` / `.toHaveBeenCalledWith` patterns (testing-philosophy — test the contract, not the implementation); vague commit messages — "minor updates", "wip", "fix stuff", "tweaks", "polish", "fixes", "updates", "changes", "improvements" (commit-message-honesty — specific or it's not documentation); "useful" claimed without specificity (useful-test). Also fires on pathPatterns (matching source files) and bashPatterns (matching `git commit -m "<generic>"`). Consult the skill's rules/ folder to identify the specific engineering-floor pattern (accessibility-floor, auth-floor, commit-message-honesty, config-or-code, contracts-and-interfaces, domain-modeling, empty-state-first, error-modeling, error-philosophy, error-state-first, migration-not-mutation, mobile-first-check, reuse-radar, schema-discipline, secrets-walk, single-file-check, system-decomposition, testing-philosophy, tokens-not-values, useful-test) and apply that rule's matching response. Hard interrupt for the safety floors: secrets-walk (credentials in chat / repos / logs), migration-not-mutation (UPDATE in place), schema-discipline (shape change without plan), auth-floor (security boundary only at UI), and severe error-philosophy violations (empty catch blocks). Soft teaching response for the rest. Do NOT use for one-off spike code / throwaway helpers, `explore` mode sketches, floors already addressed this task, or non-code work.
+description: Do NOT use for style nudges (tokens, config, tests, file splits, commit wording) on spike code, throwaway helpers or work the operator called a sketch. The safety floors apply in every mode. Use when code or data work risks a floor. Safety floors are a credential-shaped string such as `sk-`, `sk_live_`, `AKIA`, `ghp_` or `-----BEGIN`, or a connection string with a password, in chat, tool output, code or logs, real-looking patient or personal data in prompts, fixtures, logs or commits, a bulk change to existing rows ("run an UPDATE", "delete these rows", "clean up the data"), a schema change ("add a column", "rename this column", "drop the [field]") and auth checked only in the UI. Everyday floors are error and empty states, accessibility, contracts, reuse, tests, design tokens and vague commit messages.
 license: MIT — see plugin LICENSE
-metadata:
-  priority: high
-  pathPatterns:
-    - "src/**/*.{ts,tsx,js,jsx,mjs}"
-    - "app/**/*.{ts,tsx,js,jsx}"
-    - "components/**/*.{ts,tsx,js,jsx}"
-    - "lib/**/*.{ts,tsx,js,jsx,mjs}"
-    - "api/**/*.{ts,js,mjs}"
-    - "pages/**/*.{ts,tsx,js,jsx}"
-    - "migrations/**/*.sql"
-    - "hosted-Postgres/migrations/**/*.sql"
-    - "*.config.{ts,js,mjs}"
-  bashPatterns:
-    - '\bgit\s+commit\s+-m\s+["''](minor|wip|fix|tweaks|polish|updates|changes|improvements)["'']'
-    - '\bgit\s+commit\s+--?amend\b'
-    - '\bnpm\s+run\s+build\b'
-    - '\bnpm\s+test\b'
-  promptSignals:
-    phrases:
-      - "let me UPDATE"
-      - "let me just run an UPDATE"
-      - "run an UPDATE"
-      - "run an UPDATE on those rows"
-      - "clean them up"
-      - "run a one-off SQL"
-      - "mutate the existing rows"
-      - "fix up the data"
-      - "let's clean these up"
-      - "consolidate these duplicates"
-      - "rename these values"
-      - "let me hardcode"
-      - "hardcode this color"
-      - "hardcode the value"
-      - "let's add a field"
-      - "rename this column"
-      - "change the type to"
-      - "restructure this"
-      - "split this table"
-      - "drop the field"
-      - "make this required"
-      - "sk-"
-      - "sk_live"
-      - "ghp_"
-      - "github_pat_"
-      - "AKIA"
-      - "PEM private-key headers"
-      - ".env"
-      - "let me hardcode"
-      - "I'll just write it inline"
-      - "set this to"
-      - "let me catch this"
-      - "wrap it in a try"
-      - "handle the error"
-      - "swallow the exception"
-      - "let me extract this"
-      - "let me split this"
-      - "I'll create a component for"
-      - "let me build a utility"
-      - "what does this function take"
-      - "interface between"
-      - "minor updates"
-      - "wip"
-      - "fix stuff"
-      - "tweaks"
-      - "polish"
-      - "we'll mobile-test later"
-      - "let me write a test"
-      - "add a test for"
-      - "let me mock this"
-      - "useful"
-      - "p-[17px]"
-      - "padding: 17px"
-      - "#xxxxxx"
 ---
 
 # Engineering floor checklist
@@ -123,3 +49,9 @@ Match the engineering moment to the rule. Apply. Yield.
 - Block all try/catch (legitimate uses exist)
 - Demand a multi-page brief for trivial fixes
 - Apply rules to non-code work
+
+## Trigger catalogue
+
+Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads.
+
+> Use this skill whenever the operator is authoring, editing, designing, or shipping code AND an engineering-discipline floor is at risk of being violated — including data shape changes, secrets handling, error flow design, accessibility, and the everyday floors of a vibe-coded session. Triggers (high-priority floors first): credential-shaped strings (`sk-`, `sk_live`, `sk_test`, `AKIA`, `ghp_`, `github_pat_`, `eyJ...`, `PEM private-key headers`), `.env` content being pasted, Bash output containing credentials, hardcoded credentials in source (secrets-walk — never enters chat, repos, or logs); "let me UPDATE", "run a one-off SQL", "mutate the existing rows", "fix up the data", "let's clean these up", "transform these rows in place", "consolidate these duplicates", "rename these values" (migration-not-mutation — never UPDATE in place); "let's add a field", "rename this column", "change the type to", "restructure this", "split this table", "merge these", "drop the [field]", "make this required", edits to `*.sql` migration files, type definitions for persisted data, JSONB shape changes (schema-discipline — no shape change without migration plan); auth check at UI without API/RLS enforcement (auth-floor — security boundary is at the API, not the UI); new UI without contrast / focus / touch-target / keyboard considerations (accessibility-floor — four non-negotiables at write-time). Standard-priority floor triggers: "let me hardcode", "I'll just write it inline", "set this to <value>", inline hex codes, magic numbers, template strings (config-or-code — extract what varies); inline hex codes (`#xxxxxx`, `rgb(...)`, `hsl(...)`), Tailwind arbitrary values (`p-[17px]`, `bg-[#abc123]`), CSS literals (`padding: 17px`, `margin: 22px`), off-scale spacing or type sizes (tokens-not-values); "let me catch this", "wrap it in a try", "handle the error", "swallow the exception" (error-philosophy — catch where you can act, bubble where you can't); API endpoint design / multi-step workflow / async pipeline / system design without error modeling (error-modeling); network-dependent UI being designed without error path (timeout, 500, malformed response) explicitly considered (error-state-first); list / grid / table / dashboard being designed without empty-state consideration (empty-state-first); "let me extract this", premature file / component / module split (single-file-check — don't split before reuse is real); "I'll create a [component / function / utility] for X" without checking existing code (reuse-radar); function body being written without contract sketched, "what does this function take" / "interface between" (contracts-and-interfaces — name the contract before the body); domain data shapes (Orders, Invoices, Shipments) being designed / tables or types being authored without prior entity-relationship articulation (domain-modeling — plain English first); system complexity threshold, friction managing a single big thing (system-decomposition — draw the seams deliberately); UI surface being declared "done" without mobile-viewport verification (mobile-first-check); "let me write a test", "add a test for", `*.test.*` files being created, `.toHaveBeenCalled` / `.toHaveBeenCalledWith` patterns (testing-philosophy — test the contract, not the implementation); vague commit messages — "minor updates", "wip", "fix stuff", "tweaks", "polish", "fixes", "updates", "changes", "improvements" (commit-message-honesty — specific or it's not documentation); "useful" claimed without specificity (useful-test). Also fires on pathPatterns (matching source files) and bashPatterns (matching `git commit -m "<generic>"`). Consult the skill's rules/ folder to identify the specific engineering-floor pattern (accessibility-floor, auth-floor, commit-message-honesty, config-or-code, contracts-and-interfaces, domain-modeling, empty-state-first, error-modeling, error-philosophy, error-state-first, migration-not-mutation, mobile-first-check, reuse-radar, schema-discipline, secrets-walk, single-file-check, system-decomposition, testing-philosophy, tokens-not-values, useful-test) and apply that rule's matching response. Hard interrupt for the safety floors: secrets-walk (credentials in chat / repos / logs), migration-not-mutation (UPDATE in place), schema-discipline (shape change without plan), auth-floor (security boundary only at UI), and severe error-philosophy violations (empty catch blocks). Soft teaching response for the rest. Do NOT use for one-off spike code / throwaway helpers, `explore` mode sketches, floors already addressed this task, or non-code work.

@@ -1,41 +1,7 @@
 ---
 name: claude-quality-watch
-description: |
-  Use this skill whenever Claude's own output starts drifting in ways that corrode session value — sycophancy (3+ agreements without pushback), paraphrase drift (paraphrasing what the operator said with added content they didn't say), hallucinated code (generated code referencing APIs / libraries / signatures that don't exist), confident factual claims about current state without fresh verification (claims about file contents, function names, API behavior, package versions, endpoint shapes — all checkable but unchecked), stale current-state claims (saying "currently X" without fresh verification), direction-by-momentum (the operator nodding along to a path Claude pushed confidently), skim-and-trust on long Claude outputs (rapid "looks good" / "ship it" within seconds of a 200+ line output), or whenever the operator pushes back with phrases like "no, that's not what I meant", "I didn't say that", "wait, how did we end up here", "I don't think this was my idea", "you're misreading me". Also trigger preventively every ~15-20 turns of agreement-heavy conversation, or explicitly on "push back on me", "what would I object to", "play devil's advocate", "what do you actually disagree with". Consult the skill's rules/ folder to identify the specific failure mode (is-claude-just-agreeing, claude-disagrees, am-i-being-led, code-i-can-actually-run, claude-confabulating-context, citation-or-it-didnt-happen, reading-claudes-output-honestly, hallucination-tripwire) and apply that rule's specific reset. Hard interrupt response. Do NOT use when the operator has explicitly invoked "support mode" / "validation only" / "agree mode", when agreements are genuinely earned by 3 strong consecutive calls, when the conversation is about the operator's emotional state where validation IS the appropriate response, when the operator explicitly asked for a "best guess" without verification, when the operator has explicitly engaged with specifics on a Claude output (asked questions, made edits, called out concerns — that's careful reading, not skim-and-trust), OR when the operator is asking about auditing or maintaining their own skills or tooling ("audit the skills", "tune the skills", "skill maintenance"); this skill is only about Claude's in-session drift modes.
+description: "Do NOT use when the operator asked for support or validation only, asked for a best guess, already engaged with the specifics of an output, or is asking about maintaining these skills (\"audit the skills\"). Use when Claude's own output may be drifting: agreeing turn after turn without pushback, paraphrasing the operator with added content (\"that's not what I meant\", \"I didn't say that\"), code that uses an import, method or endpoint not checked against the installed package or its docs, confident claims about current versions, files or API behavior that were not verified, a direction Claude pushed that the operator never chose (\"how did we end up here\"), quick approval of a long output, or an explicit ask (\"push back on me\", \"play devil's advocate\")."
 license: MIT — see plugin LICENSE
-metadata:
-  priority: high
-  promptSignals:
-    phrases:
-      - "wait, how did we end up here"
-      - "I don't think this was my idea"
-      - "what do you actually disagree with"
-      - "push back on me"
-      - "play devil's advocate"
-      - "no, that's not what I meant"
-      - "I didn't say that"
-      - "you're misreading me"
-      - "wait, that's different"
-      - "as of now"
-      - "currently"
-      - "the latest version"
-      - "good point"
-      - "you're right"
-      - "exactly"
-      - "ship it"
-      - "looks good"
-      - "that works"
-      - "perfect"
-      - "great"
-      - "the library supports"
-      - "the API returns"
-      - "the method is called"
-      - "this function takes"
-      - "the config has"
-      - "the file contains"
-      - "the endpoint returns"
-      - "this package exports"
-      - "the latest version of"
 ---
 
 # Claude quality watch
@@ -82,3 +48,9 @@ Eight failure modes that compound silently in long Claude sessions. Each is its 
 ## Why this umbrella earns its keep
 
 Each failure mode is invisible in the moment but compounds over a long session. Sycophancy drift produces validation-disguised-as-thinking. Paraphrase drift produces decisions made on an operator-position the operator never expressed. Hallucinated code produces hours debugging things that don't exist. Naming the failure mode explicitly at the moment of fire resets the mode before the cost compounds.
+
+## Trigger catalogue
+
+Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads.
+
+> Use this skill whenever Claude's own output starts drifting in ways that corrode session value — sycophancy (3+ agreements without pushback), paraphrase drift (paraphrasing what the operator said with added content they didn't say), hallucinated code (generated code referencing APIs / libraries / signatures that don't exist), confident factual claims about current state without fresh verification (claims about file contents, function names, API behavior, package versions, endpoint shapes — all checkable but unchecked), stale current-state claims (saying "currently X" without fresh verification), direction-by-momentum (the operator nodding along to a path Claude pushed confidently), skim-and-trust on long Claude outputs (rapid "looks good" / "ship it" within seconds of a 200+ line output), or whenever the operator pushes back with phrases like "no, that's not what I meant", "I didn't say that", "wait, how did we end up here", "I don't think this was my idea", "you're misreading me". Also trigger preventively every ~15-20 turns of agreement-heavy conversation, or explicitly on "push back on me", "what would I object to", "play devil's advocate", "what do you actually disagree with". Consult the skill's rules/ folder to identify the specific failure mode (is-claude-just-agreeing, claude-disagrees, am-i-being-led, code-i-can-actually-run, claude-confabulating-context, citation-or-it-didnt-happen, reading-claudes-output-honestly, hallucination-tripwire) and apply that rule's specific reset. Hard interrupt response. Do NOT use when the operator has explicitly invoked "support mode" / "validation only" / "agree mode", when agreements are genuinely earned by 3 strong consecutive calls, when the conversation is about the operator's emotional state where validation IS the appropriate response, when the operator explicitly asked for a "best guess" without verification, when the operator has explicitly engaged with specifics on a Claude output (asked questions, made edits, called out concerns — that's careful reading, not skim-and-trust), OR when the operator is asking about auditing or maintaining their own skills or tooling ("audit the skills", "tune the skills", "skill maintenance"); this skill is only about Claude's in-session drift modes.

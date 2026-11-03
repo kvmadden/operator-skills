@@ -1,0 +1,84 @@
+# Routing check after the description rewrite
+# Command: node tools/fire-test.mjs   (run on 3 Nov 2026)
+# All sets are development data. Compare with routing-before-description-rewrite.txt.
+
+Lexical routing check. Development data only: every set below was seen while descriptions changed.
+A pass means the visible text contains the intended words. It does not show how Claude Code routes.
+
+fire-test-phrases.json (development): should fire 7/28, should stay quiet 0/0, ties 0, gated failures 0 of 0 gated (known failures 0)
+  info  build-discipline-not-another-product: expected build-discipline/not-another-product, got quiet
+  info  build-discipline-done-is-done: expected build-discipline/done-is-done, got quiet
+  info  build-discipline-scope-lock: expected build-discipline/scope-lock, got quiet
+  info  decision-discipline-kill-criteria: expected decision-discipline/kill-criteria, got quiet
+  info  decision-discipline-pick-one: expected decision-discipline/pick-one, got quiet
+  info  engineering-floor-tokens-not-values: expected engineering-floor/tokens-not-values, got quiet
+  info  communication-craft-acknowledgment-first: expected communication-craft/acknowledgment-first, got quiet
+  info  communication-craft-apologies-without-excuses: expected communication-craft/apologies-without-excuses, got quiet
+  info  communication-craft-when-someone-shares-bad-news: expected communication-craft/when-someone-shares-bad-news, got quiet
+  info  communication-craft-when-someone-shares-good-news: expected communication-craft/when-someone-shares-good-news, got quiet
+  info  communication-craft-difficult-conversation-prep: expected communication-craft/difficult-conversation-prep, got quiet
+  info  communication-craft-thank-you-overdue: expected communication-craft/thank-you-overdue, got quiet
+  info  strategy-and-business-vendor-as-resource: expected strategy-and-business/vendor-as-resource, got quiet
+  info  claude-effective-usage-dispatch-this: expected claude-effective-usage/dispatch-this, got quiet
+  info  claude-effective-usage-use-cowork: expected claude-effective-usage/use-cowork-not-code, got quiet
+  info  claude-effective-usage-invoke-subagent: expected claude-effective-usage/invoke-subagent, got quiet
+  info  claude-effective-usage-monitor-instead-of-poll: expected claude-effective-usage/monitor-instead-of-poll, got quiet
+  info  claude-effective-usage-prefer-dedicated-mcp: expected claude-effective-usage/prefer-dedicated-mcp, got quiet
+  info  claude-effective-usage-single-message-multi-tool: expected claude-effective-usage/single-message-multi-tool, got quiet
+  info  claude-effective-usage-pin-this: expected claude-effective-usage/pin-this, got quiet
+  info  claude-effective-usage-summarize-and-archive: expected claude-effective-usage/summarize-and-archive, got quiet
+claude-paraphrases.dev.json (development): should fire 0/28, should stay quiet 0/0, ties 0, gated failures 0 of 0 gated (known failures 0)
+  info  paraphrase-strategy-business-moat: expected strategy-and-business/moat-thinking, got quiet
+  info  paraphrase-strategy-business-unit-economics: expected strategy-and-business/unit-economics, got quiet
+  info  paraphrase-build-discipline-not-another-product: expected build-discipline/not-another-product, got quiet
+  info  paraphrase-build-discipline-done-is-done: expected build-discipline/done-is-done, got quiet
+  info  paraphrase-build-discipline-scope-lock: expected build-discipline/scope-lock, got quiet
+  info  paraphrase-decision-discipline-kill-criteria: expected decision-discipline/kill-criteria, got quiet
+  info  paraphrase-decision-discipline-pick-one: expected decision-discipline/pick-one, got quiet
+  info  paraphrase-claude-quality-watch-is-claude-just-agreeing: expected claude-quality-watch/claude-disagrees, got quiet
+  info  paraphrase-engineering-floor-migration-not-mutation: expected engineering-floor/migration-not-mutation, got quiet
+  info  paraphrase-engineering-floor-tokens-not-values: expected engineering-floor/tokens-not-values, got quiet
+  info  paraphrase-communication-craft-acknowledgment-first: expected communication-craft/acknowledgment-first, got quiet
+  info  paraphrase-communication-craft-apologies-without-excuses: expected communication-craft/apologies-without-excuses, got quiet
+  info  paraphrase-communication-craft-is-this-a-no: expected communication-craft/is-this-a-no, got quiet
+  info  paraphrase-communication-craft-when-someone-shares-bad-news: expected communication-craft/when-someone-shares-bad-news, got quiet
+  info  paraphrase-communication-craft-when-someone-shares-good-news: expected communication-craft/when-someone-shares-good-news, got quiet
+  info  paraphrase-communication-craft-difficult-conversation-prep: expected communication-craft/difficult-conversation-prep, got quiet
+  info  paraphrase-communication-craft-thank-you-overdue: expected communication-craft/thank-you-overdue, got quiet
+  info  paraphrase-strategy-and-business-vendor-as-resource: expected strategy-and-business/vendor-as-resource, got quiet
+  info  paraphrase-claude-effective-usage-dispatch-this: expected claude-effective-usage/dispatch-this, got quiet
+  info  paraphrase-claude-effective-usage-switch-to-chat: expected claude-effective-usage/switch-to-chat-instead, got quiet
+  info  paraphrase-claude-effective-usage-use-cowork: expected claude-effective-usage/use-cowork-not-code, got quiet
+  info  paraphrase-claude-effective-usage-invoke-subagent: expected claude-effective-usage/invoke-subagent, got quiet
+  info  paraphrase-claude-effective-usage-monitor-instead-of-poll: expected claude-effective-usage/monitor-instead-of-poll, got quiet
+  info  paraphrase-claude-effective-usage-prefer-dedicated-mcp: expected claude-effective-usage/prefer-dedicated-mcp, got quiet
+  info  paraphrase-claude-effective-usage-single-message-multi-tool: expected claude-effective-usage/single-message-multi-tool, got quiet
+  info  paraphrase-claude-effective-usage-pin-this: expected claude-effective-usage/pin-this, got quiet
+  info  paraphrase-claude-effective-usage-clear-context-when-stale: expected claude-effective-usage/clear-context-when-stale, got quiet
+  info  paraphrase-claude-effective-usage-summarize-and-archive: expected claude-effective-usage/summarize-and-archive, got quiet
+claude-probes.dev.json (development): should fire 3/28, should stay quiet 30/30, ties 0, gated failures 0 of 30 gated (known failures 0)
+  info  claude-A15: expected engineering-floor/tokens-not-values, got quiet
+  info  claude-D2: expected engineering-floor/secrets-walk, got quiet
+  info  claude-D4: expected engineering-floor/secrets-walk, got quiet
+  info  claude-D5: expected engineering-floor/secrets-walk, got engineering-floor/(no rule) [engineering-floor=2]
+  info  claude-D6: expected engineering-floor/migration-not-mutation, got quiet
+  info  claude-D7: expected engineering-floor/migration-not-mutation, got quiet
+  info  claude-D8: expected engineering-floor/migration-not-mutation, got quiet
+  info  claude-D9: expected engineering-floor/migration-not-mutation, got quiet
+  info  claude-D11: expected engineering-floor/schema-discipline, got quiet
+  info  claude-D12: expected engineering-floor/schema-discipline, got quiet
+  info  claude-D13: expected claude-quality-watch/code-i-can-actually-run, got quiet
+  info  claude-D14: expected solo-run/solo-run-checklist, got quiet
+  info  claude-D15: expected solo-run/solo-run-checklist, got quiet
+  info  claude-D16: expected decision-discipline/pick-one, got quiet
+  info  claude-D17: expected engineering-floor/config-or-code, got quiet
+  info  claude-D18: expected engineering-floor/commit-message-honesty, got quiet
+  info  claude-D19: expected build-discipline/right-rung, got quiet
+  info  claude-D20: expected claude-quality-watch/citation-or-it-didnt-happen, got quiet
+  info  claude-D21: expected engineering-floor/migration-not-mutation, got quiet
+  info  claude-E1: expected claude-quality-watch/reading-claudes-output-honestly, got quiet
+  info  claude-E2: expected engineering-floor/domain-modeling, got quiet
+  info  claude-E3: expected claude-quality-watch/reading-claudes-output-honestly, got quiet
+  info  claude-D22: expected engineering-floor/secrets-walk, got engineering-floor/(no rule) [engineering-floor=2]
+  info  claude-D23: expected engineering-floor/commit-message-honesty, got quiet
+  info  claude-D24: expected communication-craft/introductions-that-help, got quiet
