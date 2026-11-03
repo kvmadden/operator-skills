@@ -1,50 +1,40 @@
 ---
-title: Migration not mutation — never UPDATE existing rows in place
+title: Migration not mutation. No bulk change to existing data without a snapshot, a transaction and a check
 trigger: >-
-  "let me UPDATE" / "let me just run an UPDATE" / "run an UPDATE" / "run an update on those rows" / "clean them up" / "run a one-off SQL" / "mutate the existing rows" / "fix up the data" / "let's clean these up" / "transform these rows in place" / "consolidate these duplicates" / "rename these values"
+  about to change or delete many existing rows, at the operator's request or by Claude's own plan: "run an UPDATE", "delete these rows", "clean up the data", "fix up the data", "dedupe these", "normalize these values", "backfill", "consolidate these duplicates", "rename these values", "mutate the existing rows", "transform these rows in place", "run a one-off SQL", a statement with `UPDATE`, `DELETE`, `TRUNCATE`, `MERGE` or an upsert, or an ORM bulk call such as `updateMany`, `deleteMany`, `bulk_update`, `update_all` or `delete_all`, run through psql, a database tool, an MCP server or application code
 priority: high
 ---
 
 ## The pattern
 
-Never mutate existing data in place. Every data transformation is a migration: backup → idempotent script → test on sample → execute → verify. Skipping any step is borrowing trouble.
+Changing existing rows in place destroys the old values. If the change is wrong, only a backup brings them back. This covers UPDATE, DELETE, TRUNCATE, MERGE and upserts, ORM bulk calls, and statements Claude decides to run on its own, not only the ones the operator asks for.
 
-Common patterns this fires on:
-- JSONB column shape transformations across rows
-- User-metadata or session-metadata updates across rows
-- Array-field member mutations across rows
-- Routing / status re-assignments across many rows
-
-In-place mutations destroy original state. If the mutation was wrong, recovery is impossible without backups. The cost of skipping migration discipline ranges from "annoying" (a few broken rows) to "irrecoverable" (silent data loss across thousands of rows discovered weeks later).
+The rule is not "never change data". It is: no bulk change without a way back and a check that it did what was intended.
 
 ## Response
 
-**HARD INTERRUPT.** Do not run the mutation.
+**HARD STOP before running the statement.**
 
-1. **Stop.** Don't run the mutation.
-2. **Name the risk:** "That's a multi-row mutation. Affected rows: ~<estimate>. Recovery if wrong: <impossible without backup | possible from backup | possible from upstream>."
-3. **Walk the migration steps:**
-   - "(1) **Backup** — snapshot affected rows (`SELECT ... INTO backup_table`)"
-   - "(2) **Script** — idempotent (running it twice doesn't double-apply)"
-   - "(3) **Sample test** — apply to 5 rows, verify correctness"
-   - "(4) **Execute** — apply to full set"
-   - "(5) **Verify** — re-query, confirm shape and counts"
-4. **Wait.**
+1. **Name the target and the scale:** which database and environment (never assume it is not production), which table, how many rows (run `SELECT count(*)` with the same condition first), and whether triggers, cascades, reports or other services depend on these values.
+2. **Walk the steps:**
+   - (1) **Snapshot** the affected rows, for example `CREATE TABLE backup_orders_20261103 AS SELECT * FROM orders WHERE <same condition>` (`SELECT ... INTO` on SQL Server), or confirm a restorable backup and where it is.
+   - (2) **Write it idempotent:** running it twice must not change the result again.
+   - (3) **Use a transaction** where the database supports one: `BEGIN`, the statement, check the affected row count and a sample, then `COMMIT` or `ROLLBACK`. TRUNCATE and some schema statements cannot be rolled back on every database, so they need the snapshot first.
+   - (4) **Try a small sample first**, for example five rows by primary key, and look at them.
+   - (5) **Run the full set**, then re-query counts and a sample.
+3. **Wait** for the operator to agree to the plan before running anything.
 
-If the mutation is small (single row, fully understood), the steps collapse — but they should still be NAMED, not skipped silently.
+For one row identified by its primary key, the steps shrink to naming the row and its current value. They are still named.
 
 ## Suppression
 
-- Single-row update with explicit ID (e.g., updating one user's first_name)
-- Operation is reversible AND backup exists
-- The operator is running an idempotent migration script that's been tested on a sample
-- Mode is `explore` AND it's a fresh test database
+- One row identified by its primary key, with its current value shown first
+- A tested, idempotent migration script that already takes a snapshot and uses a transaction, run as written
+- A disposable local or test database that the operator has named as disposable
 
 ## Override
 
-- "single-row, explicit ID, no risk"
-- "backup exists at <location>"
-- "idempotent script, tested on sample"
-- "fresh data, no recovery needed"
+- "backup exists at <location>" with the row count: proceed inside a transaction and check the result
+- "disposable database": proceed, and say so in the summary
 
-NO override path for "trust me, just run it." The skill always requires the migration steps be NAMED, even if abbreviated.
+No override skips naming the steps. "Trust me, just run it" gets the steps in one line, then a wait.

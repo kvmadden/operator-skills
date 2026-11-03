@@ -6,7 +6,7 @@ license: MIT — see plugin LICENSE
 
 # Engineering floor checklist
 
-Twenty rules covering the engineering floors a vibe-coded build can violate — from safety floors (secrets, schema, migration, auth) through everyday floors (config, tokens, errors, tests, accessibility). Each rule has its own specific check + response.
+Twenty-one rules covering the engineering floors a vibe-coded build can violate — from safety floors (secrets, schema, migration, auth) through everyday floors (config, tokens, errors, tests, accessibility). Each rule has its own specific check + response.
 
 ## Rules
 
@@ -27,6 +27,7 @@ Twenty rules covering the engineering floors a vibe-coded build can violate — 
 | New component / utility being built without checking existing code | "I'll create a [thing] for X" without reuse check | [reuse-radar](rules/reuse-radar.md) |
 | Schema shape change without migration plan | "let's add a field" / "rename this column" / "drop the [field]" / edits to migration files | [schema-discipline](rules/schema-discipline.md) |
 | Credentials in chat / repos / logs | `sk-`, `ghp_`, `AKIA`, `.env` paste, bash credential leak | [secrets-walk](rules/secrets-walk.md) |
+| Real-looking patient or personal data in prompts, fixtures, logs or commits | "use this EHR export", "turn these patient rows into fixtures", MRNs, HL7 `PID` segments, FHIR `Patient` resources | [phi-floor](rules/phi-floor.md) |
 | Premature file / component / module split before reuse is real | "let me extract this" / "let me split this" without earned extraction | [single-file-check](rules/single-file-check.md) |
 | System complexity threshold; friction managing single big thing | designing something complex from scratch without seams | [system-decomposition](rules/system-decomposition.md) |
 | Test written against implementation, not contract | "let me mock this" / `.toHaveBeenCalled` / `*.test.*` patterns | [testing-philosophy](rules/testing-philosophy.md) |
@@ -39,9 +40,11 @@ Match the engineering moment to the rule. Apply. Yield.
 
 ## Suppression rules
 
-- Spike code / one-off throwaway
-- Mode is `explore`
-- Already addressed this rule in current task
+The safety floors (secrets-walk, phi-floor, migration-not-mutation, schema-discipline, auth-floor) are never suppressed by mode, by "spike" or by "throwaway". The suppressions below apply to the everyday floors only.
+
+- Spike code or a one-off throwaway helper
+- Explore mode, as defined in the precedence section below
+- Already addressed this rule in the current task
 
 ## What this skill never does
 
