@@ -30,8 +30,8 @@ Orchestrates Claude doing autonomous work while the operator is away. The full l
 
 - Operator said they are drained or distracted (autonomy then is a bad call)
 - Time window < 30 minutes (overhead exceeds value)
-- Operator hasn't named a concrete scope
-- Wifi is unreliable (solo-run can't recover from network failures unattended)
+- Operator declines to name a concrete scope when the intake asks for one
+- Connectivity is unreliable and the operator does not accept the "save often, local work only" stop that the checklist adds
 - Operator is mid-flow on something else; don't switch contexts
 
 ## What this skill never does
@@ -51,8 +51,39 @@ Orchestrates Claude doing autonomous work while the operator is away. The full l
 
 Autonomous work is high-leverage but high-risk. The contract structure (checklist → contract → log → debrief → postmortem) makes the autonomy safe by forcing the operator and Claude to agree on scope, decision authority, and stopping conditions UPFRONT. Without the contract, "go work on it for a while" turns into either anxious over-checking or runaway scope drift. With the contract, the operator can actually step away.
 
+<!-- precedence:start -->
+## Precedence across operator-skills
+
+When more than one rule could respond, use this order. Give at most one correction per turn: the highest tier wins, and lower tiers wait or drop.
+
+| Tier | Rules | How they respond |
+|---|---|---|
+| 1 | `secrets-walk`, `phi-floor`, `migration-not-mutation`, `schema-discipline`, `auth-floor`, `solo-run-checklist`, `solo-run-contract`, `solo-run-log`, `solo-run-debrief` | Stop before the risky action and wait for the operator. No mode, sketch or "explore" label suppresses them. |
+| 2 | `code-i-can-actually-run`, `hallucination-tripwire`, `citation-or-it-didnt-happen`, `claude-confabulating-context`, `am-i-being-led`, `reading-claudes-output-honestly`, `is-claude-just-agreeing`, `claude-disagrees` | Check or correct Claude's own output, say what changed, then continue. |
+| 3 | Every other engineering-floor and build-discipline rule | One short nudge, then yield. Never a hard stop. |
+| 4 | Every other rule (communication, decision, honesty, strategy, usage and effective-usage rules, solo-run-postmortem) | Mention only when asked or clearly useful. Never interrupt work. |
+
+Shared meanings:
+- **Explore mode** starts only when the operator says so ("explore mode", "just sketching") and ends when they say so or start building something to ship. It quiets tiers 3 and 4, never tier 1.
+- **Logged** means said in the conversation. Write to a file only after the operator agrees to that file, and never copy credentials or patient data into it.
+- **Unknown stays unknown.** Claude cannot see clock time between messages, earlier sessions or usage counts. When a rule depends on them, ask or say they are unknown instead of guessing.
+
+Owners for situations two rules both claim:
+
+| Situation | Owner | The other rule |
+|---|---|---|
+| "ship it" or "looks good" right after a long change | reading-claudes-output-honestly asks once whether it was read | handoff-at-the-boundary waits until the operator has confirmed the review |
+| "perfect" or "exactly" | reading-claudes-output-honestly, when it approves a long output | prompt-archeology only when the operator asks to keep a prompt |
+| "while we're at it" during an active build | scope-lock | park-the-idea owns stray ideas outside an active build |
+| "the latest version" of outside software | citation-or-it-didnt-happen | name-the-version owns the operator's own artifacts |
+| Several options on the table | pick-one when the operator asks for a recommendation | am-i-being-led applies when Claude steered without being asked |
+| An inline color or spacing value | tokens-not-values, only when the project has design tokens | config-or-code for other hardcoded values |
+| "done" or "shipped" | output-vs-outcome for a report of finished work | vibe-vs-real only for a maturity claim about a product |
+| A clinical, safety or data-integrity edge case | the engineering floors, as first-version work | v1-versus-v2-thinking never defers it |
+<!-- precedence:end -->
+
 ## Trigger catalogue
 
-Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads.
+Moved here from the skill description on 3 November 2026, unchanged. Claude Code shows at most 1,536 characters of a skill description in its skill listing and can show less when many skills are installed, so the long list was being cut. Claude reads this section after the skill loads. Where this older text disagrees with a rule file or the precedence section above, the rule file and the precedence section win.
 
 > Use this skill the moment the operator wants Claude to keep working autonomously while they step away. Triggers include "I'm going to be away", "set this up to run", "work on this while I'm gone", "I have a few hours and good wifi", "set me up for autonomy", "you've got this — keep going", "work on it for me", "I'll come back in [time]", "solo-run", "start a solo run", or any phrasing that signals the operator wants long-form unattended work with defined decision rules. The skill orchestrates the full solo-run lifecycle by dispatching to rule files in the rules/ folder: pre-flight checklist (solo-run-checklist) → contract authoring + explicit "go" gate (solo-run-contract) → periodic in-progress logging during the run (solo-run-log) → debrief on return (solo-run-debrief) → cross-run pattern analysis every ~5 runs (solo-run-postmortem). Each sub-skill has its own trigger context within the lifecycle. Do NOT use this skill outside an explicit solo-run request, for normal interactive sessions where the operator stays present, when the operator says they are drained or distracted (autonomy then is a bad call), or when the time window is < 30 minutes (overhead exceeds value).
