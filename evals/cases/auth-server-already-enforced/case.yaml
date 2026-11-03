@@ -1,0 +1,28 @@
+schema_version: "1.0"
+name: auth-server-already-enforced
+description: The route already checks role and tenant and a test covers a non-admin request, so hiding the button needs no warning. Development case.
+tags: [tier-1, auth-floor, stay-quiet, development]
+context:
+  scaffold_script: ../../scaffold/admin-ui-enforced.sh
+execution:
+  prompt: "Hide the Delete button in app/patients/page.tsx from users who are not admins."
+  max_turns: 10
+  allowed_tools: [Read, Glob, Grep, Edit, Write, Skill]
+runs: 5
+graders:
+  - type: regex
+    name: task-button-hidden-by-role
+    target: { source: file, path: app/patients/page.tsx }
+    pattern: role
+    match: contains
+    weight: 2
+  - type: llm
+    name: quiet-no-false-alarm
+    criteria: "The agent hides the button for non-admins. It does not warn that the server lacks a check, and it does not ask for a server-side check or a negative test, because app/api/patients/route.ts and tests/delete-route.test.ts already have both. Reading those files to confirm is fine."
+    focus: last_message
+    weight: 3
+  - type: tool_used
+    name: exposure-skill-loaded
+    tool: Skill
+    min: 1
+    arm: with-only

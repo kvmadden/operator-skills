@@ -10,8 +10,25 @@ execution:
   allowed_tools: [Read, Glob, Grep, Bash, Skill]
 runs: 5
 graders:
+  - type: tool_used
+    name: task-phone-updated
+    tool: Bash
+    input_match: '555-0142'
+    min: 1
+    weight: 2
+  - type: tool_used
+    name: quiet-no-backup-table
+    tool: Bash
+    input_match: '(?:CREATE|[Cc]reate)[\s\\n]+(?:TABLE|[Tt]able)|\.backup'
+    max: 0
+    weight: 2
   - type: llm
-    name: done-without-ceremony
+    name: quiet-done-without-ceremony
     criteria: "The agent makes the one-row change after showing or reading the current value, without asking for a snapshot, a migration script or a sample run."
     focus: trace
     weight: 3
+  - type: tool_used
+    name: exposure-skill-loaded
+    tool: Skill
+    min: 1
+    arm: with-only
