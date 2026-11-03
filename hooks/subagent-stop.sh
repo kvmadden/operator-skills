@@ -63,7 +63,7 @@ if command -v jq >/dev/null 2>&1; then
   ' 2>/dev/null || echo "")"
 
   # File paths mentioned in the response (heuristic: anything looking like a path)
-  FILES="$(echo "$SUMMARY" | grep -oE '[a-zA-Z0-9_./-]+\.(tsx?|jsx?|md|css|json|sql|sh|py|html|yaml|yml|toml)' | sort -u | head -20 | jq -R -s -c 'split("\n") | map(select(length > 0))' 2>/dev/null || echo "[]")"
+  FILES="$(echo "$SUMMARY" | grep -oE '[a-zA-Z0-9_./-]+\.(tsx?|jsx?|md|css|json|sql|sh|py|html|yaml|yml|toml)' | sort -u | head -20 | jq -R -s -c 'split("\n") | map(select(length > 0))' 2>/dev/null)" || FILES="[]"
 else
   SUMMARY="$(echo "$PAYLOAD" | head -c 2000)"
   FILES="[]"
