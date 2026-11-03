@@ -1,14 +1,13 @@
 # Routing check on the current branch text
-# Command: node tools/fire-test.mjs   (run on 3 Nov 2026 after the rule corrections)
-# All sets are development data.
+# Command: node tools/fire-test.mjs   (run on 3 Nov 2026 after the second review round)
+# All sets are development data. claude-R1 was added in this round.
 
 Lexical routing check. Development data only: every set below was seen while descriptions changed.
 A pass means the visible text contains the intended words. It does not show how Claude Code routes.
 
-fire-test-phrases.json (development): should fire 7/28, should stay quiet 0/0, ties 0, gated failures 0 of 0 gated (known failures 0)
+fire-test-phrases.json (development): should fire 8/28, should stay quiet 0/0, ties 0, gated failures 0 of 0 gated (known failures 0)
   info  build-discipline-not-another-product: expected build-discipline/not-another-product, got quiet
   info  build-discipline-done-is-done: expected build-discipline/done-is-done, got quiet
-  info  build-discipline-scope-lock: expected build-discipline/scope-lock, got quiet
   info  decision-discipline-kill-criteria: expected decision-discipline/kill-criteria, got quiet
   info  decision-discipline-pick-one: expected decision-discipline/pick-one, got quiet
   info  engineering-floor-tokens-not-values: expected engineering-floor/tokens-not-values, got quiet
@@ -56,8 +55,10 @@ claude-paraphrases.dev.json (development): should fire 0/28, should stay quiet 0
   info  paraphrase-claude-effective-usage-pin-this: expected claude-effective-usage/pin-this, got quiet
   info  paraphrase-claude-effective-usage-clear-context-when-stale: expected claude-effective-usage/clear-context-when-stale, got quiet
   info  paraphrase-claude-effective-usage-summarize-and-archive: expected claude-effective-usage/summarize-and-archive, got quiet
-claude-probes.dev.json (development): should fire 5/28, should stay quiet 30/30, ties 0, gated failures 0 of 30 gated (known failures 0)
+claude-probes.dev.json (development): should fire 6/28, should stay quiet 29/31, ties 0, gated failures 0 of 35 gated (known failures 2)
   info  claude-A15: expected engineering-floor/tokens-not-values, got quiet
+  KNOWN claude-B4: expected quiet, got build-discipline/right-rung [build-discipline=3]
+        reason: build-discipline quotes "let me polish" as an example of polish before the feature works. The lint matches the words and cannot see whether the feature works, and README wording is not that case. Until 3 Nov 2026 this probe passed only because of a bug: the old split treated the whole build-discipline description as its Do NOT use clause.
   info  claude-D2: expected engineering-floor/secrets-walk, got quiet
   info  claude-D4: expected engineering-floor/secrets-walk, got quiet
   info  claude-D6: expected engineering-floor/migration-not-mutation, got quiet
@@ -72,7 +73,6 @@ claude-probes.dev.json (development): should fire 5/28, should stay quiet 30/30,
   info  claude-D16: expected decision-discipline/pick-one, got quiet
   info  claude-D17: expected engineering-floor/config-or-code, got quiet
   info  claude-D18: expected engineering-floor/commit-message-honesty, got quiet
-  info  claude-D19: expected build-discipline/right-rung, got quiet
   info  claude-D20: expected claude-quality-watch/citation-or-it-didnt-happen, got quiet
   info  claude-D21: expected engineering-floor/migration-not-mutation, got quiet
   info  claude-E1: expected claude-quality-watch/reading-claudes-output-honestly, got quiet
@@ -80,3 +80,5 @@ claude-probes.dev.json (development): should fire 5/28, should stay quiet 30/30,
   info  claude-E3: expected claude-quality-watch/reading-claudes-output-honestly, got quiet
   info  claude-D23: expected engineering-floor/commit-message-honesty, got quiet
   info  claude-D24: expected communication-craft/introductions-that-help, got quiet
+  KNOWN claude-R1: expected quiet, got engineering-floor/schema-discipline [engineering-floor=3]
+        reason: The placeholder in "drop the [field]" matches any one to four words, so "drop the mic" scores as a schema change. The model reads the meaning. The lint cannot.

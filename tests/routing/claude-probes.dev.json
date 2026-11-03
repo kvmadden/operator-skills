@@ -1,9 +1,19 @@
 {
   "data_status": "development",
-  "provenance": "Written by the Claude reviewer on 3 Nov 2026 while evaluating main at 64513a4, before any description change, then used while changing descriptions. Development data from then on.",
+  "provenance": "Written by the Claude reviewer on 3 Nov 2026 while evaluating main at 64513a4, before any description change, then used while changing descriptions. Development data from then on. claude-R1 was added in the second review round, after the routing check changed, from Grok's finding 12.",
   "expectations": "Taken from each rule's own trigger and suppression text. quiet means no skill should load. !skill means that skill must not be chosen.",
-  "gate": "Stay-quiet cases are gated in CI. Should-fire cases are reported only, because Claude Code routes semantically and short descriptions are not meant to contain every trigger word.",
-  "known_failures": [],
+  "gate": "Stay-quiet cases are gated in CI. Should-fire cases are reported only, because Claude Code routes semantically and short descriptions are not meant to contain every trigger word. The exception is four credential-shape cases (claude-D1, D3, D5 and D22), gated so that deleting a provider prefix or the private key header from the engineering-floor description fails CI. Credential shapes are lexical by nature.",
+  "known_failures": [
+    {
+      "id": "claude-B4",
+      "reason": "build-discipline quotes \"let me polish\" as an example of polish before the feature works. The lint matches the words and cannot see whether the feature works, and README wording is not that case. Until 3 Nov 2026 this probe passed only because of a bug: the old split treated the whole build-discipline description as its Do NOT use clause."
+    },
+    {
+      "id": "claude-R1",
+      "reason": "The placeholder in \"drop the [field]\" matches any one to four words, so \"drop the mic\" scores as a schema change. The model reads the meaning. The lint cannot."
+    }
+  ],
+  "known_failures_note": "Known failures are listed with their reasons in every run. Before the description rewrite of 3 Nov 2026, 10 stay-quiet probes fired: see docs/evidence/routing-before-description-rewrite.txt.",
   "cases": [
     {
       "id": "claude-A1",
@@ -165,7 +175,7 @@
       "id": "claude-D1",
       "phrase": "Here is my .env: STRIPE_SECRET_KEY=sk_live_51FIXTURE0NLY",
       "expect": "engineering-floor/secrets-walk",
-      "gate": false
+      "gate": true
     },
     {
       "id": "claude-D2",
@@ -177,7 +187,7 @@
       "id": "claude-D3",
       "phrase": "my key is sk-proj-Ab3dEf9hIjKlMnOpQrStUvWx, why 401?",
       "expect": "engineering-floor/secrets-walk",
-      "gate": false
+      "gate": true
     },
     {
       "id": "claude-D4",
@@ -189,7 +199,7 @@
       "id": "claude-D5",
       "phrase": "-----BEGIN OPENSSH PRIVATE KEY----- b3BlbnNzaC1rZXk... deploy is failing",
       "expect": "engineering-floor/secrets-walk",
-      "gate": false
+      "gate": true
     },
     {
       "id": "claude-D6",
@@ -327,7 +337,7 @@
       "id": "claude-D22",
       "phrase": "Why does Stripe reject my key sk_live_51FIXTURE0NLY?",
       "expect": "engineering-floor/secrets-walk",
-      "gate": false
+      "gate": true
     },
     {
       "id": "claude-D23",
@@ -352,7 +362,12 @@
       "phrase": "Skip the brief, I know what I want: make me a CSV parser",
       "expect": "quiet",
       "gate": true
+    },
+    {
+      "id": "claude-R1",
+      "phrase": "Time to drop the mic on this demo",
+      "expect": "quiet",
+      "gate": true
     }
-  ],
-  "known_failures_note": "None after the description rewrite of 3 Nov 2026. Before it, 10 stay-quiet probes fired: see docs/evidence/routing-before-description-rewrite.txt."
+  ]
 }

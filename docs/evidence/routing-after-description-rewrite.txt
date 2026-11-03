@@ -1,6 +1,9 @@
 # Routing check after the description rewrite
 # Command: node tools/fire-test.mjs   (run on 3 Nov 2026)
 # All sets are development data. Compare with routing-before-description-rewrite.txt.
+# Note added in the second review round: this output came from the first-round scorer, which put a whole
+# description in its Do NOT use part when the description had no "Use when" phrase and read rule files the agent
+# has not opened. routing-rescored-history.txt has the same text scored by the corrected check.
 
 Lexical routing check. Development data only: every set below was seen while descriptions changed.
 A pass means the visible text contains the intended words. It does not show how Claude Code routes.
