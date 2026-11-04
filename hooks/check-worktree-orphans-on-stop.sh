@@ -98,34 +98,71 @@ if [ -n "$default_name" ]; then
   if g show-ref --verify --quiet "refs/remotes/origin/$default_name"; then bases+=("refs/remotes/origin/$default_name"); fi
 fi
 
-dirty_count="$(g status --porcelain=v1 --untracked-files=normal | wc -l | tr -d ' ')"
-[ -n "$dirty_count" ] || dirty_count=0
+if dirty_output="$(g status --porcelain=v1 --untracked-files=normal)"; then
+  if [ -n "$dirty_output" ]; then
+    dirty_count="$(printf '%s\n' "$dirty_output" | wc -l | tr -d ' ')"
+  else
+    dirty_count=0
+  fi
+  [ -n "$dirty_count" ] || dirty_count=0
+else
+  dirty_count="unknown"
+fi
 
-paths_between() {
+paths_between() (
+  set -o pipefail
   g diff --no-ext-diff --no-textconv --name-only --no-renames -z "$1" "$2" | tr '\0' '\n' | LC_ALL=C sort -u
-}
+)
 
 ahead="unknown"
+unknown_reason="No usable default branch reference was found"
 base_tips="none"
 if [ -n "$branch" ] && [ "$branch" = "$default_name" ]; then
   ahead=0   # the default branch itself: only uncommitted changes are reported
 elif [ "${#bases[@]}" -gt 0 ]; then
-  base_tips="$(for b in "${bases[@]}"; do g rev-parse --verify --quiet "$b"; done | tr '\n' ' ')"
-  unreachable="$(g rev-list --count HEAD --not "${bases[@]}")" || unreachable=""
-  if [ "$unreachable" = "0" ]; then
-    ahead=0
-  elif [ -n "$unreachable" ]; then
-    ahead="$unreachable"
-    for b in "${bases[@]}"; do
-      mb="$(g merge-base "$b" HEAD)" || continue
-      [ -n "$mb" ] || continue
-      changed="$(paths_between "$mb" HEAD)"
-      differing="$(paths_between "$b" HEAD)"
-      if [ -z "$changed" ] || [ -z "$(LC_ALL=C comm -12 <(printf '%s\n' "$changed") <(printf '%s\n' "$differing") | sed '/^$/d')" ]; then
-        ahead=0
-        break
-      fi
-    done
+  base_tips=""
+  base_tips_ok=1
+  for b in "${bases[@]}"; do
+    if tip="$(g rev-parse --verify --quiet "$b")" && [ -n "$tip" ]; then
+      base_tips="${base_tips}${tip} "
+    else
+      base_tips_ok=0
+      break
+    fi
+  done
+  if [ "$base_tips_ok" -eq 1 ]; then
+    unreachable="$(g rev-list --count HEAD --not "${bases[@]}")" || unreachable=""
+    if [ "$unreachable" = "0" ]; then
+      ahead=0
+    elif [ -n "$unreachable" ]; then
+      ahead="$unreachable"
+      for b in "${bases[@]}"; do
+        if mb="$(g merge-base "$b" HEAD)" && [ -n "$mb" ]; then :; else
+          ahead="unknown"
+          unknown_reason="Git could not find a merge base reliably"
+          break
+        fi
+        if changed="$(paths_between "$mb" HEAD)"; then :; else
+          ahead="unknown"
+          unknown_reason="Git could not compare the worktree paths reliably"
+          break
+        fi
+        if differing="$(paths_between "$b" HEAD)"; then :; else
+          ahead="unknown"
+          unknown_reason="Git could not compare the default branch paths reliably"
+          break
+        fi
+        if [ -z "$changed" ] || [ -z "$(LC_ALL=C comm -12 <(printf '%s\n' "$changed") <(printf '%s\n' "$differing") | sed '/^$/d')" ]; then
+          ahead=0
+          break
+        fi
+      done
+    else
+      unknown_reason="Git could not inspect commit reachability reliably"
+    fi
+  else
+    base_tips="unknown"
+    unknown_reason="Git could not inspect the default branch references reliably"
   fi
 fi
 
@@ -133,7 +170,7 @@ fi
 if [ "$ahead" = "0" ] && [ "$dirty_count" = "0" ]; then exit 0; fi
 
 dirty_flag=0
-[ "$dirty_count" -gt 0 ] 2>/dev/null && dirty_flag=1
+if [ "$dirty_count" = "unknown" ]; then dirty_flag="unknown"; elif [ "$dirty_count" -gt 0 ] 2>/dev/null; then dirty_flag=1; fi
 key="$head_sha|$base_tips|$dirty_flag|$ahead"
 
 # Dedupe: one file per session holding every state already warned about.
@@ -167,13 +204,15 @@ else
   msg="$msg${nl}Detached HEAD at $short_sha. Create a branch at that commit before removing the worktree, or the commits become hard to find."
 fi
 if [ "$ahead" = "unknown" ]; then
-  msg="$msg${nl}Merge state: unknown. No default branch was found (checked origin/HEAD, init.defaultBranch, main, master, trunk and develop), so this hook cannot tell which commits are unmerged. Needs review."
+  msg="$msg${nl}Merge state: unknown. $unknown_reason. Needs review."
 elif [ "$ahead" != "0" ]; then
   msg="$msg${nl}Commits not found in $default_name: $ahead (newest $short_sha)."
 fi
 if [ "$dirty_count" -gt 0 ] 2>/dev/null; then
   if [ "$dirty_count" = "1" ]; then msg="$msg${nl}Uncommitted changes: 1 path."
   else msg="$msg${nl}Uncommitted changes: $dirty_count paths."; fi
+elif [ "$dirty_count" = "unknown" ]; then
+  msg="$msg${nl}Uncommitted state: unknown. Git status failed, so this worktree needs review."
 fi
 msg="$msg${nl}Before removing this worktree, merge or push the work, or open a pull request. Removing a worktree with unmerged or uncommitted work can lose it."
 

@@ -196,6 +196,47 @@ test('SubagentStop: rotates the log past 1 MiB and keeps one previous file', () 
   assert.equal(fs.readFileSync(log, 'utf8').trim().split('\n').length, 1);
 });
 
+test('SubagentStop: refuses unsafe archive destinations and still appends', () => {
+  const cases = [
+    ['symlink to directory', (archive, outside) => fs.symlinkSync(outside, archive)],
+    ['symlink to file', (archive, outside) => {
+      fs.writeFileSync(path.join(outside, 'victim.txt'), 'keep\n');
+      fs.symlinkSync(path.join(outside, 'victim.txt'), archive);
+    }],
+    ['directory', (archive) => fs.mkdirSync(archive)],
+  ];
+  for (const [label, makeArchive] of cases) {
+    const state = path.join(tmp(), 'state');
+    const outside = path.join(tmp(), 'outside');
+    fs.mkdirSync(state);
+    fs.mkdirSync(outside);
+    const log = path.join(state, 'agent-activity.jsonl');
+    const archive = `${log}.1`;
+    fs.writeFileSync(log, 'x'.repeat(1_100_000));
+    makeArchive(archive, outside);
+    const r = runHook(SUBAGENT, fixture('subagent-stop.json'), { env: { OPERATOR_SKILLS_STATE_DIR: state } });
+    assert.equal(r.code, 0, label);
+    assert.ok(fs.existsSync(log), `${label}: active log remains`);
+    assert.ok(fs.statSync(log).size > 1_100_000, `${label}: new metadata appends without rotation`);
+    if (label === 'directory') assert.equal(fs.statSync(archive).isDirectory(), true);
+    else assert.equal(fs.lstatSync(archive).isSymbolicLink(), true, `${label}: archive link remains untouched`);
+    if (label === 'symlink to directory') assert.deepEqual(fs.readdirSync(outside), [], 'no log escapes through the archive directory link');
+    if (label === 'symlink to file') assert.equal(fs.readFileSync(path.join(outside, 'victim.txt'), 'utf8'), 'keep\n');
+  }
+});
+
+test('SubagentStop: replaces an existing regular archive while rotating', () => {
+  const state = path.join(tmp(), 'state');
+  fs.mkdirSync(state);
+  const log = path.join(state, 'agent-activity.jsonl');
+  fs.writeFileSync(log, 'x'.repeat(1_100_000));
+  fs.writeFileSync(`${log}.1`, 'old archive\n');
+  const r = runHook(SUBAGENT, fixture('subagent-stop.json'), { env: { OPERATOR_SKILLS_STATE_DIR: state } });
+  assert.equal(r.code, 0);
+  assert.equal(fs.statSync(`${log}.1`).size, 1_100_000);
+  assert.equal(fs.readFileSync(log, 'utf8').trim().split('\n').length, 1);
+});
+
 // ---------------------------------------------------------------- Stop (worktree check)
 
 function stopRun(wt, { state = path.join(tmp(), 'state'), payload, cwd, pathOverride } = {}) {
@@ -295,6 +336,30 @@ test('Stop: uncommitted changes alone are reported with a count', () => {
   const msg = parseOne(stopRun(wt).out).systemMessage;
   assert.match(msg, /Uncommitted changes: 1 path\./);
   assert.doesNotMatch(msg, /Commits not found/);
+});
+
+test('Stop: a failed git status is reported as unknown, not clean', () => {
+  const { wt } = repoWithWorktree();
+  const gitdir = git(wt, 'rev-parse', '--absolute-git-dir');
+  fs.writeFileSync(path.join(gitdir, 'index'), 'invalid index\n');
+  const r = stopRun(wt);
+  assert.equal(r.code, 0);
+  const msg = parseOne(r.out).systemMessage;
+  assert.match(msg, /Uncommitted state: unknown/);
+  assert.match(msg, /Git status failed/);
+});
+
+test('Stop: a failed path comparison is reported as unknown, not merged', () => {
+  const { wt } = repoWithWorktree();
+  commitFile(wt, 'b.txt', 'b\n', 'Add b');
+  const bin = tmp('opsk-git-');
+  const realGit = spawnSync('bash', ['-c', 'command -v git'], { encoding: 'utf8' }).stdout.trim();
+  fs.writeFileSync(path.join(bin, 'git'), `#!/bin/sh\nfor arg in "$@"; do\n  if [ "$arg" = diff ]; then exit 128; fi\ndone\nexec "${realGit}" "$@"\n`, { mode: 0o755 });
+  const r = stopRun(wt, { pathOverride: `${bin}:${process.env.PATH}` });
+  assert.equal(r.code, 0);
+  const msg = parseOne(r.out).systemMessage;
+  assert.match(msg, /Merge state: unknown/);
+  assert.match(msg, /could not compare the worktree paths reliably/);
 });
 
 test('Stop: stop_hook_active true stays silent, and the payload cwd wins over the process cwd', () => {
@@ -510,7 +575,67 @@ test('SubagentStop: paths and custom agent names cannot carry identifiers into t
 test('SubagentStop: a state directory inside the project is refused', () => {
   const project = tmp();
   const state = path.join(project, '.claude', 'operator-state');
+  fs.chmodSync(project, 0o755);
   const r = runHook(SUBAGENT, { ...fixture('subagent-stop.json'), cwd: project }, { env: { OPERATOR_SKILLS_STATE_DIR: state } });
   assert.equal(r.code, 0);
+  assert.equal(fs.statSync(project).mode & 0o777, 0o755, 'refusal leaves the project root mode unchanged');
+  assert.equal(fs.existsSync(path.dirname(state)), false, 'refusal does not create parent directories');
   assert.equal(fs.existsSync(path.join(state, 'agent-activity.jsonl')), false);
+});
+
+test('SubagentStop: physical containment through a symlinked ancestor is checked before creation', () => {
+  const project = tmp();
+  const alias = path.join(tmp(), 'project-alias');
+  fs.symlinkSync(project, alias);
+  const state = path.join(alias, '.claude', 'operator-state');
+  const r = runHook(SUBAGENT, { ...fixture('subagent-stop.json'), cwd: project }, { env: { OPERATOR_SKILLS_STATE_DIR: state } });
+  assert.equal(r.code, 0);
+  assert.equal(fs.existsSync(path.join(project, '.claude')), false, 'physical project remains unchanged');
+});
+
+test('SubagentStop: a parent after a symlink is resolved physically before creation', () => {
+  const parent = tmp();
+  const project = path.join(parent, 'project');
+  fs.mkdirSync(path.join(project, 'nested'), { recursive: true });
+  const alias = path.join(parent, 'project-nested');
+  fs.symlinkSync(path.join(project, 'nested'), alias);
+  const state = path.join(alias, '..', 'operator-state');
+  const r = runHook(SUBAGENT, { ...fixture('subagent-stop.json'), cwd: project }, { env: { OPERATOR_SKILLS_STATE_DIR: state } });
+  assert.equal(r.code, 0);
+  assert.equal(fs.existsSync(path.join(project, 'operator-state')), false, 'the resolved project parent remains unchanged');
+});
+
+test('SubagentStop: an existing non-directory ancestor is refused without creation', () => {
+  const project = tmp();
+  const blocker = path.join(project, 'state-file');
+  fs.writeFileSync(blocker, 'keep\n');
+  const state = path.join(blocker, 'nested-state');
+  const r = runHook(SUBAGENT, { ...fixture('subagent-stop.json'), cwd: project }, { env: { OPERATOR_SKILLS_STATE_DIR: state } });
+  assert.equal(r.code, 0);
+  assert.equal(fs.readFileSync(blocker, 'utf8'), 'keep\n');
+  assert.equal(fs.existsSync(state), false);
+});
+
+test('SubagentStop: canonical mutations do not create discarded intermediate paths', () => {
+  const project = tmp();
+  const state = `${project}/new/../../external-state`;
+  const r = runHook(SUBAGENT, { ...fixture('subagent-stop.json'), cwd: project }, { env: { OPERATOR_SKILLS_STATE_DIR: state } });
+  assert.equal(r.code, 0);
+  assert.equal(fs.existsSync(path.join(project, 'new')), false, 'the checked canonical destination is used for mkdir');
+  const log = path.join(path.dirname(project), 'external-state', 'agent-activity.jsonl');
+  assert.equal(fs.existsSync(log), true, 'normal external state still writes one metadata record');
+  assert.equal(fs.statSync(path.dirname(log)).mode & 0o777, 0o700);
+});
+
+test('SubagentStop: a trailing slash cannot bypass final state symlink refusal', () => {
+  const project = tmp();
+  const target = path.join(tmp(), 'state-target');
+  const link = path.join(tmp(), 'state-link');
+  fs.mkdirSync(target, { mode: 0o755 });
+  fs.chmodSync(target, 0o755);
+  fs.symlinkSync(target, link);
+  const r = runHook(SUBAGENT, { ...fixture('subagent-stop.json'), cwd: project }, { env: { OPERATOR_SKILLS_STATE_DIR: `${link}/` } });
+  assert.equal(r.code, 0);
+  assert.equal(fs.statSync(target).mode & 0o777, 0o755, 'refusal leaves the linked target permissions unchanged');
+  assert.equal(fs.existsSync(path.join(target, 'agent-activity.jsonl')), false);
 });

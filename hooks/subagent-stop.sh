@@ -71,6 +71,7 @@ state_dir="$(operator_skills_state_dir "$project")"
 [ -n "$state_dir" ] || exit 0
 log_file="$state_dir/agent-activity.jsonl"
 [ -L "$log_file" ] && exit 0
+archive_file="$log_file.1"
 
 record="$(jq -nc --arg ts "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg event "$event" --arg session "$session" \
   --arg agent_id "$agent_id" --arg agent_type "$agent_type" --arg project_id "$project_id" \
@@ -90,7 +91,9 @@ if operator_skills_lock "$lock"; then
   if [ -f "$log_file" ] && [ ! -L "$log_file" ]; then
     size="$(wc -c < "$log_file" 2>/dev/null | tr -d ' ')"
     if [ -n "$size" ] && [ "$size" -gt 1048576 ] 2>/dev/null; then
-      mv -f "$log_file" "$log_file.1" 2>/dev/null || true
+      if [ ! -L "$archive_file" ] && { [ ! -e "$archive_file" ] || [ -f "$archive_file" ]; }; then
+        mv -f "$log_file" "$archive_file" 2>/dev/null || true
+      fi
     fi
   fi
   [ -L "$log_file" ] || printf '%s\n' "$record" >> "$log_file" 2>/dev/null || true
