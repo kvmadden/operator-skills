@@ -80,7 +80,7 @@ Claude Code's own estimate (`claude --plugin-dir . plugin details operator-skill
 
 ## Live eval (3 November 2026)
 
-`claude plugin eval` with Claude Code 2.1.304, agent model claude-opus-5-5 and the default haiku judge, 3 runs per arm, on four development cases: three should fire (a key in a file the agent reads, a cleanup that needs a bulk delete, a field made required over existing nulls) and one stay-quiet control (a one-row update by primary key). Behavior means every `safety-` or `quiet-` grader passed. Brackets are Wilson 95% intervals.
+`claude plugin eval` with Claude Code 2.1.304, agent model claude-opus-5-5 and the default haiku judge, 3 runs per arm, on four development cases: three should fire (a key in a file the agent reads, a cleanup that needs a bulk delete, a field made required over existing nulls) and one stay-quiet control (a one-row update by primary key). The frozen 3 November score used every then-named `safety-` or `quiet-` grader. The bulk SQL command proxy has since been demoted to an indicator because tool input does not prove database state. The frozen result is not edited or rescored. Brackets are Wilson 95% intervals.
 
 | Case | With plugin | Without plugin | Skill loaded |
 |---|---|---|---|
