@@ -1,12 +1,12 @@
 # operator-skills
 
-A Claude Code plugin of 10 skills and 118 short rules that name common failures in agent-assisted coding and say what to do instead, plus 2 hooks. The rules are prompts. Five safety floors tell the agent to stop before a risky action. Nothing here is an enforcement control. One small live eval (3 November 2026) found no effect as shipped: Claude Code never loaded the skills.
+A Claude Code plugin of 10 skills and 118 short rules that name common failures in agent-assisted coding and say what to do instead, plus 2 hooks. The rules are prompts. Five safety floors tell the agent to stop before a risky action. Nothing here is an enforcement control. A small live evaluation on 3 November 2026 recorded matching behavior scores with and without the plugin across four development cases. None of the 12 plugin-arm runs loaded a skill, so this comparison did not establish whether the rules help once loaded.
 
 ## Status, with evidence
 
 | Question | Answer | Evidence |
 |---|---|---|
-| Does a rule change what the agent does in a live session? | Not as shipped. | Live eval on 3 November 2026, claude-opus-5-5, 3 runs per arm on four development cases: Claude Code loaded none of the skills in 12 of 12 plugin runs, and every case scored the same with and without the plugin (should fire 3 of 9 in both arms). Invoked by hand, the bulk delete rule stopped the agent before deleting in 4 of 4 runs, against 0 of 6 as shipped. See [evals/README.md](evals/README.md). |
+| Did providing the plugin change the measured behavior? | Matching scores in four development cases; no skills loaded. | Live eval on 3 November 2026, claude-opus-5-5, 3 runs per arm on four development cases: Claude Code loaded none of the skills in 12 of 12 plugin runs, and every case scored the same with and without the plugin (should fire 3 of 9 in both arms). In the manually invoked bulk follow-up, the behavior check passed in 4 of 4 runs, against 0 of 6 as shipped; task completion passed in 3 of those 4 runs. See [evals/README.md](evals/README.md). |
 | Is the plugin well formed? | Yes, by a validator that opens every file. | 10 of 10 skills and 118 of 118 rules pass: valid YAML, every rule linked, all four rule sections, descriptions within Claude Code's listing cap, trigger tables in sync. `claude plugin validate --strict` also passes ([saved output](docs/evidence/plugin-validate-strict.txt)). |
 | Do the hooks follow the current Claude Code hook contract? | Yes, on fixtures. | 35 of 35 contract tests pass on temporary git repos, using payloads reconstructed from Claude Code 2.1.304 (not captured live). |
 | What does the plugin cost in context before any skill fires? | About 2,029 tokens per session, down from about 8,556. | Claude Code's own estimate, saved in [docs/evidence/context-cost.txt](docs/evidence/context-cost.txt). A skill costs more when it loads than in v1.0.0, because each SKILL.md now holds the precedence block and its trigger table. |
@@ -123,7 +123,7 @@ tools/            validator, routing lint, sync for the generated parts of each 
 
 ## Development history
 
-Built May to October 2026 in a private repository with personal notes and configuration, published as a cleaned snapshot (2 commits on main). The changes on this branch, their reasons and the review that prompted them are listed in [CHANGELOG.md](CHANGELOG.md).
+Built May to October 2026 in a private repository with personal notes and configuration, initially published as a cleaned two-commit snapshot. Subsequent changes, their reasons and the review that prompted them are listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 
