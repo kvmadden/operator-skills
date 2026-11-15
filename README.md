@@ -2,6 +2,17 @@
 
 A Claude Code plugin of 10 skills and 118 short rules that name common failures in agent-assisted coding and say what to do instead, plus 2 hooks. The rules are prompts. Five safety floors tell the agent to stop before a risky action. Nothing here is an enforcement control. A small live evaluation on 3 November 2026 recorded matching behavior scores with and without the plugin across four development cases. None of the 12 plugin-arm runs loaded a skill, so this comparison did not establish whether the rules help once loaded.
 
+## Start here
+
+For people using Claude Code, install the plugin from inside Claude Code:
+
+```text
+/plugin marketplace add kvmadden/operator-skills
+/plugin install operator-skills@operator-skills-marketplace
+```
+
+This makes ten advisory skills available and installs two hooks. Read [what the hooks record and how to disable them](docs/HOOKS.md) before enabling the plugin. The skills do not enforce safety rules. In the 3 November 2026 live evaluation, Claude Code loaded no skills in any of twelve plugin runs. For a local trial and the test commands, see [Run locally](#run-locally).
+
 ## Status, with evidence
 
 | Question | Answer | Evidence |
