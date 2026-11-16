@@ -8,7 +8,7 @@ A Claude Code plugin of 10 skills and 118 short rules that name common failures 
 |---|---|---|
 | Did providing the plugin change the measured behavior? | Matching scores in four development cases; no skills loaded. | Live eval on 3 November 2026, claude-opus-5-5, 3 runs per arm on four development cases: Claude Code loaded none of the skills in 12 of 12 plugin runs, and every case scored the same with and without the plugin (should fire 3 of 9 in both arms). In the manually invoked bulk follow-up, the behavior check passed in 4 of 4 runs, against 0 of 6 as shipped; task completion passed in 3 of those 4 runs. See [evals/README.md](evals/README.md). |
 | Is the plugin well formed? | Yes, by a validator that opens every file. | 10 of 10 skills and 118 of 118 rules pass: valid YAML, every rule linked, all four rule sections, descriptions within Claude Code's listing cap, trigger tables in sync. `claude plugin validate --strict` also passes ([saved output](docs/evidence/plugin-validate-strict.txt)). |
-| Do the hooks follow the current Claude Code hook contract? | Yes, on fixtures. | 35 of 35 contract tests pass on temporary git repos, using payloads reconstructed from Claude Code 2.1.304 (not captured live). |
+| Do the hooks follow the current Claude Code hook contract? | Yes, on fixtures. | 44 of 44 contract tests pass on temporary git repos, using payloads reconstructed from Claude Code 2.1.304 (not captured live). |
 | What does the plugin cost in context before any skill fires? | About 2,029 tokens per session, down from about 8,556. | Claude Code's own estimate, saved in [docs/evidence/context-cost.txt](docs/evidence/context-cost.txt). A skill costs more when it loads than in v1.0.0, because each SKILL.md now holds the precedence block and its trigger table. |
 | Does the visible skill text contain the intended words? | Partly. This is a lint, not routing accuracy. | Development data only: 8 of 28 shipped phrases, 6 of 28 should-fire probes, 29 of 31 stay-quiet probes, with the two failures listed and explained. The first round's 30 of 30 depended on a scoring bug and is withdrawn. See [docs/EVALUATION.md](docs/EVALUATION.md). |
 
@@ -83,7 +83,7 @@ These are illustrations of the intended response, written by hand. They are not 
 
 ## Evidence and limits
 
-- The validator, the routing lint, 35 hook contract tests, 12 validator fixture tests, 16 routing unit tests, 9 rule content tests and 11 harness checks run with `npm test` on macOS and Linux in CI.
+- The validator, the routing lint, 44 hook contract tests, 12 validator fixture tests, 16 routing unit tests, 9 rule content tests and 11 harness checks run with `npm test` on macOS and Linux in CI.
 - The routing lint reads only text Claude Code can see. Its case files are development data: they were seen while the descriptions changed, so their numbers are development results, never a headline. A headline needs a fresh set written blind by someone who has not seen the rules, locked by checksum before its first run.
 - Rules are prompts. They shape what the agent says and does when the agent applies them. They do not block anything. The hooks warn and record metadata. They do not enforce.
 - Claude Code decides when to load a skill from its name and description. In the live eval it loaded none of these skills in 12 of 12 runs where a floor applied, so as shipped the rules did not reach the agent.
