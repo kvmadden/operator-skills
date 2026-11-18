@@ -72,7 +72,7 @@ tests/rule-content.test.mjs reads whole rule files and checks the corrections th
 
 ## Hooks
 
-tests/hook-contract.test.mjs runs both hooks against temporary git repositories and payload fixtures reconstructed from the Claude Code 2.1.304 bundle. 35 of 35 pass on macOS, and CI runs them on macOS and Linux. Of the 35, 18 fail on the hooks as they were before the second review round, including a forced rotation race, work only in a merge commit, a squash merge later reverted, a dirty worktree on the default branch, symlinks in the state directory, identifiers in paths and agent names, and repository config that tries to start fsmonitor, diff driver or textconv programs. The fixtures are not captured from a live session, which is a limit.
+tests/hook-contract.test.mjs runs both hooks against temporary git repositories and payload fixtures reconstructed from the Claude Code 2.1.304 bundle. The current suite has 44 contract tests, all reported passing on macOS, and CI runs the suite on macOS and Linux. In the earlier 35-test suite, 18 tests failed against the hooks as they were before the second review round, including a forced rotation race, work only in a merge commit, a squash merge later reverted, a dirty worktree on the default branch, symlinks in the state directory, identifiers in paths and agent names, and repository config that tries to start fsmonitor, diff driver or textconv programs. The 18-of-35 comparison is historical; it has not been repeated with the expanded suite. The fixtures are not captured from a live session, which is a limit.
 
 ## Context cost
 
