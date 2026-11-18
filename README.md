@@ -1,6 +1,17 @@
 # operator-skills
 
-A Claude Code plugin of 10 skills and 118 short rules that name common failures in agent-assisted coding and say what to do instead, plus 2 hooks. The rules are prompts. Five safety floors tell the agent to stop before a risky action. Nothing here is an enforcement control. A small live evaluation on 3 November 2026 recorded matching behavior scores with and without the plugin across four development cases. None of the 12 plugin-arm runs loaded a skill, so this comparison did not establish whether the rules help once loaded.
+Operator Skills is a Claude Code plugin for developers who want their coding agents to recognize and correct common mistakes.
+
+[Read the portfolio project note and its evaluation results](https://kvmadden.com/projects/?project=operator-skills).
+
+To try the plugin locally, install Claude Code, Node.js 20 or later, Git, and jq. Run these commands from this repository.
+
+```sh
+npm ci
+claude --plugin-dir .
+```
+
+The plugin includes 10 skills, 118 short rules, and 2 hooks. The rules are prompts. Five safety floors tell the agent to stop before a risky action. Nothing here is an enforcement control. A small live evaluation on 3 November 2026 recorded matching behavior scores with and without the plugin across four development cases. None of the 12 plugin-arm runs loaded a skill, so this comparison did not establish whether the rules help once loaded.
 
 ## Status, with evidence
 
